@@ -1,8 +1,10 @@
-import './App.css'
+import './App.css';
+import LoadingMonate from './components/loading-monate';
 
-function App() {
+const App = () => {
   return (
-  )
-}
+    <LoadingMonate />
+  );
+};
 
-export default App
+export default App;

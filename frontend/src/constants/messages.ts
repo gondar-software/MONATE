@@ -1,0 +1,1 @@
+export const MSG_ERROR_0001 = 'Encryption error:';

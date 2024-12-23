@@ -1,11 +1,18 @@
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
-import SimpleCenteredHeroSection from './components/hero-sections'
+import LoadingProvider from './providers/loading-provider';
+import './App.css';
 
-function App() {
+const App = () => {
   return (
-    <SimpleCenteredHeroSection />
-  )
-}
+    <LoadingProvider>
+      <Router>
+        <Routes>
+          
+        </Routes>
+      </Router>
+    </LoadingProvider>
+  );
+};
 
-export default App
+export default App;

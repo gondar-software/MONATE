@@ -1,9 +1,17 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+
+import LoadingProvider from './providers/loading-provider';
 import './App.css';
-import LoadingMonate from './components/loading-monate';
 
 const App = () => {
   return (
-    <LoadingMonate />
+    <LoadingProvider>
+      <Router>
+        <Routes>
+          
+        </Routes>
+      </Router>
+    </LoadingProvider>
   );
 };
 

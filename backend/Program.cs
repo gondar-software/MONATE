@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -6,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("Database");
-builder.Services.AddDbContext<MonateDbContext>(options =>
+builder.Services.AddDbContext<Databases.DBContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });

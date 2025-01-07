@@ -1,4 +1,4 @@
-namespace Databases.User
+namespace Databases.UserData
 {
     using Enums;
 
@@ -7,6 +7,7 @@ namespace Databases.User
         public int Id { get; set; }
         public int UserId { get; set; }
         public string UniversityName { get; set; } = "";
+        public string Location { get; set; } = "";
         public Degree Degree { get; set; }
         public string FieldOfEducation { get; set; } = "";
         public DateTime AttendedDate { get; set; }
@@ -14,5 +15,6 @@ namespace Databases.User
         public string? Description { get; set; }
 
         public User? User { get; set; }
+        public ICollection<Certification>? Certifications { get; set; }
     }
 }

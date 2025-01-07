@@ -1,4 +1,4 @@
-namespace Databases.User
+namespace Databases.UserData
 {
     using Enums;
 

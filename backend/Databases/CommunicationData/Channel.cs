@@ -10,5 +10,6 @@ namespace Databases.CommunicationData
         public string? ImagePath { get; set; }
 
         public ICollection<User>? Users { get; set; }
+        public ICollection<Chat>? Chats { get; set; }
     }
 }

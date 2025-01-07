@@ -9,5 +9,6 @@ namespace Databases.EcommerceData
         public string Address { get; set; } = "";
 
         public User? User { get; set; }
+        public ICollection<Transaction>? Transactions { get; set; }
     }
 }

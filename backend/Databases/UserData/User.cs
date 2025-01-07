@@ -15,10 +15,8 @@ namespace Databases.UserData
         public DateTime ExpireDate { get; set; }
 
         public Information? Information { get; set; }
+        public Profile? Profile { get; set; }
         public ICollection<API>? APIs { get; set; }
-        public ICollection<Certification>? Certifications { get; set; }
-        public ICollection<Education>? Educations { get; set; }
-        public ICollection<Experience>? Experiences { get; set; }
         public ICollection<EthAddress>? EthAddresses { get; set; }
         public ICollection<Transaction>? Transactions { get; set; }
         public ICollection<Channel>? Channels { get; set; }
@@ -26,6 +24,8 @@ namespace Databases.UserData
         public ICollection<Chat>? ReceivedChats { get; set; }
         public ICollection<Mail>? SentMails { get; set; }
         public ICollection<Mail>? ReceivedMails { get; set; }
-        public ICollection<EndpointData.Endpoint>? Endpoints { get; set; }
+        public ICollection<Relation>? OwningRelations { get; set; }
+        public ICollection<Relation>? OwnedRelations { get; set; }
+        public ICollection<Feedback>? Feedbacks { get; set; }
     }
 }

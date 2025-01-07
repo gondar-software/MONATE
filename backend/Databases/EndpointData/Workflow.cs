@@ -1,3 +1,5 @@
+using Databases.CommunicationData;
+
 namespace Databases.EndpointData
 {
     public class Workflow
@@ -13,5 +15,6 @@ namespace Databases.EndpointData
 
         public Endpoint? Endpoint { get; set; }
         public ICollection<Input>? Inputs { get; set; }
+        public ICollection<Feedback>? Feedbacks { get; set; }
     }
 }

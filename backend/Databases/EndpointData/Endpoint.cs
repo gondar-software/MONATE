@@ -1,3 +1,4 @@
+using Databases.CommunicationData;
 using Databases.UserData;
 
 namespace Databases.EndpointData
@@ -13,5 +14,6 @@ namespace Databases.EndpointData
         public string? ImagePath { get; set; }
 
         public User? User { get; set; }
+        public ICollection<Feedback>? Feedbacks { get; set; }
     }
 }

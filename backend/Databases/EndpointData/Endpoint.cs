@@ -1,7 +1,7 @@
+using Databases.UserData;
+
 namespace Databases.EndpointData
 {
-    using Databases.UserData;
-
     public class Endpoint
     {
         public int Id { get; set; }

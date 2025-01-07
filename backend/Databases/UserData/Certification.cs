@@ -1,7 +1,7 @@
+using Databases.EndpointData;
+
 namespace Databases.UserData
 {
-    using Databases.EndpointData;
-
     public class Certification
     {
         public int Id { get; set; }

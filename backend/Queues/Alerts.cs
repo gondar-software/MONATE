@@ -1,8 +1,8 @@
+using Enums;
+using Models;
+
 namespace Queues
 {
-    using Enums;
-    using Models;
-
     public static class Alerts
     {
         private static readonly Queue<Alert> alerts = new Queue<Alert>();

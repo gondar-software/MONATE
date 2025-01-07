@@ -1,13 +1,11 @@
+using Exceptions;
+using Nethereum.Web3;
+using Nethereum.Web3.Accounts.Managed;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+    
 namespace Helpers
 {
-    using Enums;
-    using Exceptions;
-    using Nethereum.Web3;
-    using Nethereum.Web3.Accounts.Managed;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using Queues;
-
     public static class BlockChainHelper
     {
         public static async Task<decimal> GetBalance(string address)

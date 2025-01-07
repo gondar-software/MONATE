@@ -1,7 +1,7 @@
+using Enums;
+
 namespace Databases.EndpointData
 {
-    using Enums;
-
     public class Input
     {
         public int Id { get; set; }

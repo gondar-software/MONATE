@@ -1,7 +1,7 @@
+using Databases.UserData;
+
 namespace Databases.EndpointData
 {
-    using Databases.UserData;
-
     public class Category
     {
         public int Id { get; set; }

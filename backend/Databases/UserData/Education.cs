@@ -1,7 +1,7 @@
+using Enums;
+
 namespace Databases.UserData
 {
-    using Enums;
-
     public class Education
     {
         public int Id { get; set; }

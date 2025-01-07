@@ -1,7 +1,7 @@
-﻿namespace Databases
-{
-    using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace Databases
+{
     public class DBContext: DbContext
     {
         public DBContext(DbContextOptions<DBContext> options) : base(options) 

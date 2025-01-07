@@ -1,6 +1,6 @@
 namespace Enums
 {
-    public enum Gender : int
+    public enum GenderType : int
     {
         Male = 0,
         Femail = 1,

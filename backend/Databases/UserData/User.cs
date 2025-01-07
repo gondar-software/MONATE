@@ -9,6 +9,7 @@ namespace Databases.UserData
         public string Token { get; set; } = "";
         public string Password { get; set; } = "";
         public UserType Type { get; set; }
+        public PermitionType Permition { get; set; }
         public DateTime ExpireDate { get; set; }
 
         public Information? Information { get; set; }

@@ -8,7 +8,7 @@ namespace Databases.UserData
         public int UserId { get; set; }
         public string UniversityName { get; set; } = "";
         public string Location { get; set; } = "";
-        public Degree Degree { get; set; }
+        public DegreeType Degree { get; set; }
         public string FieldOfEducation { get; set; } = "";
         public DateTime AttendedDate { get; set; }
         public DateTime GraduatedDate { get; set; }

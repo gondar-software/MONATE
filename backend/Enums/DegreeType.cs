@@ -1,6 +1,6 @@
 namespace Enums
 {
-    public enum Degree : int
+    public enum DegreeType : int
     {
         Bachelor = 0,
         Master = 1,

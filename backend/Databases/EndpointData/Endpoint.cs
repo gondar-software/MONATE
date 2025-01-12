@@ -17,5 +17,6 @@ namespace Databases.EndpointData
         public ICollection<Feedback>? Feedbacks { get; set; }
         public ICollection<Category>? Categories { get; set; }
         public ICollection<Workflow>? Workflows { get; set; }
+        public ICollection<Commit>? Commits { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using Databases.TeamData;
 using Databases.UserData;
 
 namespace Databases.EndpointData
@@ -13,5 +14,6 @@ namespace Databases.EndpointData
         public ICollection<Education>? Educations { get; set; }
         public ICollection<Endpoint>? Endpoints { get; set; }
         public ICollection<Experience>? Experiences { get; set; }
+        public ICollection<Portfolio>? Portfolios { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Databases.CommunicationData;
 using Databases.EcommerceData;
+using Databases.EndpointData;
 using Enums;
 
 namespace Databases.UserData
@@ -27,5 +28,8 @@ namespace Databases.UserData
         public ICollection<Relation>? OwningRelations { get; set; }
         public ICollection<Relation>? OwnedRelations { get; set; }
         public ICollection<Feedback>? Feedbacks { get; set; }
+        public ICollection<Commit>? Commits { get; set; }
+        public ICollection<User>? KnownUsers { get; set; }
+        public ICollection<User>? FavouriteUsers { get; set; }
     }
 }

@@ -8,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("Database");
-builder.Services.AddDbContext<Databases.DBContext>(options =>
+builder.Services.AddDbContext<Databases.DatabaseContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });

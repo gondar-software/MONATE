@@ -1,6 +1,8 @@
 using System.Text;
 using Databases;
+using Databases.EndpointData;
 using Databases.TeamData;
+using Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.Portfolio;
@@ -8,26 +10,87 @@ using Packets.Portfolio;
 namespace Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PortfolioController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private readonly ILogger<PortfolioController> _logger;
 
-        public PortfolioController(DatabaseContext context)
+        public PortfolioController(DatabaseContext context, ILogger<PortfolioController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        public async Task<IActionResult> Get(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetIds([FromQuery] int page = 1, [FromQuery] string? query = null)
+        {
+            try
+            {
+                var portfolioIds = await _context.Portfolios
+                    .AsNoTracking()
+                    .Include(p => p.Items)
+                    .Include(p => p.Categories)
+                    .Where(p => string.IsNullOrEmpty(query) || ValidatePortfolio(p, query))
+                    .Select(p => p.Id)
+                    .ToListAsync();
+
+                var firstIndex = (page - 1) * 16;
+                var lastIndex = Math.Min(page * 16, portfolioIds.Count);
+                portfolioIds = firstIndex >= lastIndex ? 
+                    new List<int>() : portfolioIds[firstIndex..lastIndex];
+
+                return Ok(new { PortfolioIds = portfolioIds });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving portfolio IDs");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePortfolio([FromBody] PortfolioPacket packet)
+        {
+            try
+            {
+                var portfolio = new Portfolio
+                {
+                    Type = packet.Type,
+                    Name = packet.Name,
+                    Url = packet.Url,
+                    Categories = packet.Categories?.Select(c => new Category { Name = c }).ToList(),
+                    Items = packet.Items?.Select(i => new PortfolioItem
+                    {
+                        Type = i.Type,
+                        Path = FileHelper.SaveFileAndGetPath(i.File)
+                    }).ToList()
+                };
+
+                _context.Portfolios.Add(portfolio);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetPortfolio), new { id = portfolio.Id }, portfolio);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating portfolio");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPortfolio(int id)
         {
             var portfolio = await _context.Portfolios
+                .AsNoTracking()
                 .Include(p => p.Items)
                 .Include(p => p.Categories)
                 .FirstOrDefaultAsync(p => p.Id == id);
             
             if (portfolio == null)
             {
-                return BadRequest(new { message = "Can't find portfolio with this id." } );
+                return NotFound();
             }
             else
             {
@@ -40,7 +103,7 @@ namespace Controllers
                     Items = portfolio.Items?.Select(i => new PortfolioItemData
                     {
                         Type = i.Type,
-                        Value = System.IO.File.ReadAllText($"Datas\\Portfolio\\{i.Value}")
+                        File = FileHelper.CreateFormFile(i.Path)
                     }).ToList()
                 };
 
@@ -48,36 +111,15 @@ namespace Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetIds(int page, string? query)
+        private bool ValidatePortfolio(Portfolio p, string query)
         {
-            var portfolios = await _context.Portfolios
-                .Include(p => p.Items)
-                .Include(p => p.Categories)
-                .ToListAsync();
+            var searchText = new StringBuilder()
+                .Append(p.Name)
+                .Append(p.Url)
+                .AppendJoin(" ", p.Categories?.Select(c => c.Name) ?? Array.Empty<string>())
+                .ToString();
 
-            var portfolioIds = portfolios.Where(p => ValidatePortfolio(p, query))
-                .Select(p => p.Id)
-                .ToList();
-
-            var firstIndex = (page - 1) * 16;
-            var lastIndex = Math.Min(page * 16, portfolioIds.Count);
-            portfolioIds = firstIndex >= lastIndex ? 
-                new List<int>() : portfolioIds[firstIndex..lastIndex];
-
-            return Ok(new { portfolioIds });
-        }
-
-        private bool ValidatePortfolio(Portfolio p, string? query)
-        {
-            var stringBuilder = new StringBuilder();
-
-            stringBuilder.Append(p.Name).Append(p.Url);
-
-            if (p.Categories != null) foreach (var category in p.Categories)
-                stringBuilder.Append(category.Name);
-
-            return string.IsNullOrEmpty(query) || stringBuilder.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1;
+            return searchText.Contains(query, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreatePortfolio([FromBody] PortfolioPacket packet)
         {
             try

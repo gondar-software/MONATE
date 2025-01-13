@@ -21,6 +21,7 @@ namespace Databases
         public DbSet<Education> Educations { get; set; } = null!;
         public DbSet<Experience> Experiences { get; set; } = null!;
         public DbSet<Information> Informations { get; set; } = null!;
+        public DbSet<KnowUser> KnowUsers { get; set; } = null!;
         public DbSet<Profile> Profiles { get; set; } = null!;
         public DbSet<Relation> Relations { get; set; } = null!;
         #endregion
@@ -120,10 +121,16 @@ namespace Databases
                 .WithMany(u => u.OwningRelations)
                 .HasForeignKey(r => r.OwnedUserId)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.KnownUsers);
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.FavouriteUsers);
+            modelBuilder.Entity<KnowUser>()
+                .HasOne(k => k.Me)
+                .WithMany(u => u.KnewUsers)
+                .HasForeignKey(k => k.MeId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<KnowUser>()
+                .HasOne(k => k.You)
+                .WithMany(u => u.KnownUsers)
+                .HasForeignKey(k => k.YouId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void ConfigureTeamTables(ModelBuilder modelBuilder)

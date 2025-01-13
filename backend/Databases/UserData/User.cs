@@ -29,7 +29,7 @@ namespace Databases.UserData
         public ICollection<Relation>? OwnedRelations { get; set; }
         public ICollection<Feedback>? Feedbacks { get; set; }
         public ICollection<Commit>? Commits { get; set; }
-        public ICollection<User>? KnownUsers { get; set; }
-        public ICollection<User>? FavouriteUsers { get; set; }
+        public ICollection<KnowUser>? KnownUsers { get; set; }
+        public ICollection<KnowUser>? KnewUsers { get; set; }
     }
 }

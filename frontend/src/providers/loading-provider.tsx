@@ -1,10 +1,10 @@
 import { createContext, useState, useContext } from 'react';
 
-import LoadingMonate from '../components/loading-monate';
+import { LoadingMonate } from '@app/components';
 
 const LoadingContext = createContext<any | undefined>(undefined);
 
-const LoadingProvider = ({ children }: any) => {
+export const LoadingProvider = ({ children }: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const showLoading = () => {

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setLightMode } from './reducers';
+import { setLightMode } from '@app/global';
 
 export const useSaveLightMode = () => {
     const dispatch = useDispatch();

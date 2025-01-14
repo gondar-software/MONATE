@@ -1,4 +1,4 @@
-const fontExtensions = {
+export const fontExtensions = {
     calibri: ['"Calibri"', 'font-calibri'],
 };
 

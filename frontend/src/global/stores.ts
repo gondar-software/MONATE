@@ -3,8 +3,8 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 
-import reducer from './reducers';
-import { MSG_ERROR_0001 } from '../constants/messages';
+import { reducer } from '@app/global';
+import { MSG_ERROR_0001 } from '@app/constants';
 
 const encryptor = encryptTransform({
     secretKey: import.meta.env.VITE_ENCRYPTION_KEY,
@@ -20,7 +20,7 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
-const store = createStore(persistedReducer);
+export const store = createStore(persistedReducer);
 
 export const persistor = persistStore(store);
 export default store;

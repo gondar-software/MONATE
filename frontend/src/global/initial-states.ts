@@ -1,4 +1,4 @@
-const initialStates = {
+export const initialStates = {
     lightMode: true,
 };
 

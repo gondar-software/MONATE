@@ -1,8 +1,8 @@
-import initialStates from './initial-states';
+import { initialStates } from '@app/global';
 
 export const SET_LIGHT_MODE = 'SET_LIGHT_MODE';
 
-const reducer = (state = initialStates, action: any) => {
+export const reducer = (state = initialStates, action: any) => {
     switch (action.type) {
         case SET_LIGHT_MODE:
             return {

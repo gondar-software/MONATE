@@ -1,12 +1,13 @@
 import { useLightMode } from '@app/global';
 
-export const MonateIcon = () => {
+export const MonateIcon = (props: any) => {
     const lightMode = useLightMode();
 
     return (
         <svg
             viewBox="0 0 36 36"
             xmlns="http://www.w3.org/2000/svg"
+            className={`${props.className}`}
             fill="none">
             <g>
                 <path className={lightMode ? 'fill-current text-black' : 'fill-current text-white' } d="M36 18c0 9.941-8.059 18-18 18S0 27.941 0 18S8.059 0 18 0s18 8.059 18 18z"></path>
@@ -16,9 +17,12 @@ export const MonateIcon = () => {
     );
 };
 
-export const LoadingSpin = () => {
+export const LoadingSpin = (props: any) => {
     return (
-        <svg viewBox="0 0 860.1 876.5">
+        <svg 
+            viewBox="0 0 860.1 876.5"
+            className={`${props.className}`}
+        >
             <path
                 className="animate-spin from-blue-300"
                 style={{

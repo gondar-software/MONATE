@@ -2,14 +2,18 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import '@app/App.css';
 import { LoadingProvider } from '@app/providers';
-import { Home } from '@app/pages';
+import { routes } from '@app/routes';
 
-const App = () => {
+export const App = () => {
   return (
     <LoadingProvider>
       <Router>
         <Routes>
-          <Route path='/' element={<Home />} />
+          {routes.map((layout) => (
+            layout.pages.map((page) => (
+              <Route path={`${layout.layout}${page.path}`} element={page.element} />
+            ))
+          ))}
         </Routes>
       </Router>
     </LoadingProvider>

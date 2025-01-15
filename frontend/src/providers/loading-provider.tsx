@@ -5,7 +5,7 @@ import { LoadingMonate } from '@app/components';
 const LoadingContext = createContext<any | undefined>(undefined);
 
 export const LoadingProvider = ({ children }: any) => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const showLoading = () => {
         setIsLoading(true);

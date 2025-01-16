@@ -35,7 +35,13 @@ export const reducer = (state = initialStates, action: any) => {
                 oasisProgress: action.payload,
             };
         case SET_INITIAL_VALUE:
-            return initialStates;
+            return {
+                ...state,
+                gardenLoaded: initialStates.gardenLoaded,
+                oasisLoaded: initialStates.oasisLoaded,
+                gardenProgress: initialStates.gardenProgress,
+                oasisProgress: initialStates.oasisProgress,
+            }
         default:
             return state;
     }

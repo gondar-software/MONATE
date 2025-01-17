@@ -1,20 +1,17 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { UnityGardenControl, UnityOasisControl } from '@app/controls';
+import { useUnityBackgroundMode } from '@app/global';
 
 const UnityBackgroundContext = createContext<any | undefined>(undefined);
 
 export const UnityBackgroundProvider = ({ children }: any) => {
-    const [name, setName] = useState<string>('oasis');
-
-    const showUnityBackground = (name: string) => {
-        setName(name);
-    };
+    const unityBackgroundMode = useUnityBackgroundMode();
 
     return(
-        <UnityBackgroundContext.Provider value={{ showUnityBackground }}>
+        <UnityBackgroundContext.Provider value={{}}>
             <div className='fixed w-full h-full left-0 top-0'>
-                <UnityGardenControl className={`w-full h-full absolute ${name === 'garden' ? 'visible' : 'hidden'}`} />
-                <UnityOasisControl className={`w-full h-full absolute ${name === 'oasis' ? 'visible' : 'hidden'}`} />
+                <UnityGardenControl className={`w-full h-full absolute ${unityBackgroundMode === 'garden' ? 'visible' : 'hidden'}`} />
+                <UnityOasisControl className={`w-full h-full absolute ${unityBackgroundMode === 'oasis' ? 'visible' : 'hidden'}`} />
             </div>
             {children}
         </UnityBackgroundContext.Provider>

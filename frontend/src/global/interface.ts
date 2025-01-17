@@ -6,6 +6,7 @@ import {
     setOasisLoaded,
     setGardenProgress,
     setOasisProgress,
+    setUnityBackgroundMode,
     setInitialValue,
 } from '@app/global';
 
@@ -29,6 +30,10 @@ export const useSaveOasisProgress = () => {
     const dispatch = useDispatch();
     return (oasisProgress: any) => dispatch(setOasisProgress(oasisProgress));
 };
+export const useSaveUnityBackgroundMode = () => {
+    const dispatch = useDispatch();
+    return (unityBackgroundMode: string) => dispatch(setUnityBackgroundMode(unityBackgroundMode));
+};
 
 export const useLightMode = () => {
     return useSelector((state: any) => state.lightMode);
@@ -44,6 +49,9 @@ export const useGardenProgress = () => {
 };
 export const useOasisProgress = () => {
     return useSelector((state: any) => state.oasisProgress);
+};
+export const useUnityBackgroundMode = () => {
+    return useSelector((state: any) => state.unityBackgroundMode);
 };
 
 export const useSetInitialValue = () => {

@@ -6,10 +6,10 @@ import {
     useGardenLoaded,
     useGardenProgress,
     useLightMode,
+    useSaveUnityBackgroundMode,
 } from "@app/global";
 import { LoadingMonate, MonateIcon, CopyrightIcon } from "@app/components";
 import { routes } from '@app/routes';
-import { useUnityBackground } from "@app/providers/unity-background-provider";
 
 export const Preface = () => {
     const oasisLoaded = useOasisLoaded();
@@ -17,8 +17,8 @@ export const Preface = () => {
     const gardenLoaded = useGardenLoaded();
     const gardenProgress = useGardenProgress();
     const lightMode = useLightMode();
+    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
     const navigate = useNavigate();
-    const { showUnityBackground } = useUnityBackground();
 
     const words = [
         'Websites',
@@ -38,8 +38,8 @@ export const Preface = () => {
     };
 
     useEffect(() => {
-        showUnityBackground('oasis');
-    });
+        saveUnityBackgroundMode('oasis');
+    })
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -77,7 +77,10 @@ export const Preface = () => {
                             <div className={`h-12 w-48 items-center rounded-none transition-all duration-300 cursor-pointer flex justify-center
                                 ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
                                     : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
-                                onClick={(() => navigate(`client${page.path}`))}>
+                                onClick={(() => {
+                                    saveUnityBackgroundMode('garden');
+                                    navigate(`client${page.path}`);
+                                })}>
                                 {page.label}
                             </div>
                         ))}
@@ -87,7 +90,10 @@ export const Preface = () => {
                             <div className={`h-12 w-48 items-center rounded-none transition-all duration-300 cursor-pointer flex justify-center
                                 ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
                                     : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
-                                onClick={(() => navigate(`client${page.path}`))}>
+                                onClick={(() => {
+                                    saveUnityBackgroundMode('garden');
+                                    navigate(`client${page.path}`);
+                                })}>
                                 {page.label}
                             </div>
                         ))}

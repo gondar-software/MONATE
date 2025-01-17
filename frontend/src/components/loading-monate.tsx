@@ -20,11 +20,11 @@ export const LoadingMonate = (props: any) => {
                     </div>
                 </div>
                 <div className='md:hidden flex-col'>
-                    <div className='h-20 w-20 justify-self-center'><LoadingSpin /></div>
+                    <div className='h-20 w-20'><LoadingSpin /></div>
                     {props.progress ?
-                        <div className={`text-3xl font-bold font-calibri animate-pulse ${lightMode ? 'text-gray-900' : 'text-white'}`}>{props.progress}%</div>
+                        <div className={`text-3xl font-bold text-center font-calibri animate-pulse ${lightMode ? 'text-gray-900' : 'text-white'}`}>{props.progress}%</div>
                         :
-                        <div className={`text-3xl font-bold font-calibri animate-pulse ${lightMode ? 'text-gray-900' : 'text-white'}`}>Loading...</div>
+                        <div className={`text-3xl font-bold text-center font-calibri animate-pulse ${lightMode ? 'text-gray-900' : 'text-white'}`}>Loading...</div>
                     }
                 </div>
             </div>

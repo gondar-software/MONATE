@@ -1,20 +1,24 @@
 import { useState, MouseEvent, useEffect } from "react";
-import { UnityBackground } from "@app/controls";
+import { useNavigate } from "react-router-dom";
 import { 
-    useGardenLoaded, 
     useOasisLoaded, 
-    useGardenProgress, 
     useOasisProgress,
+    useGardenLoaded,
+    useGardenProgress,
     useLightMode,
 } from "@app/global";
 import { LoadingMonate, MonateIcon, CopyrightIcon } from "@app/components";
+import { routes } from '@app/routes';
+import { useUnityBackground } from "@app/providers/unity-background-provider";
 
 export const Preface = () => {
-    const gardenLoaded = useGardenLoaded();
     const oasisLoaded = useOasisLoaded();
-    const gardenProgress = useGardenProgress();
     const oasisProgress = useOasisProgress();
+    const gardenLoaded = useGardenLoaded();
+    const gardenProgress = useGardenProgress();
     const lightMode = useLightMode();
+    const navigate = useNavigate();
+    const { showUnityBackground } = useUnityBackground();
 
     const words = [
         'Websites',
@@ -28,10 +32,14 @@ export const Preface = () => {
     const [currentWord, setCurrentWord] = useState(0);
 
     const handleMouseMove = (_: MouseEvent<HTMLDivElement>): void => {
-        if (!hasInteracted && gardenLoaded && oasisLoaded) {
+        if (!hasInteracted && oasisLoaded && gardenLoaded) {
             setHasInteracted(true);
         }
     };
+
+    useEffect(() => {
+        showUnityBackground('oasis');
+    });
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -46,11 +54,10 @@ export const Preface = () => {
             className="w-screen h-screen left-0 top-0 relative"
             onMouseMove={handleMouseMove}
         >
-            <UnityBackground name="oasis" className="w-full h-full" />
-            {!(gardenLoaded && oasisLoaded) && (
+            {!(oasisLoaded && gardenLoaded) && (
                 <LoadingMonate
                     className="w-full h-full absolute left-0 top-0"
-                    progress={(gardenProgress + oasisProgress) / 2}
+                    progress={(oasisProgress + gardenProgress) / 2.}
                 />
             )}
             <div className={`w-full h-full absolute left-0 top-0 transition-all duration-500 \
@@ -60,23 +67,35 @@ export const Preface = () => {
                     <MonateIcon className='w-10 h-10' />
                     <div className={`text-4xl font-bold underline ${lightMode ? 'text-gray-900' : 'text-white'}`}>ONATE</div>
                 </div>
-                <div className={`w-full h-1/3 absolute left-0 xl:top-1/4 md:top-32 sm:top-24 top-20 text-center justify-items-center \
+                <div className={`w-full h-1/3 absolute left-0 xl:top-1/4 md:top-36 sm:top-28 top-24 text-center justify-items-center \
                     ${lightMode ? 'text-gray-900' : 'text-white'}`}>
                     <div className='text-7xl'>Demand more out of your</div>
                     <div className='text-8xl'>{words[currentWord]}.</div>
                     <div className='h-20' />
-                    <div className='rounded-xl hidden lg:flex origin-center text-xl'>
-                        {words.map((word) => (
-                            <button className='h-12 w-48 rounded-none'>{word}</button>
+                    <div className='rounded-xl hidden lg:flex origin-center text-xl overflow-hidden'>
+                        {routes.filter(layout => layout.layout === 'client')[0].pages.map((page) => (
+                            <div className={`h-12 w-48 items-center rounded-none transition-all duration-300 cursor-pointer flex justify-center
+                                ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
+                                    : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
+                                onClick={(() => navigate(`client${page.path}`))}>
+                                {page.label}
+                            </div>
                         ))}
                     </div>
-                    <div className='rounded-xl lg:hidden flex-col origin-center text-xl'>
-                        {words.map((word) => (
-                            <button className='h-12 w-2/3 rounded-none'>{word}</button>
+                    <div className='rounded-xl lg:hidden flex-col origin-center text-xl overflow-hidden'>
+                    {routes.filter(layout => layout.layout === 'client')[0].pages.map((page) => (
+                            <div className={`h-12 w-48 items-center rounded-none transition-all duration-300 cursor-pointer flex justify-center
+                                ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
+                                    : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
+                                onClick={(() => navigate(`client${page.path}`))}>
+                                {page.label}
+                            </div>
                         ))}
                     </div>
                     <div className='h-12' />
-                    <button className='w-72 h-16 rounded-xl text-4xl'>Book me</button>
+                    <div className={`w-72 h-16 rounded-xl text-4xl items-center transition-all duration-300 cursor-pointer flex justify-center
+                                ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
+                                    : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}>Book me</div>
                 </div>
                 <div className="absolute bottom-0 w-full flex justify-center items-center py-4">
                     <CopyrightIcon className="w-6 h-6 mr-2" />

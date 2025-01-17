@@ -5,6 +5,7 @@ import '@app/App.css';
 import { LoadingProvider } from '@app/providers';
 import { routes } from '@app/routes';
 import { useSetInitialValue } from './global';
+import UnityBackgroundProvider from './providers/unity-background-provider';
 
 export const App = () => {
   const setInitialValue = useSetInitialValue();
@@ -15,15 +16,17 @@ export const App = () => {
 
   return (
     <LoadingProvider>
-      <Router>
-        <Routes>
-          {routes.map((layout) => (
-            layout.pages.map((page) => (
-              <Route path={`${layout.layout}${page.path}`} element={page.element} />
-            ))
-          ))}
-        </Routes>
-      </Router>
+      <UnityBackgroundProvider>
+        <Router>
+          <Routes>
+            {routes.map((layout) => (
+              layout.pages.map((page) => (
+                <Route path={`${layout.layout}${page.path}`} element={page.element} />
+              ))
+            ))}
+          </Routes>
+        </Router>
+      </UnityBackgroundProvider>
     </LoadingProvider>
   );
 };

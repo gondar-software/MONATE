@@ -12,7 +12,6 @@ const encryptor = encryptTransform({
         console.error(MSG_ERROR_0001, error);
     },
 });
-
 const persistConfig = {
     key: 'root',
     storage,

@@ -8,6 +8,7 @@ export const Portfolio = (props: any) => {
             const response = await fetch(url, {
                 method: 'GET',
             });
+            console.log(response);
         }
         getPortfolioData();
     }, []);

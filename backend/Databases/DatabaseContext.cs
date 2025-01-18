@@ -24,6 +24,7 @@ namespace Databases
         public DbSet<KnowUser> KnowUsers { get; set; } = null!;
         public DbSet<Profile> Profiles { get; set; } = null!;
         public DbSet<Relation> Relations { get; set; } = null!;
+        public DbSet<PaymentProfile> PaymentProfiles { get; set; } = null!;
         #endregion
 
         #region TeamTables
@@ -130,6 +131,11 @@ namespace Databases
                 .HasOne(k => k.You)
                 .WithMany(u => u.KnownUsers)
                 .HasForeignKey(k => k.YouId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<PaymentProfile>()
+                .HasOne(p => p.User)
+                .WithOne(u => u.PaymentProfile)
+                .HasForeignKey<PaymentProfile>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

@@ -17,6 +17,7 @@ namespace Databases.UserData
 
         public Information? Information { get; set; }
         public Profile? Profile { get; set; }
+        public PaymentProfile? PaymentProfile { get; set; }
         public ICollection<API>? APIs { get; set; }
         public ICollection<EthAddress>? EthAddresses { get; set; }
         public ICollection<Transaction>? Transactions { get; set; }

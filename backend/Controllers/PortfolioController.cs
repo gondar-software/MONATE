@@ -2,6 +2,7 @@ using System.Text;
 using Databases;
 using Databases.EndpointData;
 using Databases.TeamData;
+using Enums;
 using Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -60,11 +61,13 @@ namespace Controllers
                     Name = packet.Name,
                     Url = packet.Url,
                     Categories = packet.Categories?.Select(c => new Category { Name = c }).ToList(),
-                    Items = packet.Items?.Select(i => new PortfolioItem
-                    {
-                        Type = i.Type,
-                        Path = FileHelper.SaveFileAndGetPath(i.File)
-                    }).ToList()
+                    Items = packet.Items != null 
+                        ? await Task.WhenAll(packet.Items.Select(async i => new PortfolioItem
+                        {
+                            Type = i.Type,
+                            Path = i.Type == FileType.GithubRepo ? i.GithubRepo 
+                                : await FirebaseHelper.SaveFileAndGetPath(i.File, i.Type),
+                        })) : null
                 };
 
                 _context.Portfolios.Add(portfolio);
@@ -100,11 +103,13 @@ namespace Controllers
                     Name = portfolio.Name,
                     Url = portfolio.Url,
                     Categories = portfolio.Categories?.Select(c => c.Name).ToList(),
-                    Items = portfolio.Items?.Select(i => new PortfolioItemData
-                    {
-                        Type = i.Type,
-                        File = FileHelper.CreateFormFile(i.Path)
-                    }).ToList()
+                    Items = portfolio.Items != null ?
+                        (await Task.WhenAll(portfolio.Items.Select(async i => new PortfolioItemData
+                        {
+                            Type = i.Type,
+                            File = i.Type == FileType.GithubRepo ? null : await FirebaseHelper.LoadAndCreateFormFile(i.Path),
+                            GithubRepo = i.Type == FileType.GithubRepo ? i.Path : "",
+                        }))).ToList() : null
                 };
 
                 return Ok(packet);

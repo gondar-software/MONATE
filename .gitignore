@@ -365,6 +365,7 @@ FodyWeavers.xsd
 .env
 *.pem
 *.key
+firebase.json
 dist/
 Avatars/
 Portfolios/

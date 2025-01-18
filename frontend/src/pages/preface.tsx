@@ -39,7 +39,7 @@ export const Preface = () => {
 
     useEffect(() => {
         saveUnityBackgroundMode('oasis');
-    })
+    }, [])
 
     useEffect(() => {
         const intervalId = setInterval(() => {

@@ -54,6 +54,14 @@ jobs:
         run: |
           scp -i ../monate.pem -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/frontend
         working-directory: ./frontend
+
+      - name: Configure dotenv and firebase credential to project
+        run: |
+          echo "${{ secrets.BACKEND_DOTENV }}" > ./.env
+          echo "${{ secrets.FIREBASE_CREDENTIAL }}" > ./firebase.json
+          chmod 666 ./.env
+          chmod 666 ./firebase.json
+        working-directory: ./backend/publish
       
       - name: Build backend
         run: |
@@ -66,12 +74,10 @@ jobs:
           dotnet ef database update
         working-directory: ./backend
 
-      - name: Configure dotenv
+      - name: Configure dotenv to product
         run: |
           echo "${{ secrets.BACKEND_DOTENV }}" > ./.env
-          echo "${{ secrets.FIREBASE_CREDENTIAL }}" > ./firebase.json
           chmod 666 ./.env
-          chmod 666 ./firebase.json
         working-directory: ./backend/publish
 
       - name: Copy backend to EC2

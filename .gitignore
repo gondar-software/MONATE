@@ -367,10 +367,6 @@ FodyWeavers.xsd
 *.key
 firebase.json
 dist/
-Avatars/
-Portfolios/
-Endpoints/
-Workflows/
 publish/
 key/
 Migrations/

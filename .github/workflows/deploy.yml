@@ -61,7 +61,7 @@ jobs:
           echo "${{ secrets.FIREBASE_CREDENTIAL }}" > ./firebase.json
           chmod 666 ./.env
           chmod 666 ./firebase.json
-        working-directory: ./backend/publish
+        working-directory: ./backend
       
       - name: Build backend
         run: |

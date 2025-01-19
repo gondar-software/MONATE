@@ -2,7 +2,7 @@ import CardLoading from "./card-loading";
 
 export const Card = (props: any) => {
     return (
-        <div className='max-w-sm w-full h-full'>
+        <div className='w-full h-full max-w-sm'>
             {!props.loading ? <div className="w-full h-full">{props.children}</div> : <CardLoading />}
         </div>
     );

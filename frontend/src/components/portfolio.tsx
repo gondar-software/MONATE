@@ -18,3 +18,5 @@ export const Portfolio = (props: any) => {
         </Card>
     )
 }
+
+export default Portfolio;

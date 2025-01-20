@@ -7,10 +7,10 @@ export const UnityGardenControl = (props: any) => {
     const saveGardenProgress = useSaveGardenProgress();
 
     const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
-        loaderUrl: "unity/garden/Garden.loader.js",
-        dataUrl: "unity/garden/Garden.data",
-        frameworkUrl: "unity/garden/Garden.framework.js",
-        codeUrl: "unity/garden/Garden.wasm",
+        loaderUrl: "/unity/garden/Garden.loader.js",
+        dataUrl: "/unity/garden/Garden.data",
+        frameworkUrl: "/unity/garden/Garden.framework.js",
+        codeUrl: "/unity/garden/Garden.wasm",
     });
 
     useEffect(() => {

@@ -12,11 +12,11 @@ export const Portfolios = () => {
         }
 
         fetchPortfolioIds();
-    }, [])
+    }, []);
 
     return (
         <div />
-    )
+    );
 }
 
 export default Portfolios;

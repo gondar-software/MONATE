@@ -7,10 +7,10 @@ export const UnityOasisControl = (props: any) => {
     const saveOasisProgress = useSaveOasisProgress();
 
     const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
-        loaderUrl: "unity/oasis/Oasis.loader.js",
-        dataUrl: "unity/oasis/Oasis.data",
-        frameworkUrl: "unity/oasis/Oasis.framework.js",
-        codeUrl: "unity/oasis/Oasis.wasm",
+        loaderUrl: "/unity/oasis/Oasis.loader.js",
+        dataUrl: "/unity/oasis/Oasis.data",
+        frameworkUrl: "/unity/oasis/Oasis.framework.js",
+        codeUrl: "/unity/oasis/Oasis.wasm",
     });
 
     useEffect(() => {

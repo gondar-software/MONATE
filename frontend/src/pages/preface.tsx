@@ -1,20 +1,12 @@
 import { useState, MouseEvent, useEffect } from "react";
 import { 
-    useOasisLoaded, 
-    useOasisProgress,
-    useGardenLoaded,
-    useGardenProgress,
     useLightMode,
     useSaveUnityBackgroundMode,
 } from "@app/global";
-import { LoadingMonate, CopyrightIcon, MonateMark, TransparentButton } from "@app/components";
+import { CopyrightIcon, MonateMark, TransparentButton } from "@app/components";
 import { routes } from '@app/routes';
 
 export const Preface = () => {
-    const oasisLoaded = useOasisLoaded();
-    const oasisProgress = useOasisProgress();
-    const gardenLoaded = useGardenLoaded();
-    const gardenProgress = useGardenProgress();
     const lightMode = useLightMode();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
@@ -30,7 +22,7 @@ export const Preface = () => {
     const [currentWord, setCurrentWord] = useState(0);
 
     const handleMouseMove = (_: MouseEvent<HTMLDivElement>): void => {
-        if (!hasInteracted && oasisLoaded && gardenLoaded) {
+        if (!hasInteracted) {
             setHasInteracted(true);
         }
     };
@@ -52,12 +44,6 @@ export const Preface = () => {
             className="w-screen h-screen left-0 top-0 relative"
             onMouseMove={handleMouseMove}
         >
-            {!(oasisLoaded && gardenLoaded) && (
-                <LoadingMonate
-                    className="w-full h-full absolute left-0 top-0"
-                    progress={(oasisProgress + gardenProgress) / 2.}
-                />
-            )}
             <div className={`w-full h-full absolute left-0 top-0 transition-all duration-500 \
                 ${hasInteracted ? (lightMode ? 'bg-white bg-opacity-50' : 'bg-black bg-opacity-80') : 'bg-transparent'}`} />
             {hasInteracted && <div className="w-full h-full left-0 top-0 absolute">

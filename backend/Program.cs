@@ -19,7 +19,8 @@ builder.Services.AddDbContext<Databases.DatabaseContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-builder.Services.Configure<Services.JwtSettings>(Services.JwtSettings.GetJwtSettings);
+builder.Services.AddScoped<Services.JwtService>();
+var jwtSettings = Services.JwtSettings.GetJwtSettings();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -29,10 +30,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!)
+                Encoding.UTF8.GetBytes(jwtSettings.Key)
             ),
         };
     });

@@ -7,12 +7,15 @@ namespace Services
         public string Audience { get; set; } = "";
         public int ExpireInMinutes { get; set; } = 0;
 
-        public static void GetJwtSettings(JwtSettings options)
+        public static JwtSettings GetJwtSettings()
         {
-            options.Key = Environment.GetEnvironmentVariable("JWT_KEY") ?? "";
-            options.Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "";
-            options.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "";
-            options.ExpireInMinutes = int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRE_IN_MINUTES") ?? "0");
+            return new JwtSettings
+            {
+                Key = Environment.GetEnvironmentVariable("JWT_KEY") ?? "",
+                Issuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? "",
+                Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? "",
+                ExpireInMinutes = int.Parse(Environment.GetEnvironmentVariable("JWT_EXPIRE_IN_MINUTES") ?? "0"),
+            };
         }
     }
 }

@@ -8,9 +8,11 @@ export const MonateMark = (props: any) => {
     const navigate = useNavigate();
 
     return (
-        <div {...props} className={`flex cursor-pointer ${props.className}`} onClick={() => navigate(`${routes[0].layout}${routes[0].pages[1].path}`)}>
-            <MonateIcon className='w-10 h-10' />
-            <div className={`text-4xl font-bold hidden xl:block md:block sm:hidden underline ${lightMode ? 'text-gray-900' : 'text-white'}`}>ONATE</div>
+        <div {...props}>
+            <div className='flex cursor-pointer' onClick={() => navigate(`${routes[0].layout}${routes[0].pages[1].path}`)}>
+                <MonateIcon className='w-10 h-10' />
+                <div className={`text-4xl font-bold hidden xl:block md:block sm:hidden underline ${lightMode ? 'text-gray-900' : 'text-white'}`}>ONATE</div>
+            </div>
         </div>
     )
 }

@@ -8,14 +8,16 @@ export const TransparentButton = (props: any) => {
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
     return (
-        <div className={`${props.className} items-center transition-all duration-300 cursor-pointer flex justify-center
-            ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
-                : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
-            onClick={(() => {
-                saveUnityBackgroundMode('garden');
-                navigate(`${props.path}`);
-            })}>
-            {props.label}
+        <div {...props}>
+            <div className={`w-full h-full items-center transition-all duration-300 cursor-pointer flex justify-center
+                ${lightMode ? 'hover:border-white hover:bg-white hover:opacity-50 active:opacity-100'
+                    : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
+                onClick={(() => {
+                    saveUnityBackgroundMode('garden');
+                    navigate(`${props.path}`);
+                })}>
+                {props.label}
+            </div>
         </div>
     );
 };

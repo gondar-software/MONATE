@@ -54,19 +54,19 @@ namespace Controllers
         {
             try
             {
-            var user = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.EmailAddr == data.EmailAddr && u.Password == data.Password);
-            
-            if (user == null)
-            {
-                return BadRequest(new { Message = "Invalid email or password" });
-            }
-            else
-            {
-                var token = _jwtService.GenerateToken(user);
-                return Ok(new { Token = token });
-            }
+                var user = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.EmailAddr == data.EmailAddr && u.Password == data.Password);
+                
+                if (user == null)
+                {
+                    return BadRequest(new { Message = "Invalid email or password" });
+                }
+                else
+                {
+                    var token = _jwtService.GenerateToken(user);
+                    return Ok(new { Token = token });
+                }
             }
             catch (Exception ex)
             {

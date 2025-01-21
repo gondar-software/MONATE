@@ -50,8 +50,8 @@ export const Preface = () => {
                 <MonateMark className="h-1/5 left-10 top-10 absolute flex" />
                 <div className={`w-full h-1/3 absolute left-0 xl:top-1/4 md:top-36 sm:top-28 top-24 text-center justify-items-center \
                     ${lightMode ? 'text-gray-900' : 'text-white'}`}>
-                    <div className='text-7xl'>Demand more out of your</div>
-                    <div className='text-8xl'>{words[currentWord]}.</div>
+                    <div className='xl:text-7xl md:text-6xl sm:text-5xl text-4xl'>Demand more out of your</div>
+                    <div className='xl:text-8xl md:text-7xl sm:text-6xl text-5xl'>{words[currentWord]}.</div>
                     <div className='h-20' />
                     <div className='rounded-xl hidden lg:flex origin-center text-xl overflow-hidden'>
                         {routes.filter(layout => layout.layout === 'client')[0].pages.map((page) => (

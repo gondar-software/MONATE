@@ -3,7 +3,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { MonateIcon } from '@app/components';
-import { Preface, Home, Portfolios } from '@app/pages';
+import { Preface, Home, Portfolios, Login, SignUp } from '@app/pages';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -37,14 +37,14 @@ export const routes = [
                 name: 'preface',
                 label: 'Preface',
                 path: '/login',
-                element: <div />,
+                element: <Login />,
             },
             {
                 icon: <MonateIcon {...icon} />,
                 name: 'preface',
                 label: 'Preface',
                 path: '/signup',
-                element: <div />,
+                element: <SignUp />,
             },
         ],
     },

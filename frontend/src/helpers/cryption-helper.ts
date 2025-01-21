@@ -1,9 +1,8 @@
 import sodium from 'libsodium-wrappers-sumo';
 
 export const useCryptionHelper = () => {
-  const key = sodium.from_hex(import.meta.env.VITE_PASSWORD);
-
   const encrypt = async (plaintext: string) => {
+    const key = sodium.from_hex(import.meta.env.VITE_PASSWORD);
     await sodium.ready;
     try {
         const iv = sodium.randombytes_buf(12);
@@ -25,6 +24,7 @@ export const useCryptionHelper = () => {
 };
 
 const decrypt = async (cipherText: string) => {
+    const key = sodium.from_hex(import.meta.env.VITE_PASSWORD);
     await sodium.ready;
     try {
         const iv = sodium.from_hex(cipherText.slice(0, 24));

@@ -1,7 +1,7 @@
 using Enums;
 using Models;
 
-namespace Queues
+namespace Temp
 {
     public static class Alerts
     {

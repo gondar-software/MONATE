@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom';
 import { useLightMode } from '@app/global';
 import { useSaveUnityBackgroundMode } from '@app/global';
+import { useRedirectionHelper } from '@app/helpers';
 
 export const TransparentButton = (props: any) => {
     const lightMode = useLightMode();
-    const navigate = useNavigate();
+    const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
     return (
@@ -14,7 +14,7 @@ export const TransparentButton = (props: any) => {
                     : 'hover:border-gray-900 hover:bg-gray-900 hover:opacity-70 active:opacity-100'}`}
                 onClick={(() => {
                     saveUnityBackgroundMode('garden');
-                    navigate(`${props.path}`);
+                    redirect(`${props.path}`);
                 })}>
                 {props.label}
             </div>

@@ -13,8 +13,10 @@ export const FooterProvider = (props: any) => {
             <div className={`fixed bottom-0 w-full flex justify-center items-center py-4 bg-opacity-40 backdrop-blur-md \
                 ${lightMode ? 'bg-white' : 'bg-gray-900'}`}>
                 <CopyrightIcon className="w-6 h-6 mr-2" />
-                <span>2025 Copyright by MONATE. All rights reserved.</span>
+                <span className={`${lightMode ? 'text-gray-900' : 'text-white'}`}>2025 Copyright by MONATE. All rights reserved.</span>
             </div>
         </FooterContext.Provider>
-    )
-}
+    );
+};
+
+export default FooterProvider;

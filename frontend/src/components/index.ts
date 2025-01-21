@@ -6,3 +6,5 @@ export * from '@app/components/portfolio';
 export * from '@app/components/monate-mark';
 export * from '@app/components/auth-info';
 export * from '@app/components/transparent-button';
+export * from '@app/components/auth-card';
+export * from '@app/components/mode-switch';

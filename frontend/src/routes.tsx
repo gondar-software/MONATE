@@ -70,6 +70,13 @@ export const routes = [
             },
             {
                 icon: <div />,
+                name: 'full-stack',
+                label: 'Full Stack',
+                path: '/full-stack',
+                element: <div />,
+            },
+            {
+                icon: <div />,
                 name: 'gen-ai',
                 label: 'Generative AI',
                 path: '/gen-ai',
@@ -80,13 +87,6 @@ export const routes = [
                 name: 'cv',
                 label: 'Computer Vision',
                 path: '/cv',
-                element: <div />,
-            },
-            {
-                icon: <div />,
-                name: 'team',
-                label: 'Our Team',
-                path: '/team',
                 element: <div />,
             },
             {

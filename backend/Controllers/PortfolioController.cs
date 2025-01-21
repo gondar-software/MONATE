@@ -4,9 +4,11 @@ using Databases.EndpointData;
 using Databases.TeamData;
 using Enums;
 using Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.Portfolio;
+using Services;
 
 namespace Controllers
 {
@@ -16,11 +18,13 @@ namespace Controllers
     {
         private readonly DatabaseContext _context;
         private readonly ILogger<PortfolioController> _logger;
+        private readonly JwtService _jwtService;
 
-        public PortfolioController(DatabaseContext context, ILogger<PortfolioController> logger)
+        public PortfolioController(DatabaseContext context, ILogger<PortfolioController> logger, JwtService jwtService)
         {
             _context = context;
             _logger = logger;
+            _jwtService = jwtService;
         }
 
         [HttpGet]
@@ -50,6 +54,7 @@ namespace Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Team")]
         [HttpPost("create")]
         public async Task<IActionResult> CreatePortfolio([FromBody] PortfolioPacket packet)
         {
@@ -85,34 +90,42 @@ namespace Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPortfolio(int id)
         {
-            var portfolio = await _context.Portfolios
-                .AsNoTracking()
-                .Include(p => p.Items)
-                .Include(p => p.Categories)
-                .FirstOrDefaultAsync(p => p.Id == id);
-            
-            if (portfolio == null)
+            try
             {
-                return NotFound();
-            }
-            else
-            {
-                var packet = new PortfolioPacket
+                var portfolio = await _context.Portfolios
+                    .AsNoTracking()
+                    .Include(p => p.Items)
+                    .Include(p => p.Categories)
+                    .FirstOrDefaultAsync(p => p.Id == id);
+                
+                if (portfolio == null)
                 {
-                    Type = portfolio.Type,
-                    Name = portfolio.Name,
-                    Url = portfolio.Url,
-                    Categories = portfolio.Categories?.Select(c => c.Name).ToList(),
-                    Items = portfolio.Items != null ?
-                        (await Task.WhenAll(portfolio.Items.Select(async i => new PortfolioItemData
-                        {
-                            Type = i.Type,
-                            File = i.Type == FileType.GithubRepo ? null : await FirebaseHelper.LoadAndCreateFormFile(i.Path),
-                            GithubRepo = i.Type == FileType.GithubRepo ? i.Path : "",
-                        }))).ToList() : null
-                };
+                    return NotFound();
+                }
+                else
+                {
+                    var packet = new PortfolioPacket
+                    {
+                        Type = portfolio.Type,
+                        Name = portfolio.Name,
+                        Url = portfolio.Url,
+                        Categories = portfolio.Categories?.Select(c => c.Name).ToList(),
+                        Items = portfolio.Items != null ?
+                            (await Task.WhenAll(portfolio.Items.Select(async i => new PortfolioItemData
+                            {
+                                Type = i.Type,
+                                File = i.Type == FileType.GithubRepo ? null : await FirebaseHelper.LoadAndCreateFormFile(i.Path),
+                                GithubRepo = i.Type == FileType.GithubRepo ? i.Path : "",
+                            }))).ToList() : null
+                    };
 
-                return Ok(packet);
+                    return Ok(packet);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving portfolio");
+                return StatusCode(500, "Internal server error");
             }
         }
 

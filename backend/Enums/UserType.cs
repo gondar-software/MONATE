@@ -4,6 +4,6 @@ namespace Enums
     {
         Client = 0,
         Team = 1,
-        Administrator = 2,
+        Admin = 2,
     }
 }

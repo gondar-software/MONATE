@@ -52,18 +52,18 @@ namespace Helpers
         {
             try
             {
-            byte[] nonce = Convert.FromHexString(cipherTextHex[0..24]);
-            byte[] associatedData = Convert.FromHexString(cipherTextHex[24..56]);
-            byte[] encryptedData = Convert.FromHexString(cipherTextHex[56..]);
+                byte[] nonce = Convert.FromHexString(cipherTextHex[0..24]);
+                byte[] associatedData = Convert.FromHexString(cipherTextHex[24..56]);
+                byte[] encryptedData = Convert.FromHexString(cipherTextHex[56..]);
 
-            byte[] decrypted = SecretAeadChaCha20Poly1305IETF.Decrypt(
-                encryptedData,
-                nonce,
-                key,
-                associatedData
-            );
+                byte[] decrypted = SecretAeadChaCha20Poly1305IETF.Decrypt(
+                    encryptedData,
+                    nonce,
+                    key,
+                    associatedData
+                );
 
-            return Encoding.UTF8.GetString(decrypted);
+                return Encoding.UTF8.GetString(decrypted);
             }
             catch (Exception ex)
             {

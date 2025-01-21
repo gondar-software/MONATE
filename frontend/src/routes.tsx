@@ -32,6 +32,20 @@ export const routes = [
     {
         layout: 'auth',
         pages: [
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'preface',
+                label: 'Preface',
+                path: '/login',
+                element: <div />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'preface',
+                label: 'Preface',
+                path: '/signup',
+                element: <div />,
+            },
         ],
     },
     {
@@ -81,7 +95,19 @@ export const routes = [
                 label: 'About Us',
                 path: '/about-us',
                 element: <div />,
-            }
+            },
+        ]
+    },
+    {
+        layout: 'contact',
+        pages: [
+            {
+                icon: <div />,
+                name: 'book-me',
+                label: 'Book me',
+                path: '/book-me',
+                element: <div />,
+            },
         ]
     },
 ];

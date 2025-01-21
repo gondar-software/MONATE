@@ -1,11 +1,19 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { 
+  BrowserRouter as Router, 
+  Route, 
+  Routes 
+} from 'react-router-dom'
 
 import '@app/App.css';
-import { LoadingProvider } from '@app/providers';
+import { 
+  HeaderProvider, 
+  LoadingProvider, 
+  UnityBackgroundProvider, 
+  FooterProvider 
+} from '@app/providers';
 import { routes } from '@app/routes';
-import { useSetInitialValue } from './global';
-import UnityBackgroundProvider from './providers/unity-background-provider';
+import { useSetInitialValue } from '@app/global';
 
 export const App = () => {
   const setInitialValue = useSetInitialValue();
@@ -15,19 +23,23 @@ export const App = () => {
   }, []);
 
   return (
-    <LoadingProvider>
-      <UnityBackgroundProvider>
-        <Router>
-          <Routes>
-            {routes.map((layout) => (
-              layout.pages.map((page) => (
-                <Route path={`${layout.layout}${page.path}`} element={page.element} />
-              ))
-            ))}
-          </Routes>
-        </Router>
-      </UnityBackgroundProvider>
-    </LoadingProvider>
+    <Router>
+      <LoadingProvider>
+        <UnityBackgroundProvider>
+          <HeaderProvider>
+            <FooterProvider>
+              <Routes>
+                {routes.map((layout) => (
+                  layout.pages.map((page) => (
+                    <Route path={`${layout.layout}${page.path}`} element={page.element} />
+                  ))
+                ))}
+              </Routes>
+            </FooterProvider>
+          </HeaderProvider>
+        </UnityBackgroundProvider>
+      </LoadingProvider>
+    </Router>
   );
 };
 

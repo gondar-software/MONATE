@@ -3,7 +3,7 @@ import {
     useLightMode,
     useSaveUnityBackgroundMode,
 } from "@app/global";
-import { CopyrightIcon, MonateMark, TransparentButton } from "@app/components";
+import { TransparentButton } from "@app/components";
 import { routes } from '@app/routes';
 
 export const Preface = () => {
@@ -40,37 +40,29 @@ export const Preface = () => {
     }, []);
 
     return (
-        <div
-            className="w-screen h-screen left-0 top-0 relative"
+        <div 
+            className={`w-full min-h-full absolute left-0 top-0 flex \
+                ${hasInteracted ? (lightMode ? 'bg-white bg-opacity-50' : 'bg-black bg-opacity-80') : 'bg-transparent'}`}
             onMouseMove={handleMouseMove}
-        >
-            <div className={`w-full h-full absolute left-0 top-0 transition-all duration-500 \
-                ${hasInteracted ? (lightMode ? 'bg-white bg-opacity-50' : 'bg-black bg-opacity-80') : 'bg-transparent'}`} />
-            {hasInteracted && <div className="w-full h-full left-0 top-0 absolute">
-                <MonateMark className="h-1/5 left-10 top-10 absolute flex" />
-                <div className={`w-full h-1/3 absolute left-0 xl:top-1/4 md:top-36 sm:top-28 top-24 text-center justify-items-center \
+            >
+            {hasInteracted &&
+                <div className={`w-full left-0 xl:mt-52 lg:mt-56 mt-48 text-center justify-items-center items-center \
                     ${lightMode ? 'text-gray-900' : 'text-white'}`}>
-                    <div className='xl:text-7xl md:text-6xl sm:text-5xl text-4xl'>Demand more out of your</div>
-                    <div className='xl:text-8xl md:text-7xl sm:text-6xl text-5xl'>{words[currentWord]}.</div>
-                    <div className='h-20' />
-                    <div className='rounded-xl hidden lg:flex origin-center text-xl overflow-hidden'>
-                        {routes.filter(layout => layout.layout === 'client')[0].pages.map((page) => (
-                            <TransparentButton className='h-12 w-48 rounded-none' label={page.label} path={`client${page.path}`} />
+                    <div className='xl:text-7xl md:text-6xl text-5xl'>Demand more out of your</div>
+                    <div className='xl:text-8xl md:text-7xl text-6xl'>{words[currentWord]}.</div>
+                    <div className='rounded-xl hidden lg:flex origin-center text-xl overflow-hidden mt-20'>
+                        {routes.filter(layout => layout.layout === 'client')[0].pages.map((page, index) => (
+                            <TransparentButton className='h-12 w-48 rounded-none' key={index} label={page.label} path={`client${page.path}`} />
                         ))}
                     </div>
-                    <div className='rounded-xl lg:hidden flex-col origin-center text-xl overflow-hidden'>
-                        {routes.filter(layout => layout.layout === 'client')[0].pages.map((page) => (
-                            <TransparentButton className='h-12 w-48 rounded-none' label={page.label} path={`client${page.path}`} />
+                    <div className='rounded-xl lg:hidden flex-col origin-center text-xl overflow-hidden mt-20'>
+                        {routes.filter(layout => layout.layout === 'client')[0].pages.map((page, index) => (
+                            <TransparentButton className='h-12 w-48 rounded-none' key={index} label={page.label} path={`client${page.path}`} />
                         ))}
                     </div>
-                    <div className='h-12' />
-                    <TransparentButton className='w-72 h-16 rounded-xl text-4xl' label='Book me' path='' />
-                </div>
-                <div className="absolute bottom-0 w-full flex justify-center items-center py-4">
-                    <CopyrightIcon className="w-6 h-6 mr-2" />
-                    <span>2024 Copyright by MONATE. All rights reserved.</span>
-                </div>
-            </div>}
+                    <TransparentButton className='w-72 h-16 rounded-xl text-4xl overflow-hidden mt-12' label='Book me' path='contact/book-me' />
+                    <div className='h-36' />
+                </div>}
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
 import { UnityGardenControl, UnityOasisControl } from '@app/controls';
 import { 
     useUnityBackgroundMode,
@@ -11,7 +11,7 @@ import { LoadingMonate } from '@app/components';
 
 const UnityBackgroundContext = createContext<any | undefined>(undefined);
 
-export const UnityBackgroundProvider = ({ children }: any) => {
+export const UnityBackgroundProvider = (props: any) => {
     const unityBackgroundMode = useUnityBackgroundMode();
     const oasisLoaded = useOasisLoaded();
     const oasisProgress = useOasisProgress();
@@ -29,13 +29,9 @@ export const UnityBackgroundProvider = ({ children }: any) => {
                     className="w-full h-full absolute left-0 top-0"
                     progress={(oasisProgress + gardenProgress) / 2.}
                 />
-            ) : children}
+            ) : props.children}
         </UnityBackgroundContext.Provider>
     );
-};
-
-export const useUnityBackground = () => {
-    return useContext(UnityBackgroundContext);
 };
 
 export default UnityBackgroundProvider;

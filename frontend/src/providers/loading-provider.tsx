@@ -4,7 +4,7 @@ import { LoadingMonate } from '@app/components';
 
 const LoadingContext = createContext<any | undefined>(undefined);
 
-export const LoadingProvider = ({ children }: any) => {
+export const LoadingProvider = (props: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const showLoading = () => {
@@ -17,7 +17,7 @@ export const LoadingProvider = ({ children }: any) => {
 
     return(
         <LoadingContext.Provider value={{ showLoading, hideLoading }}>
-            {children}
+            {props.children}
             {isLoading && <div className='fixed w-full h-full left-0 top-0'>
                 <LoadingMonate />
             </div>}

@@ -11,3 +11,5 @@ export * from '@app/components/mode-switch';
 export * from '@app/components/accordion';
 export * from '@app/components/alert';
 export * from '@app/components/avatar';
+export * from '@app/components/badge';
+export * from '@app/components/banner';

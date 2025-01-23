@@ -3,7 +3,7 @@ import {
     useLightMode,
     useSaveUnityBackgroundMode,
 } from "@app/global";
-import { Avatar, TransparentButton } from "@app/components";
+import { Banner, TransparentButton } from "@app/components";
 import { routes } from '@app/routes';
 
 export const Preface = () => {
@@ -53,30 +53,9 @@ export const Preface = () => {
 
     return (
         <div className="w-full h-screen flex flex-col justify-center items-center dark:bg-gray-900">
-            <Avatar 
-                status='active'
-                info={{
-                    name: 'John Doe',
-                    location: 'New York, USA',
-                    email: 'monate615@gmail.com'
-                }}
-                dropDownMenu={
-                    [
-                        {
-                            label: 'Profile',
-                            path: 'profile'
-                        },
-                        {
-                            label: 'Settings',
-                            path: 'settings'
-                        },
-                        {
-                            label: 'Logout',
-                            path: 'logout'
-                        }
-                    ]
-                }
-            />
+            <Banner>
+                <span>New brand identity has been launched for the <a href="https://flowbite.com" className="inline font-medium text-blue-600 underline dark:text-blue-500 underline-offset-2 decoration-600 dark:decoration-500 decoration-solid hover:no-underline">Flowbite Library</a></span>
+            </Banner>
         </div>
     )
 };

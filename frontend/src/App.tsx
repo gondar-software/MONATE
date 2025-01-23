@@ -9,23 +9,32 @@ import '@app/App.css';
 import { 
   HeaderProvider, 
   LoadingProvider, 
-  UnityBackgroundProvider, 
+  // UnityBackgroundProvider, 
   FooterProvider 
 } from '@app/providers';
 import { routes } from '@app/routes';
-import { useSetInitialValue } from '@app/global';
+import { useLightMode, useSetInitialValue } from '@app/global';
 
 export const App = () => {
+  const lightMode = useLightMode();
   const setInitialValue = useSetInitialValue();
 
   useEffect(() => {
     setInitialValue();
   }, []);
 
+  useEffect(() => {
+    if (lightMode) {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  }, [lightMode]);
+
   return (
     <Router>
       <LoadingProvider>
-        <UnityBackgroundProvider>
+        {/* <UnityBackgroundProvider> */}
           <HeaderProvider>
             <FooterProvider>
               <Routes>
@@ -37,7 +46,7 @@ export const App = () => {
               </Routes>
             </FooterProvider>
           </HeaderProvider>
-        </UnityBackgroundProvider>
+        {/* </UnityBackgroundProvider> */}
       </LoadingProvider>
     </Router>
   );

@@ -69,9 +69,9 @@ jobs:
           dotnet build
           dotnet publish -c Release -o ./publish
 
-          dotnet tool restore
-          dotnet ef migrations add database
-          dotnet ef database update
+          # dotnet tool restore
+          # dotnet ef migrations add database
+          # dotnet ef database update
         working-directory: ./backend
 
       - name: Configure dotenv to product

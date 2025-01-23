@@ -3,7 +3,7 @@ import {
     useLightMode,
     useSaveUnityBackgroundMode,
 } from "@app/global";
-import { Alert, TransparentButton } from "@app/components";
+import { Avatar, TransparentButton } from "@app/components";
 import { routes } from '@app/routes';
 
 export const Preface = () => {
@@ -53,11 +53,30 @@ export const Preface = () => {
 
     return (
         <div className="w-full h-screen flex flex-col justify-center items-center dark:bg-gray-900">
-            <Alert className='w-1/2' mode='info' message='This website is still under construction.' title='Info' />
-            <Alert className='w-1/2' mode='danger' message='This website is still under construction.' title='Danger' />
-            <Alert className='w-1/2' mode='warning' message='This website is still under construction.' title='Warning' />
-            <Alert className='w-1/2' mode='success' message='This website is still under construction.' title='Success' />
-            <Alert className='w-1/2' mode='ignore' message='This website is still under construction.' title='Ignore' />
+            <Avatar 
+                status='active'
+                info={{
+                    name: 'John Doe',
+                    location: 'New York, USA',
+                    email: 'monate615@gmail.com'
+                }}
+                dropDownMenu={
+                    [
+                        {
+                            label: 'Profile',
+                            path: 'profile'
+                        },
+                        {
+                            label: 'Settings',
+                            path: 'settings'
+                        },
+                        {
+                            label: 'Logout',
+                            path: 'logout'
+                        }
+                    ]
+                }
+            />
         </div>
     )
 };

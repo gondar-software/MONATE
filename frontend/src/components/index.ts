@@ -10,3 +10,4 @@ export * from '@app/components/auth-card';
 export * from '@app/components/mode-switch';
 export * from '@app/components/accordion';
 export * from '@app/components/alert';
+export * from '@app/components/avatar';

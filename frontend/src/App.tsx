@@ -9,7 +9,7 @@ import '@app/App.css';
 import { 
   HeaderProvider, 
   LoadingProvider, 
-  // UnityBackgroundProvider, 
+  UnityBackgroundProvider, 
   FooterProvider 
 } from '@app/providers';
 import { routes } from '@app/routes';
@@ -34,7 +34,7 @@ export const App = () => {
   return (
     <Router>
       <LoadingProvider>
-        {/* <UnityBackgroundProvider> */}
+        <UnityBackgroundProvider>
           <HeaderProvider>
             <FooterProvider>
               <Routes>
@@ -46,7 +46,7 @@ export const App = () => {
               </Routes>
             </FooterProvider>
           </HeaderProvider>
-        {/* </UnityBackgroundProvider> */}
+        </UnityBackgroundProvider>
       </LoadingProvider>
     </Router>
   );

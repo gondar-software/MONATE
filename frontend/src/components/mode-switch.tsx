@@ -8,7 +8,7 @@ export const ModeSwitch = (props: any) => {
     return (
         <div {...props}>
             <div className="h-full w-full cursor-pointer" onClick={() => saveLightMode(!lightMode)}>
-                {lightMode ? <MoonIcon className="text-gray-900" /> : <SunIcon className="text-white" />}
+                {lightMode ? <MoonIcon className="text-gray-900" /> : <SunIcon className="text-gray-100" />}
             </div>
         </div>
     )

@@ -13,3 +13,5 @@ export * from '@app/components/alert';
 export * from '@app/components/avatar';
 export * from '@app/components/badge';
 export * from '@app/components/banner';
+export * from '@app/components/code-verify';
+export * from '@app/components/info-input';

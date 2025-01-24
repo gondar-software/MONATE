@@ -7,6 +7,7 @@ import {
     setGardenProgress,
     setOasisProgress,
     setUnityBackgroundMode,
+    setToken,
     setInitialValue,
 } from '@app/global';
 
@@ -34,6 +35,10 @@ export const useSaveUnityBackgroundMode = () => {
     const dispatch = useDispatch();
     return (unityBackgroundMode: string) => dispatch(setUnityBackgroundMode(unityBackgroundMode));
 };
+export const useSaveToken = () => {
+    const dispatch = useDispatch();
+    return (token: string) => dispatch(setToken(token));
+};
 
 export const useLightMode = () => {
     return useSelector((state: any) => state.lightMode);
@@ -52,6 +57,9 @@ export const useOasisProgress = () => {
 };
 export const useUnityBackgroundMode = () => {
     return useSelector((state: any) => state.unityBackgroundMode);
+};
+export const useToken = () => {
+    return useSelector((state: any) => state.token);
 };
 
 export const useSetInitialValue = () => {

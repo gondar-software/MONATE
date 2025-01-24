@@ -20,6 +20,7 @@ namespace Middlewares
             {
                 using var reader = new StreamReader(context.Request.Body);
                 var encryptedBody = await reader.ReadToEndAsync();
+                encryptedBody = encryptedBody.Replace("\"", "");
                 var decryptedBody = _cryptionHelper.Decrypt(encryptedBody);
 
                 var bytes = Encoding.UTF8.GetBytes(decryptedBody);

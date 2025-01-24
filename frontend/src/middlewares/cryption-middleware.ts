@@ -15,6 +15,7 @@ export const useCryptionMiddleware = () => {
             if (config.data) {
                 config.data = await encrypt(JSON.stringify(config.data));
             }
+            console.log(config.data);
             return config;
         }, (error) => {
             return Promise.reject(error);

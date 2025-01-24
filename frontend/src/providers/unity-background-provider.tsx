@@ -1,22 +1,22 @@
 import { createContext, useState } from 'react';
-import { UnityGardenControl, UnityOasisControl } from '@app/controls';
-import { 
-    useUnityBackgroundMode,
-    useOasisLoaded,
-    useOasisProgress,
-    useGardenLoaded,
-    useGardenProgress,
-} from '@app/global';
-import { LoadingMonate } from '@app/components';
+// import { UnityGardenControl, UnityOasisControl } from '@app/controls';
+// import { 
+//     useUnityBackgroundMode,
+//     useOasisLoaded,
+//     useOasisProgress,
+//     useGardenLoaded,
+//     useGardenProgress,
+// } from '@app/global';
+// import { LoadingMonate } from '@app/components';
 
 const UnityBackgroundContext = createContext<any | undefined>(undefined);
 
 export const UnityBackgroundProvider = (props: any) => {
-    const unityBackgroundMode = useUnityBackgroundMode();
-    const oasisLoaded = useOasisLoaded();
-    const oasisProgress = useOasisProgress();
-    const gardenLoaded = useGardenLoaded();
-    const gardenProgress = useGardenProgress();
+    // const unityBackgroundMode = useUnityBackgroundMode();
+    // const oasisLoaded = useOasisLoaded();
+    // const oasisProgress = useOasisProgress();
+    // const gardenLoaded = useGardenLoaded();
+    // const gardenProgress = useGardenProgress();
 
     const [hasInteracted, setHasInteracted] = useState(false);
 

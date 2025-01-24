@@ -6,6 +6,7 @@ export const SET_OASIS_LOADED = 'SET_OASIS_LOADED';
 export const SET_GARDEN_PROGRESS = 'SET_GARDEN_PROGRESS';
 export const SET_OASIS_PROGRESS = 'SET_OASIS_PROGRESS';
 export const SET_UNITY_BACKGROUND_MODE = 'SET_UNITY_BACKGROUND_MODE';
+export const SET_TOKEN = 'SET_TOKEN';
 export const SET_INITIAL_VALUE = 'SET_INITIAL_VALUE';
 
 export const reducer = (state = initialStates, action: any) => {
@@ -40,6 +41,11 @@ export const reducer = (state = initialStates, action: any) => {
                 ...state,
                 unityBackgroundMode: action.payload,
             }
+        case SET_TOKEN:
+            return {
+                ...state,
+                token: action.payload,
+            };
         case SET_INITIAL_VALUE:
             return {
                 ...state,
@@ -76,6 +82,10 @@ export const setOasisProgress = (oasisProgress: any) => ({
 export const setUnityBackgroundMode = (unityBackgroundMode: any) => ({
     type: SET_UNITY_BACKGROUND_MODE,
     payload: unityBackgroundMode,
+});
+export const setToken = (token: string) => ({
+    type: SET_TOKEN,
+    payload: token,
 });
 export const setInitialValue = () => ({
     type: SET_INITIAL_VALUE,

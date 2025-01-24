@@ -5,7 +5,7 @@ export const initialStates = {
     gardenProgress: 0,
     oasisProgress: 0,
     unityBackgroundMode: 'oasis',
-    
+    token: '',
 };
 
 export default initialStates;

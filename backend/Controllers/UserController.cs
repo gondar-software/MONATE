@@ -27,18 +27,24 @@ namespace Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] LoginData data)
+        public async Task<IActionResult> Register([FromBody] LoginData data)
         {
             try
             {
-                VerifyEmailHelper.SendVerificationCode(data.EmailAddr, _logger);
-                return Ok();
+                if (await _context.Users.AnyAsync(u => u.EmailAddr == data.EmailAddr))
+                    return StatusCode((int)ErrorType.UserAlreadyExists, ErrorType.UserAlreadyExists.ToString());
+                
+                var error = VerifyEmailHelper.SendVerificationCode(data.EmailAddr, _logger);
+
+                if (error == null)
+                    return Ok();
+                else
+                    return StatusCode((int)error, error.ToString());
             }
             catch (Exception ex) 
             {
                 _logger.LogError(ex, "Error registering user");
-                Alerts.EnQueueAlert(AlertType.Error, ex, "Error registering user");
-                return StatusCode(500, "Internal server error");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
@@ -47,8 +53,12 @@ namespace Controllers
         {   
             try
             {
-                if (VerifyEmailHelper.VerifyEmail(data.EmailAddr, data.Code))
+                var error = VerifyEmailHelper.VerifyEmail(data.EmailAddr, data.Code);
+                if (error == null)
                 {
+                    if (await _context.Users.AnyAsync(u => u.EmailAddr == data.EmailAddr))
+                        return StatusCode((int)ErrorType.UserAlreadyExists, ErrorType.UserAlreadyExists.ToString());
+
                     var user = new User
                     {
                         EmailAddr = data.EmailAddr,
@@ -65,14 +75,13 @@ namespace Controllers
                 }
                 else
                 {
-                    return BadRequest("Invalid verification code");
+                    return StatusCode((int)error, error.ToString());
                 }
             }
             catch (Exception ex) 
             {
                 _logger.LogError(ex, "Error registering user");
-                Alerts.EnQueueAlert(AlertType.Error, ex, "Error registering user");
-                return StatusCode(500, "Internal server error");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
@@ -87,7 +96,7 @@ namespace Controllers
                 
                 if (user == null)
                 {
-                    return BadRequest(new { Message = "Invalid email or password" });
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
                 }
                 else
                 {
@@ -98,8 +107,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error logging in user");
-                Alerts.EnQueueAlert(AlertType.Error, ex, "Error logging in user");
-                return StatusCode(500, "Internal server error");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
     }

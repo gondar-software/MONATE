@@ -19,13 +19,11 @@ namespace Controllers
     {
         private readonly DatabaseContext _context;
         private readonly ILogger<PortfolioController> _logger;
-        private readonly JwtService _jwtService;
 
-        public PortfolioController(DatabaseContext context, ILogger<PortfolioController> logger, JwtService jwtService)
+        public PortfolioController(DatabaseContext context, ILogger<PortfolioController> logger)
         {
             _context = context;
             _logger = logger;
-            _jwtService = jwtService;
         }
 
         [HttpGet]
@@ -41,18 +39,18 @@ namespace Controllers
                     .Select(p => p.Id)
                     .ToListAsync();
 
-                var firstIndex = (page - 1) * 16;
-                var lastIndex = Math.Min(page * 16, portfolioIds.Count);
+                var maxPage = (int)Math.Ceiling((double)portfolioIds.Count / 16);
+                var firstIndex = (Math.Min(page, maxPage) - 1) * 16;
+                var lastIndex = Math.Min(Math.Min(page, maxPage) * 16, portfolioIds.Count);
                 portfolioIds = firstIndex >= lastIndex ? 
                     new List<int>() : portfolioIds[firstIndex..lastIndex];
 
-                return Ok(new { PortfolioIds = portfolioIds });
+                return Ok(new { PortfolioIds = portfolioIds, MaxPage = maxPage });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving portfolio IDs");
-                Alerts.EnQueueAlert(AlertType.Error, ex, "Error retrieving portfolio IDs");
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
@@ -85,8 +83,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating portfolio");
-                Alerts.EnQueueAlert(AlertType.Error, ex, "Error creating portfolio");
-                return StatusCode(500, "Internal server error");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
@@ -103,7 +100,7 @@ namespace Controllers
                 
                 if (portfolio == null)
                 {
-                    return NotFound();
+                    return StatusCode((int)ErrorType.PortfolioNotFound, ErrorType.PortfolioNotFound.ToString());
                 }
                 else
                 {
@@ -128,8 +125,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving portfolio");
-                Alerts.EnQueueAlert(AlertType.Error, ex, "Error retrieving portfolio");
-                return StatusCode(500, "Internal server error");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 

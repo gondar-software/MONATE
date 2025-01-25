@@ -19,6 +19,7 @@ export const AuthCard = (props: any) => {
         }
 
         setError('');
+        
         const formData = {
             email,
             password,

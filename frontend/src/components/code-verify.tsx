@@ -1,12 +1,8 @@
 import React, { useRef, useState } from "react";
 
-interface CodeVerifyProps {
-  length?: number;
-  onComplete: (code: string) => void;
-}
-
-export const CodeVerify = ({ length = 6, onComplete }: CodeVerifyProps) => {
-  const [code, setCode] = useState<string[]>(Array(length).fill(""));
+export const CodeVerify = (props: any) => {
+  const length = props.length | 6;
+  const [code, setCode] = useState<string[]>(Array(length | 6).fill(""));
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleInputChange = (value: string, index: number) => {
@@ -20,7 +16,7 @@ export const CodeVerify = ({ length = 6, onComplete }: CodeVerifyProps) => {
       }
 
       if (updatedCode.every((char) => char !== "")) {
-        onComplete(updatedCode.join(""));
+        props.onComplete(updatedCode.join(""));
       }
     }
   };
@@ -40,7 +36,7 @@ export const CodeVerify = ({ length = 6, onComplete }: CodeVerifyProps) => {
     inputsRef.current[Math.min(pasteData.length, length) - 1]?.focus();
 
     if (updatedCode.every((char) => char !== "")) {
-      onComplete(updatedCode.join(""));
+      props.onComplete(updatedCode.join(""));
     }
   };
 

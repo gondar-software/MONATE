@@ -5,8 +5,6 @@ export const Login = () => {
     const { apiClient } = useCryptionMiddleware();
 
     const handleSubmit = async(formData: any) => {
-        console.log(formData);
-
         const response = await apiClient.post(
             '/user/login',
             {

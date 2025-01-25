@@ -1,10 +1,13 @@
+using System.Threading.Tasks;
 using Databases;
 using Databases.UserData;
 using Enums;
+using Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.User;
 using Services;
+using Temp;
 
 namespace Controllers
 {
@@ -24,27 +27,51 @@ namespace Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] LoginData data)
+        public IActionResult Register([FromBody] LoginData data)
         {
             try
             {
-                var user = new User
-                {
-                    EmailAddr = data.EmailAddr,
-                    Password = data.Password,
-                    Type = UserType.Client,
-                    Permition = PermitionType.Pending,
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                var token = _jwtService.GenerateToken(user);
-                return Ok(new { Token = token });
+                VerifyEmailHelper.SendVerificationCode(data.EmailAddr, _logger);
+                return Ok();
             }
             catch (Exception ex) 
             {
                 _logger.LogError(ex, "Error registering user");
+                Alerts.EnQueueAlert(AlertType.Error, ex, "Error registering user");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("verify")]
+        public async Task<IActionResult> Verify([FromBody] VerifyData data)
+        {   
+            try
+            {
+                if (VerifyEmailHelper.VerifyEmail(data.EmailAddr, data.Code))
+                {
+                    var user = new User
+                    {
+                        EmailAddr = data.EmailAddr,
+                        Password = data.Password,
+                        Type = UserType.Client,
+                        Permition = PermitionType.Pending,
+                    };
+
+                    await _context.Users.AddAsync(user);
+                    await _context.SaveChangesAsync();
+
+                    var token = _jwtService.GenerateToken(user);
+                    return Ok(new { Token = token });
+                }
+                else
+                {
+                    return BadRequest("Invalid verification code");
+                }
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "Error registering user");
+                Alerts.EnQueueAlert(AlertType.Error, ex, "Error registering user");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -71,6 +98,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error logging in user");
+                Alerts.EnQueueAlert(AlertType.Error, ex, "Error logging in user");
                 return StatusCode(500, "Internal server error");
             }
         }

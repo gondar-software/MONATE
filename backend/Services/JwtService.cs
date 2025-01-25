@@ -2,23 +2,19 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Databases.UserData;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Services
 {
     public class JwtService
     {
-        private readonly JwtSettings _jwtSettings;
-
-        public JwtService(IOptions<JwtSettings> jwtSettings)
+        public JwtService()
         {
-            _jwtSettings = jwtSettings.Value;
         }
 
         public string GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -29,10 +25,10 @@ namespace Services
             };
 
             var token = new JwtSecurityToken(
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
+                issuer: JwtSettings.Issuer,
+                audience: JwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpireInMinutes),
+                expires: DateTime.UtcNow.AddMinutes(JwtSettings.ExpireInMinutes),
                 signingCredentials: credentials
             );
 

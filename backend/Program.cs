@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,7 @@ builder.Services.AddDbContext<Databases.DatabaseContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-builder.Services.AddScoped<Services.JwtService>();
-var jwtSettings = Services.JwtSettings.GetJwtSettings();
+builder.Services.AddScoped<JwtService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -30,10 +30,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings.Issuer,
-            ValidAudience = jwtSettings.Audience,
+            ValidIssuer = JwtSettings.Issuer,
+            ValidAudience = JwtSettings.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSettings.Key)
+                Encoding.UTF8.GetBytes(JwtSettings.Key)
             ),
         };
     });

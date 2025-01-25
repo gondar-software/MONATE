@@ -16,13 +16,14 @@ namespace Temp
             }
         }
 
-        public static void EnQueueAlert(AlertType type, string message)
+        public static void EnQueueAlert(AlertType type, Exception ex, string message)
         {
             lock (lockObject)
             {
                 alerts.Enqueue(new Alert
                 {
                     Type = type,
+                    Exception = ex,
                     Message = message,
                 });
             }

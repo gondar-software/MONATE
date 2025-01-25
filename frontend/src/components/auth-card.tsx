@@ -1,3 +1,4 @@
+import { useRedirectionHelper } from '@app/helpers';
 import { useState } from 'react';
 
 export const AuthCard = (props: any) => {
@@ -6,6 +7,8 @@ export const AuthCard = (props: any) => {
     const [rePassword, setRePassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
+
+    const redirect = useRedirectionHelper();
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
@@ -98,12 +101,12 @@ export const AuthCard = (props: any) => {
                         Remember me
                     </label>
                     {!props.signUp && (
-                        <a
-                            href="/auth/re-pwd"
+                        <button type='button'
+                            onClick={() => redirect("/auth/re-pwd")}
                             className="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
                         >
                             Forgot Password?
-                        </a>
+                        </button>
                     )}
                 </div>
                 <button
@@ -114,12 +117,12 @@ export const AuthCard = (props: any) => {
                 </button>
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                     {props.signUp ? 'Already registered?' : 'Not registered?'}{' '}
-                    <a
-                        href={props.signUp ? '/auth/login' : '/auth/signup'}
+                    <button type='button'
+                        onClick={() => redirect(props.signUp ? '/auth/login' : '/auth/signup')}
                         className="text-blue-700 hover:underline dark:text-blue-500"
                     >
                         {props.signUp ? 'Go to login' : 'Create account'}
-                    </a>
+                    </button>
                 </div>
             </form>
         </div>

@@ -32,7 +32,7 @@ export const Preface = () => {
     }, []);
 
     return (
-        <div className={`w-full left-0 xl:mt-52 lg:mt-56 mt-48 text-center justify-items-center items-center \
+        <div className={`w-full left-0 xl:mt-52 lg:mt-56 mt-48 text-center justify-items-center \
             ${lightMode ? 'text-gray-900' : 'text-white'}`}>
             <div className='xl:text-7xl md:text-6xl text-5xl'>Demand more out of your</div>
             <div className='xl:text-8xl md:text-7xl text-6xl'>{words[currentWord]}.</div>

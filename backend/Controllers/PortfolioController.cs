@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.Portfolio;
 using Services;
+using Temp;
 
 namespace Controllers
 {
@@ -50,6 +51,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving portfolio IDs");
+                Alerts.EnQueueAlert(AlertType.Error, ex, "Error retrieving portfolio IDs");
                 return StatusCode(500, "Internal Server Error");
             }
         }
@@ -83,6 +85,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating portfolio");
+                Alerts.EnQueueAlert(AlertType.Error, ex, "Error creating portfolio");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -125,6 +128,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving portfolio");
+                Alerts.EnQueueAlert(AlertType.Error, ex, "Error retrieving portfolio");
                 return StatusCode(500, "Internal server error");
             }
         }

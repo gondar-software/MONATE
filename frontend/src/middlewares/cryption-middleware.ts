@@ -15,7 +15,6 @@ export const useCryptionMiddleware = () => {
             if (config.data) {
                 config.data = await encrypt(JSON.stringify(config.data));
             }
-            console.log(config.data);
             return config;
         }, (error) => {
             return Promise.reject(error);
@@ -24,7 +23,7 @@ export const useCryptionMiddleware = () => {
     apiClient.interceptors.response.use(async(response) => {
             if (response.data) {
                 const decrypted = await decrypt(response.data);
-                response.data = JSON.parse(decrypted);
+                response.data = decrypted && JSON.parse(decrypted);
             }
             return response;
         }, (error) => {

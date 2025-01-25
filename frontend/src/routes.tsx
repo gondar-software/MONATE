@@ -34,15 +34,15 @@ export const routes = [
         pages: [
             {
                 icon: <MonateIcon {...icon} />,
-                name: 'preface',
-                label: 'Preface',
+                name: 'login',
+                label: 'Login',
                 path: '/login',
                 element: <Login />,
             },
             {
                 icon: <MonateIcon {...icon} />,
-                name: 'preface',
-                label: 'Preface',
+                name: 'signUp',
+                label: 'SignUp',
                 path: '/signup',
                 element: <SignUp />,
             },

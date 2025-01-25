@@ -1,9 +1,9 @@
 namespace Packets.User
 {
-    public class VerificationCodePacket
+    public class VerifyData
     {
         public string EmailAddr { get; set; } = "";
         public string Password { get; set; } = "";
-        public int Code { get; set; }
+        public string Code { get; set; } = "";
     }
 }

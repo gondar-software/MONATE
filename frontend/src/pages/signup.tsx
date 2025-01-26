@@ -2,61 +2,55 @@ import { useState } from "react";
 import { AuthCard, CodeVerify } from "@app/components";
 import { useCryptionMiddleware } from "@app/middlewares";
 import { useSaveToken } from "@app/global";
+import { handleNetworkError } from "@app/handlers";
+import { useAlert } from "@app/providers";
 
 export const SignUp = () => {
     const { apiClient } = useCryptionMiddleware();
+    const { addAlert } = useAlert();
     const saveToken = useSaveToken();
 
     const [formData, setFormData] = useState<any>();
     const [isOpen, setIsOpen] = useState(false);
 
-    const handleSubmit = async(data: any) => {
-        const response = await apiClient.post(
+    const handleSubmit = (data: any) => {
+        apiClient.post(
             '/user/register',
             {
                 emailAddr: data.email,
                 password: data.password,
             }
-        );
-        
-        if (response.status === 200)
-        {
-            setFormData(data);
+        ).then(res => {
+            setFormData(res.data);
             showVerifyCode();
-        }
-    }
+        }).catch(err => handleNetworkError(err, addAlert));
+    };
 
-    const handleResendCode = async() => {
-        const response = await apiClient.post(
+    const handleResendCode = () => {
+        apiClient.post(
             '/user/register',
             {
                 emailAddr: formData.email,
                 password: formData.password,
             }
-        );
-        
-        if (response.status === 200)
-        {
+        ).then(_ => {
             setFormData(formData);
             showVerifyCode();
-        }
+        }).catch(err => handleNetworkError(err, addAlert));
     }
 
-    const handleComplete = async(code: string) => {
-        const response = await apiClient.post(
+    const handleComplete = (code: string) => {
+        apiClient.post(
             '/user/verify',
             {
                 emailAddr: formData.email,
                 password: formData.password,
                 code: code,
             }
-        );
-
-        if (response.status === 200)
-        {
-            saveToken(response.data.token);
+        ).then(res => {
+            saveToken(res.data.token);
             hideVerifyCode();
-        }
+        }).catch(err => handleNetworkError(err, addAlert));
     }
 
     const showVerifyCode = () => 

@@ -1,19 +1,24 @@
 import { AuthCard } from "@app/components";
+import { useSaveToken } from "@app/global";
+import { handleNetworkError } from "@app/handlers";
 import { useCryptionMiddleware } from "@app/middlewares";
+import { useAlert } from "@app/providers";
 
 export const Login = () => {
+    const saveToken = useSaveToken();
     const { apiClient } = useCryptionMiddleware();
+    const { addAlert } = useAlert();
 
-    const handleSubmit = async(formData: any) => {
-        const response = await apiClient.post(
+    const handleSubmit = (formData: any) => {
+        apiClient.post(
             '/user/login',
             {
                 emailAddr: formData.email,
                 password: formData.password,
             }
-        );
-        
-        console.log(response);
+        ).then(res => {
+            saveToken(res.data.token);
+        }).catch(err => handleNetworkError(err, addAlert));
     };
 
     return (

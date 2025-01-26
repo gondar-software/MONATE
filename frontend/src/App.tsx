@@ -10,7 +10,8 @@ import {
   HeaderProvider, 
   LoadingProvider, 
   UnityBackgroundProvider, 
-  FooterProvider 
+  FooterProvider, 
+  AlertProvider
 } from '@app/providers';
 import { routes } from '@app/routes';
 import { useLightMode, useSetInitialValue } from '@app/global';
@@ -37,13 +38,15 @@ export const App = () => {
         <UnityBackgroundProvider>
           <HeaderProvider>
             <FooterProvider>
-              <Routes>
-                {routes.map((layout) => (
-                  layout.pages.map((page) => (
-                    <Route path={`${layout.layout}${page.path}`} element={page.element} />
-                  ))
-                ))}
-              </Routes>
+              <AlertProvider>
+                <Routes>
+                  {routes.map((layout) => (
+                    layout.pages.map((page) => (
+                      <Route path={`${layout.layout}${page.path}`} element={page.element} />
+                    ))
+                  ))}
+                </Routes>
+              </AlertProvider>
             </FooterProvider>
           </HeaderProvider>
         </UnityBackgroundProvider>

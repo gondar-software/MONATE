@@ -24,7 +24,7 @@ namespace Helpers
 
             logger.LogInformation(code);
 
-            SMTPHelper.SendEmail(email, subject, body, logger);
+            // SMTPHelper.SendEmail(email, subject, body, logger);
 
             return null;
         }

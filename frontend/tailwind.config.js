@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 import fontExtensions from './src/extensions/font-extensions';
+import animationExtensions from './src/extensions/animation-extensions';
+import keyframeExtensions from './src/extensions/keyframe-extensions';
 
 export default {
   content: [
@@ -10,7 +12,13 @@ export default {
     extend: {
       fontFamily: {
         ...fontExtensions,
-      }
+      },
+      animation: {
+        ...animationExtensions,
+      },
+      keyframes: {
+        ...keyframeExtensions,
+      },
     },
   },
   plugins: [],

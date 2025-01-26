@@ -14,4 +14,5 @@ export * from '@app/components/avatar';
 export * from '@app/components/badge';
 export * from '@app/components/banner';
 export * from '@app/components/code-verify';
-export * from '@app/components/info-input';
+export * from '@app/components/information-card';
+export * from '@app/components/image-uploader';

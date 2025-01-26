@@ -3,3 +3,5 @@ export * from '@app/pages/preface';
 export * from '@app/pages/portfolios';
 export * from '@app/pages/login';
 export * from '@app/pages/signup';
+export * from '@app/pages/re-pwd';
+export * from '@app/pages/information';

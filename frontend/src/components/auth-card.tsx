@@ -13,7 +13,7 @@ export const AuthCard = (props: any) => {
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
-        if (props.signUp && password !== rePassword) {
+        if (props.mode === 'signUp' && password !== rePassword) {
             setError('Passwords do not match');
             return;
         }
@@ -23,7 +23,6 @@ export const AuthCard = (props: any) => {
         const formData = {
             email,
             password,
-            rePassword: props.signUp ? rePassword : undefined,
             rememberMe,
         };
         
@@ -34,7 +33,8 @@ export const AuthCard = (props: any) => {
         <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <h5 className="text-xl font-medium text-gray-900 dark:text-white">
-                    {props.signUp ? 'Sign up' : 'Login'} to MONATE
+                    {props.mode === 'rePwd' ? 'Reset Password' 
+                        : `${props.mode === 'signUp' ? 'Sign up' : 'Login'} to MONATE`}
                 </h5>
                 {error && (
                     <div className="p-2 mb-4 text-sm text-red-800 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
@@ -71,10 +71,10 @@ export const AuthCard = (props: any) => {
                         required
                     />
                 </div>
-                {props.signUp && (
+                {props.mode !== 'login' && (
                     <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Retype password
+                            Confirm password
                         </label>
                         <input
                             type="password"
@@ -101,7 +101,7 @@ export const AuthCard = (props: any) => {
                     <label className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                         Remember me
                     </label>
-                    {!props.signUp && (
+                    {props.mode === 'login' && (
                         <button type='button'
                             onClick={() => redirect("/auth/re-pwd")}
                             className="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
@@ -114,17 +114,17 @@ export const AuthCard = (props: any) => {
                     type="submit"
                     className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                    {props.signUp ? 'Sign up' : 'Login'} to your account
+                    {props.mode === 'rePwd' ? 'Reset' : `${props.mode === 'signUp' ? 'Sign up' : 'Login'} to your account`}
                 </button>
-                <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                    {props.signUp ? 'Already registered?' : 'Not registered?'}{' '}
+                {props.mode !== 'rePwd' && <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                    {props.mode === 'signUp' ? 'Already registered?' : 'Not registered?'}{' '}
                     <button type='button'
-                        onClick={() => redirect(props.signUp ? '/auth/login' : '/auth/signup')}
+                        onClick={() => redirect(props.mode === 'signUp' ? '/auth/login' : '/auth/signup')}
                         className="text-blue-700 hover:underline dark:text-blue-500"
                     >
-                        {props.signUp ? 'Go to login' : 'Create account'}
+                        {props.mode === 'signUp' ? 'Go to login' : 'Create account'}
                     </button>
-                </div>
+                </div>}
             </form>
         </div>
     );

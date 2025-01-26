@@ -65,7 +65,7 @@ export const SignUp = () => {
 
     return (
         <div className='flex w-full h-screen justify-center items-center'>
-            <AuthCard signUp onSubmit={handleSubmit} />
+            <AuthCard mode='signUp' onSubmit={handleSubmit} />
             {isOpen && <div className='absolute top-0 w-full h-full flex items-center justify-center backdrop-blur-xl bg-gray-100 bg-opacity-70 dark:bg-gray-900 dark:bg-opacity-70'>
                 <div className="absolute w-full h-full flex items-center justify-center" onClick={hideVerifyCode} />
                 <div className="absolute w-full max-w-sm p-4 bg-white border border-gray-200 flex flex-col justify-center rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">

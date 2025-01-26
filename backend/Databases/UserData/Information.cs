@@ -10,6 +10,7 @@ namespace Databases.UserData
         public string? MiddleName { get; set; }
         public string LastName { get; set; } = "";
         public GenderType Gender { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string Address1 { get; set; } = "";
         public string? Address2 { get; set; } = "";
         public string City { get; set; } = "";

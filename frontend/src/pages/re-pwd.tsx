@@ -4,14 +4,14 @@ import { handleNetworkError } from "@app/handlers";
 import { useCryptionMiddleware } from "@app/middlewares";
 import { useAlert } from "@app/providers";
 
-export const Login = () => {
+export const RePassword = () => {
     const saveToken = useSaveToken();
     const { apiClient } = useCryptionMiddleware();
     const { addAlert } = useAlert();
 
     const handleSubmit = (formData: any) => {
         apiClient.post(
-            '/user/login',
+            '/user/re-pwd',
             {
                 emailAddr: formData.email,
                 password: formData.password,
@@ -23,9 +23,9 @@ export const Login = () => {
 
     return (
         <div className='flex w-full h-screen justify-center items-center'>
-            <AuthCard mode='login' onSubmit={handleSubmit} />
+            <AuthCard mode='rePwd' onSubmit={handleSubmit} />
         </div>
     );
 };
 
-export default Login;
+export default RePassword;

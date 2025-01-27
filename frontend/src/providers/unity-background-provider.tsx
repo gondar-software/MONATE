@@ -32,18 +32,19 @@ export const UnityBackgroundProvider = (props: any) => {
                 <UnityGardenControl className={`w-full h-full absolute ${unityBackgroundMode === 'garden' ? 'visible' : 'hidden'}`} />
                 <UnityOasisControl className={`w-full h-full absolute ${unityBackgroundMode === 'oasis' ? 'visible' : 'hidden'}`} />
             </div>
-            {!(oasisLoaded && gardenLoaded) ? (
+            {!(oasisLoaded && gardenLoaded) && 
                 <LoadingMonate
                     className="w-full h-full absolute left-0 top-0"
                     progress={(oasisProgress + gardenProgress) / 2.}
-                />
-            ) : ( */}
-                <div className={`w-full min-h-full absolute left-0 top-0 flex transition-all duration-300 justify-center items-center \
-                    ${hasInteracted ? 'bg-gray-100 bg-opacity-80 dark:bg-black dark:bg-opacity-80' : 'bg-transparent'}`}
-                    onMouseMove={handleMouseMove}>
-                        {hasInteracted && props.children}
+                />} */}
+            <div className={`w-full min-h-screen absolute left-0 top-0 transition-all duration-300 \
+                ${/*(oasisLoaded && gardenLoaded) ? */'opacity-100'/* : 'opacity-0'*/} \
+                ${hasInteracted ? 'bg-gray-100 bg-opacity-80 dark:bg-black dark:bg-opacity-80' : 'bg-transparent'}`}
+                onMouseMove={handleMouseMove}>
+                <div className={`w-full min-h-screen absolute left-0 top-0 flex justify-center items-center ${hasInteracted ? 'opacity-100' : 'opacity-0'}`}>
+                    {props.children}
                 </div>
-            {/* )} */}
+            </div>
         </UnityBackgroundContext.Provider>
     );
 };

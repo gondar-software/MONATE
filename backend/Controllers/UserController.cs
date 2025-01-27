@@ -47,6 +47,28 @@ namespace Controllers
             }
         }
 
+        [HttpPost("re-pwd")]
+        public async Task<IActionResult> RePassword([FromBody] LoginData data)
+        {
+            try
+            {
+                if (!await _context.Users.AnyAsync(u => u.EmailAddr == data.EmailAddr))
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                
+                var error = VerifyEmailHelper.SendVerificationCode(data.EmailAddr, _logger);
+
+                if (error == null)
+                    return Ok();
+                else
+                    return StatusCode((int)error, error.ToString());
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "Error registering user");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
         [HttpPost("verify")]
         public async Task<IActionResult> Verify([FromBody] VerifyData data)
         {   
@@ -55,22 +77,32 @@ namespace Controllers
                 var error = VerifyEmailHelper.VerifyEmail(data.EmailAddr, data.Code);
                 if (error == null)
                 {
-                    if (await _context.Users.AnyAsync(u => u.EmailAddr == data.EmailAddr))
-                        return StatusCode((int)ErrorType.UserAlreadyExists, ErrorType.UserAlreadyExists.ToString());
+                    var user = await _context.Users
+                        .FirstOrDefaultAsync(u => u.EmailAddr == data.EmailAddr);
 
-                    var user = new User
+                    if (user == null)
                     {
-                        EmailAddr = data.EmailAddr,
-                        Password = data.Password,
-                        Type = UserType.Client,
-                        Permition = PermitionType.Pending,
-                    };
+                        var newUser = new User
+                        {
+                            EmailAddr = data.EmailAddr,
+                            Password = data.Password,
+                            Type = UserType.Client,
+                            Permition = PermitionType.Pending,
+                        };
 
-                    await _context.Users.AddAsync(user);
-                    await _context.SaveChangesAsync();
+                        await _context.Users.AddAsync(newUser);
+                        await _context.SaveChangesAsync();
 
-                    var token = _jwtService.GenerateToken(user);
-                    return Ok(new { Token = token });
+                        var token = _jwtService.GenerateToken(newUser);
+                        return Ok(new { Token = token });
+                    }
+                    else
+                    {
+                        user.Password = data.Password;
+                        await _context.SaveChangesAsync();
+
+                        return Ok();
+                    }
                 }
                 else
                 {

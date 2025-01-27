@@ -15,7 +15,7 @@ namespace Helpers
         {
             string code = GenerateRandom6DigitString();
             string subject = "Your Verification Code";
-            string body = $"Welcome to MONATE website!!!\n\nYour verification code is: **{code}**.\n\nPlease enter this code to verify your account.\n\nThank you!";
+            string body = $"Hi, there.\n\nYour verification code is: **{code}**.\n\nPlease enter this code to verify your account.\n\nThank you!";
 
             if (!VerifyTrialCounts(email))
                 return ErrorType.VerificationCodeTrialExceeded;

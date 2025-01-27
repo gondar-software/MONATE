@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 
 export const CodeVerify = (props: any) => {
   const length = props.length | 6;
-  const [code, setCode] = useState<string[]>(Array(length | 6).fill(""));
+  const [code, setCode] = useState<string[]>(Array(length).fill(""));
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleInputChange = (value: string, index: number) => {
@@ -17,6 +17,7 @@ export const CodeVerify = (props: any) => {
 
       if (updatedCode.every((char) => char !== "")) {
         props.onComplete(updatedCode.join(""));
+        setCode(Array(length).fill(""));
       }
     }
   };
@@ -37,6 +38,7 @@ export const CodeVerify = (props: any) => {
 
     if (updatedCode.every((char) => char !== "")) {
       props.onComplete(updatedCode.join(""));
+      setCode(Array(length).fill(""));
     }
   };
 

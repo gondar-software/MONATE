@@ -62,7 +62,7 @@ export const routes = [
                 icon: <MonateIcon {...icon} />,
                 name: 'information',
                 label: 'Information',
-                path: '/information',
+                path: '/info',
                 element: <Information />,
             }
         ]

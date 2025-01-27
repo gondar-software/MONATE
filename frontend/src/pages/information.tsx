@@ -1,19 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InformationCard } from "@app/components";
 import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { genderTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
-import { useAlert } from "@app/providers";
-import { useToken } from "@app/global";
+import { useAlert, useHeader, useLoading } from "@app/providers";
+import { useSaveUnityBackgroundMode, useToken } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { formClient } = useFormCryptionMiddleware();
     const { addAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+    const { hideAuthInfo } = useHeader();
     const [saving, setSaving] = useState(false);
     const token = useToken();
     const redirect = useRedirectionHelper();
+    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+
+    useEffect(() => {
+        showLoading();
+        jsonClient.get('user/info',
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        ).then(res => {
+            console.log(res);
+        }).catch(_ => {
+        }).finally(() => {
+            saveUnityBackgroundMode('garden');
+            hideAuthInfo();
+            hideLoading();
+        });
+    }, []);
 
     const handleSubmit = (formData: any) => {
         setSaving(true);
@@ -31,7 +52,11 @@ export const Information = () => {
                 }
             ).then(res => {
                 saveInfo(formData, res)
-            }).catch(err => handleError(err));
+            }).catch(err => 
+                handleNetworkError(err, addAlert)
+            ).finally(() => {
+                setSaving(false);
+            });
         }
         else
         {
@@ -65,12 +90,11 @@ export const Information = () => {
         ).then(_ => {
             setSaving(false);
             redirect('/');
-        }).catch(err => handleError(err));
-    }
-
-    const handleError = (err: any) => {
-        handleNetworkError(err, addAlert);
-        setSaving(false);
+        }).catch(err => 
+            handleNetworkError(err, addAlert)
+        ).finally(() => {
+            setSaving(false);
+        });
     }
 
     return (

@@ -5,10 +5,14 @@ import {
 } from "@app/global";
 import { TransparentButton } from "@app/components";
 import { routes } from '@app/routes';
+import { useHeader, useLoading } from "@app/providers";
 
 export const Preface = () => {
     const lightMode = useLightMode();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+
+    const { showAuthInfo } = useHeader();
+    const { hideLoading } = useLoading();
 
     const words = [
         'Websites',
@@ -21,7 +25,9 @@ export const Preface = () => {
 
     useEffect(() => {
         saveUnityBackgroundMode('oasis');
-    }, [])
+        showAuthInfo();
+        hideLoading();
+    }, []);
 
     useEffect(() => {
         const intervalId = setInterval(() => {

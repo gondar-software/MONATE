@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.Portfolio;
-using Services;
-using Temp;
 
 namespace Controllers
 {

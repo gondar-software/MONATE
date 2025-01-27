@@ -42,7 +42,7 @@ export const ImageUploader = (props: any) => {
     };
 
     return (
-        <div {...props}>
+        <div className={props.className}>
             <div
                 className="flex items-center justify-center w-full h-full"
                 onDragOver={handleDragOver}
@@ -87,7 +87,7 @@ export const ImageUploader = (props: any) => {
                     <input
                         id="dropzone-file"
                         type="file"
-                        accept="image/*"
+                        accept=".svg,.jpg,.jpeg,.png"
                         className="hidden"
                         onChange={handleFileChange}
                     />

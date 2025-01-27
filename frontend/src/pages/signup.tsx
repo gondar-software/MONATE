@@ -1,46 +1,47 @@
 import { useState } from "react";
 import { AuthCard, CodeVerify } from "@app/components";
-import { useCryptionMiddleware } from "@app/middlewares";
+import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useSaveToken } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert } from "@app/providers";
+import { useRedirectionHelper } from "@app/helpers";
 
 export const SignUp = () => {
-    const { apiClient } = useCryptionMiddleware();
+    const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
     const saveToken = useSaveToken();
+    const redirect = useRedirectionHelper();
 
     const [formData, setFormData] = useState<any>();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleSubmit = (data: any) => {
-        apiClient.post(
+        jsonClient.post(
             '/user/register',
             {
                 emailAddr: data.email,
                 password: data.password,
             }
-        ).then(res => {
-            setFormData(res.data);
+        ).then(_ => {
+            setFormData(data);
             showVerifyCode();
         }).catch(err => handleNetworkError(err, addAlert));
     };
 
     const handleResendCode = () => {
-        apiClient.post(
+        jsonClient.post(
             '/user/register',
             {
                 emailAddr: formData.email,
                 password: formData.password,
             }
         ).then(_ => {
-            setFormData(formData);
             showVerifyCode();
         }).catch(err => handleNetworkError(err, addAlert));
     }
 
     const handleComplete = (code: string) => {
-        apiClient.post(
+        jsonClient.post(
             '/user/verify',
             {
                 emailAddr: formData.email,
@@ -50,6 +51,7 @@ export const SignUp = () => {
         ).then(res => {
             saveToken(res.data.token);
             hideVerifyCode();
+            redirect('/');
         }).catch(err => handleNetworkError(err, addAlert));
     }
 

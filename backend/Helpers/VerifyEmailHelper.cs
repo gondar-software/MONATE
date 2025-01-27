@@ -31,7 +31,7 @@ namespace Helpers
 
         public static ErrorType? VerifyEmail(string email, string code)
         {
-            if (VerifyTrialCounts(email))
+            if (!VerifyTrialCounts(email))
                 return ErrorType.VerificationCodeTrialExceeded;
 
             if (VerifyCodeDict.TryGetValue(email, out string? storedCode) && storedCode == code)

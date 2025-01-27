@@ -1,16 +1,18 @@
 import { AuthCard } from "@app/components";
 import { useSaveToken } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
-import { useCryptionMiddleware } from "@app/middlewares";
+import { useRedirectionHelper } from "@app/helpers";
+import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert } from "@app/providers";
 
 export const Login = () => {
     const saveToken = useSaveToken();
-    const { apiClient } = useCryptionMiddleware();
+    const redirect = useRedirectionHelper();
+    const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
 
     const handleSubmit = (formData: any) => {
-        apiClient.post(
+        jsonClient.post(
             '/user/login',
             {
                 emailAddr: formData.email,
@@ -18,6 +20,7 @@ export const Login = () => {
             }
         ).then(res => {
             saveToken(res.data.token);
+            redirect('/');
         }).catch(err => handleNetworkError(err, addAlert));
     };
 

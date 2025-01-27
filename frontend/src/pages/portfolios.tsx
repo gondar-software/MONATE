@@ -1,12 +1,12 @@
-import { useCryptionMiddleware } from "@app/middlewares";
+import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useEffect } from "react";
 
 export const Portfolios = () => {
-    const { apiClient } = useCryptionMiddleware();
+    const { jsonClient } = useJsonCryptionMiddleware();
 
     useEffect(() => {
         const fetchPortfolioIds = async() => {
-            const response = await apiClient.get('/portfolio');
+            const response = await jsonClient.get('/portfolio');
             
             console.log(response);
         }

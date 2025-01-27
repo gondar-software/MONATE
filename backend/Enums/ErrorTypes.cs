@@ -12,5 +12,7 @@ namespace Enums
         VerificationCodeTrialExceeded = 508,
         UserPasswordFailed = 509,
         PortfolioNotFound = 510,
+        ImageUploadError = 511,
+        Unauthorized = 512,
     }
 }

@@ -1,13 +1,12 @@
-using System.Threading.Tasks;
 using Databases;
 using Databases.UserData;
 using Enums;
 using Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.User;
 using Services;
-using Temp;
 
 namespace Controllers
 {
@@ -107,6 +106,71 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error logging in user");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize]
+        [HttpPost("info")]
+        public async Task<IActionResult> SaveInfo([FromBody] InformationData data)
+        {
+            try
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                    return StatusCode((int)ErrorType.Unauthorized, ErrorType.Unauthorized.ToString());
+                
+                var user = await _context.Users
+                    .Include(u => u.Information)
+                    .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
+                if (user == null)
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+
+                if (user.Information != null)
+                {
+                    user.Information.FirstName = data.FirstName;
+                    user.Information.MiddleName = data.MiddleName;
+                    user.Information.LastName = data.LastName;
+                    user.Information.Gender = data.Gender;
+                    user.Information.DateOfBirth = data.Dob;
+                    user.Information.Address1 = data.Address1;
+                    user.Information.Address2 = data.Address2;
+                    user.Information.City = data.City;
+                    user.Information.State = data.State;
+                    user.Information.ZipCode = data.ZipCode;
+                    user.Information.Country = data.Country;
+                    user.Information.AvatarPath = data.Avatar;
+                    user.Information.GithubUrl = data.GithubUrl;
+                    user.Information.PhoneNumber = data.PhoneNumber;
+                }
+                else
+                {
+                    _context.Informations.Add(new Information
+                    {
+                        FirstName = data.FirstName,
+                        MiddleName = data.MiddleName,
+                        LastName = data.LastName,
+                        Gender = data.Gender,
+                        DateOfBirth = data.Dob,
+                        Address1 = data.Address1,
+                        Address2 = data.Address2,
+                        City = data.City,
+                        State = data.State,
+                        ZipCode = data.ZipCode,
+                        Country = data.Country,
+                        AvatarPath = data.Avatar,
+                        GithubUrl = data.GithubUrl,
+                        PhoneNumber = data.PhoneNumber,
+                        User = user,
+                    });
+                }
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving user information");
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }

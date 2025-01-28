@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { InformationCard } from "@app/components";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
+import { useFormCryptionMiddleware, useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from "@app/middlewares";
 import { genderTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
@@ -10,6 +10,7 @@ import { useRedirectionHelper } from "@app/helpers";
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { formClient } = useFormCryptionMiddleware();
+    const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
     const { addAlert } = useAlert();
     const { showLoading, hideLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
@@ -27,14 +28,40 @@ export const Information = () => {
                 },
             }
         ).then(res => {
-            console.log(res);
-        }).catch(_ => {
-        }).finally(() => {
-            saveUnityBackgroundMode('garden');
-            hideAuthInfo();
-            hideLoading();
+            if (res.data.avatar)
+            {
+                jsonOnlyRequestClient.get(
+                    `/download/image?filePath=${res.data.avatar}`,
+                    {
+                        responseType: 'blob',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    }
+                ).then(res => {
+                    const url = URL.createObjectURL(res.data);
+                    console.log(url);
+                }).catch(err => {
+                    handleNetworkError(err, addAlert);
+                }).finally(() => {
+                    initialSuccess();
+                });
+            }
+            else
+                initialSuccess();
+        }).catch(err => {
+            if (err.response.status === 513)
+                initialSuccess();
+            else
+                redirect('/auth/login');
         });
     }, []);
+
+    const initialSuccess = () => {
+        saveUnityBackgroundMode('garden');
+        hideAuthInfo();
+        hideLoading();
+    }
 
     const handleSubmit = (formData: any) => {
         setSaving(true);

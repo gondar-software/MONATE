@@ -2,6 +2,7 @@ using Enums;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 using Org.BouncyCastle.Bcpg;
+using Sodium.Exceptions;
 
 namespace Helpers
 {
@@ -29,7 +30,7 @@ namespace Helpers
             return filePath;
         }
 
-        public static async Task<IFormFile?> LoadAndCreateFormFile(string? path)
+        public static async Task<byte[]?> LoadAndCreateFormFile(string? path)
         {
             if (string.IsNullOrEmpty(path))
                 return null;
@@ -42,11 +43,7 @@ namespace Helpers
                     memoryStream
                 );
                 memoryStream.Seek(0, SeekOrigin.Begin);
-
-                return new FormFile(memoryStream, 0, memoryStream.Length, "file", path.Substring('_')){
-                    Headers = new HeaderDictionary(),
-                    ContentType = "application/octet-stream",
-                };
+                return memoryStream.ToArray();
             }
         }
     }

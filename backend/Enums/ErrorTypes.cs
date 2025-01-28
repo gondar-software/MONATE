@@ -14,5 +14,8 @@ namespace Enums
         PortfolioNotFound = 510,
         ImageUploadError = 511,
         Unauthorized = 512,
+        InforNotFound = 513,
+        ImageDownloadError = 514,
+        FileNotFound = 515,
     }
 }

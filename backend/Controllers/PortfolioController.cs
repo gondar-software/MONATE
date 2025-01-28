@@ -52,80 +52,80 @@ namespace Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Team")]
-        [HttpPost("create")]
-        public async Task<IActionResult> CreatePortfolio([FromBody] PortfolioPacket packet)
-        {
-            try
-            {
-                var portfolio = new Portfolio
-                {
-                    Type = packet.Type,
-                    Name = packet.Name,
-                    Url = packet.Url,
-                    Categories = packet.Categories?.Select(c => new Category { Name = c }).ToList(),
-                    Items = packet.Items != null 
-                        ? await Task.WhenAll(packet.Items.Select(async i => new PortfolioItem
-                        {
-                            Type = i.Type,
-                            Path = i.Type == FileType.GithubRepo ? i.GithubRepo 
-                                : await FirebaseHelper.SaveFileAndGetPath(i.File, i.Type),
-                        })) : null
-                };
+        // [Authorize(Roles = "Admin, Team")]
+        // [HttpPost("create")]
+        // public async Task<IActionResult> CreatePortfolio([FromBody] PortfolioPacket packet)
+        // {
+        //     try
+        //     {
+        //         var portfolio = new Portfolio
+        //         {
+        //             Type = packet.Type,
+        //             Name = packet.Name,
+        //             Url = packet.Url,
+        //             Categories = packet.Categories?.Select(c => new Category { Name = c }).ToList(),
+        //             Items = packet.Items != null 
+        //                 ? await Task.WhenAll(packet.Items.Select(async i => new PortfolioItem
+        //                 {
+        //                     Type = i.Type,
+        //                     Path = i.Type == FileType.GithubRepo ? i.GithubRepo 
+        //                         : await FirebaseHelper.SaveFileAndGetPath(i.File, i.Type),
+        //                 })) : null
+        //         };
 
-                _context.Portfolios.Add(portfolio);
-                await _context.SaveChangesAsync();
+        //         _context.Portfolios.Add(portfolio);
+        //         await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetPortfolio), new { id = portfolio.Id }, portfolio);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creating portfolio");
-                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
-            }
-        }
+        //         return CreatedAtAction(nameof(GetPortfolio), new { id = portfolio.Id }, portfolio);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError(ex, "Error creating portfolio");
+        //         return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+        //     }
+        // }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPortfolio(int id)
-        {
-            try
-            {
-                var portfolio = await _context.Portfolios
-                    .AsNoTracking()
-                    .Include(p => p.Items)
-                    .Include(p => p.Categories)
-                    .FirstOrDefaultAsync(p => p.Id == id);
+        // [HttpGet("{id}")]
+        // public async Task<IActionResult> GetPortfolio(int id)
+        // {
+        //     try
+        //     {
+        //         var portfolio = await _context.Portfolios
+        //             .AsNoTracking()
+        //             .Include(p => p.Items)
+        //             .Include(p => p.Categories)
+        //             .FirstOrDefaultAsync(p => p.Id == id);
                 
-                if (portfolio == null)
-                {
-                    return StatusCode((int)ErrorType.PortfolioNotFound, ErrorType.PortfolioNotFound.ToString());
-                }
-                else
-                {
-                    var packet = new PortfolioPacket
-                    {
-                        Type = portfolio.Type,
-                        Name = portfolio.Name,
-                        Url = portfolio.Url,
-                        Categories = portfolio.Categories?.Select(c => c.Name).ToList(),
-                        Items = portfolio.Items != null ?
-                            (await Task.WhenAll(portfolio.Items.Select(async i => new PortfolioItemData
-                            {
-                                Type = i.Type,
-                                File = i.Type == FileType.GithubRepo ? null : await FirebaseHelper.LoadAndCreateFormFile(i.Path),
-                                GithubRepo = i.Type == FileType.GithubRepo ? i.Path : "",
-                            }))).ToList() : null
-                    };
+        //         if (portfolio == null)
+        //         {
+        //             return StatusCode((int)ErrorType.PortfolioNotFound, ErrorType.PortfolioNotFound.ToString());
+        //         }
+        //         else
+        //         {
+        //             var packet = new PortfolioPacket
+        //             {
+        //                 Type = portfolio.Type,
+        //                 Name = portfolio.Name,
+        //                 Url = portfolio.Url,
+        //                 Categories = portfolio.Categories?.Select(c => c.Name).ToList(),
+        //                 Items = portfolio.Items != null ?
+        //                     (await Task.WhenAll(portfolio.Items.Select(async i => new PortfolioItemData
+        //                     {
+        //                         Type = i.Type,
+        //                         File = i.Type == FileType.GithubRepo ? null : await FirebaseHelper.LoadAndCreateFormFile(i.Path),
+        //                         GithubRepo = i.Type == FileType.GithubRepo ? i.Path : "",
+        //                     }))).ToList() : null
+        //             };
 
-                    return Ok(packet);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving portfolio");
-                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
-            }
-        }
+        //             return Ok(packet);
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError(ex, "Error retrieving portfolio");
+        //         return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+        //     }
+        // }
 
         private bool ValidatePortfolio(Portfolio p, string query)
         {

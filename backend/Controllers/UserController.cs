@@ -206,5 +206,51 @@ namespace Controllers
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
+
+        [Authorize]
+        [HttpGet("info")]
+        public async Task<IActionResult> GetInfo()
+        {
+            try
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                    return StatusCode((int)ErrorType.Unauthorized, ErrorType.Unauthorized.ToString());
+                
+                var user = await _context.Users
+                    .Include(u => u.Information)
+                    .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
+                if (user == null)
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                else if (user.Information == null)
+                    return StatusCode((int)ErrorType.InforNotFound, ErrorType.InforNotFound.ToString());
+                else {
+                    var infoData = new InformationData
+                    {
+                        FirstName = user.Information.FirstName,
+                        MiddleName = user.Information.MiddleName,
+                        LastName = user.Information.LastName,
+                        Gender = user.Information.Gender,
+                        Dob = user.Information.DateOfBirth,
+                        Address1 = user.Information.Address1,
+                        Address2 = user.Information.Address2,
+                        City = user.Information.City,
+                        State = user.Information.State,
+                        ZipCode = user.Information.ZipCode,
+                        Country = user.Information.Country,
+                        Avatar = user.Information.AvatarPath,
+                        GithubUrl = user.Information.GithubUrl,
+                        PhoneNumber = user.Information.PhoneNumber,
+                    };
+
+                    return Ok(infoData);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user information");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
     }
 }

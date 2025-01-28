@@ -10,6 +10,11 @@ export const errorTypes = {
     508: "Verification trial is exceeded, please try again tomorrow",
     509: "Your password is not correct",
     510: "Can not find portfolio with given id",
+    511: "Error occurred when uploading image",
+    512: "Token is expired or invalid",
+    513: "Can not find user information",
+    514: "Can not download image data",
+    515: "Can not find file",
 }
 
 export default errorTypes;

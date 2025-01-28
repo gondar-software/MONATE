@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ImageUploader } from '@app/components';
+import { genderTypes } from '@app/constants';
 
 export const InformationCard = (props: any) => {
     const [firstName, setFirstName] = useState('');
@@ -13,9 +14,38 @@ export const InformationCard = (props: any) => {
     const [state, setState] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [country, setCountry] = useState('');
-    const [avatar, setAvatar] = useState<File | null>(null);
+    const [avatar, setAvatar] = useState<any>(props.initUrl ? 'original' : null);
     const [githubUrl, setGithubUrl] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    
+    useEffect(() => {
+        const genderMap = Object.entries(genderTypes).reduce((acc: any, [key, value]) => {
+            acc[value] = key;
+            return acc;
+        }, {});
+
+        if (!props.info) {
+            return;
+        }
+    
+        setFirstName(props.info.firstName);
+        setMiddleName(props.info.middleName);
+        setLastName(props.info.lastName);
+        setGender(genderMap[props.info.gender]); // Map gender number to string
+        setDob(props.info.dob);
+        setAddress1(props.info.address1);
+        setAddress2(props.info.address2);
+        setCity(props.info.city);
+        setState(props.info.state);
+        setZipCode(props.info.zipCode);
+        setCountry(props.info.country);
+        setGithubUrl(props.info.githubUrl);
+        setPhoneNumber(props.info.phoneNumber);
+    }, [props.info]);
+
+    useEffect(() => {
+        setAvatar(props.initUrl ? 'original' : null);
+    }, [props.initUrl]);
 
     const handleAvatarUpload = (file: File) => {
         setAvatar(file);
@@ -51,7 +81,7 @@ export const InformationCard = (props: any) => {
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center">
                         Avatar
                     </label>
-                    <ImageUploader className='w-40 h-40' maxWidth={2048} maxHeight={2048} onImageUpload={handleAvatarUpload} />
+                    <ImageUploader initUrl={props.initUrl} className='w-40 h-40' maxWidth={2048} maxHeight={2048} onImageUpload={handleAvatarUpload} />
                 </div>
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -173,7 +203,6 @@ export const InformationCard = (props: any) => {
                         onChange={(e) => setAddress2(e.target.value)}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                         placeholder=""
-                        required
                     />
                 </div>
                 <div>

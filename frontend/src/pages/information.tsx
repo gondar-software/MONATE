@@ -15,6 +15,8 @@ export const Information = () => {
     const { showLoading, hideLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
     const [saving, setSaving] = useState(false);
+    const [initUrl, setInitUrl] = useState('');
+    const [info, setInfo] = useState<any>();
     const token = useToken();
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
@@ -28,6 +30,7 @@ export const Information = () => {
                 },
             }
         ).then(res => {
+            setInfo(res.data);
             if (res.data.avatar)
             {
                 jsonOnlyRequestClient.get(
@@ -40,7 +43,7 @@ export const Information = () => {
                     }
                 ).then(res => {
                     const url = URL.createObjectURL(res.data);
-                    console.log(url);
+                    setInitUrl(url);
                 }).catch(err => {
                     handleNetworkError(err, addAlert);
                 }).finally(() => {
@@ -65,7 +68,7 @@ export const Information = () => {
 
     const handleSubmit = (formData: any) => {
         setSaving(true);
-        if (formData.avatar)
+        if (formData.avatar && formData.avatar !== 'original')
         {
             const formDt = new FormData();
             formDt.append('image', formData.avatar);
@@ -105,7 +108,7 @@ export const Information = () => {
                 state: formData.state,
                 zipCode: formData.zipCode,
                 country: formData.country,
-                avatar: res ? res.data.filePath : null,
+                avatar: res ? res.data.filePath : 'original',
                 githubUrl: formData.githubUrl,
                 phoneNumber: formData.phoneNumber,
             },
@@ -126,7 +129,7 @@ export const Information = () => {
 
     return (
         <div className='flex w-full min-h-screen justify-center items-center'>
-            <InformationCard onSubmit={handleSubmit} saving={saving} />
+            <InformationCard info={info} onSubmit={handleSubmit} initUrl={initUrl} saving={saving} />
         </div>
     );
 };

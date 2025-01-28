@@ -1,9 +1,13 @@
 import { useAlert } from "@app/providers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ImageUploader = (props: any) => {
-    const [selectedImage, setSelectedImage] = useState("");
+    const [selectedImage, setSelectedImage] = useState(props.initUrl);
     const { addAlert } = useAlert();
+
+    useEffect(() => {
+        setSelectedImage(props.initUrl);
+    }, [props.initUrl]);
 
     const maxWidth = props.maxWidth || 800;
     const maxHeight = props.maxHeight || 400;

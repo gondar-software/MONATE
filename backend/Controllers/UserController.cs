@@ -171,7 +171,7 @@ namespace Controllers
                     user.Information.State = data.State;
                     user.Information.ZipCode = data.ZipCode;
                     user.Information.Country = data.Country;
-                    user.Information.AvatarPath = data.Avatar;
+                    user.Information.AvatarPath = data.Avatar == "original" ? user.Information.AvatarPath : data.Avatar;
                     user.Information.GithubUrl = data.GithubUrl;
                     user.Information.PhoneNumber = data.PhoneNumber;
                 }
@@ -190,7 +190,7 @@ namespace Controllers
                         State = data.State,
                         ZipCode = data.ZipCode,
                         Country = data.Country,
-                        AvatarPath = data.Avatar,
+                        AvatarPath = data.Avatar == "original" ? null : data.Avatar,
                         GithubUrl = data.GithubUrl,
                         PhoneNumber = data.PhoneNumber,
                         User = user,

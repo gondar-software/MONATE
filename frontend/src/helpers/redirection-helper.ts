@@ -8,7 +8,6 @@ export const useRedirectionHelper = () => {
 
     const redirect = (url: string) => {
         if (location.pathname !== url) {
-            console.log(location.pathname);
             showLoading();
             navigate(url);
         }

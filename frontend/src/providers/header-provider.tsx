@@ -18,7 +18,7 @@ export const HeaderProvider = (props: any) => {
             {props.children}
             <div className='fixed top-0 w-full h-14 flex items-center justify-between px-8 bg-opacity-40 dark:bg-opacity-40 backdrop-blur-md bg-gray-100 dark:bg-gray-900 transition-all duration-300'>
                 <MonateMark />
-                <div className='flex gap-8'>
+                <div className='flex gap-8 items-center'>
                     {authInfo && <AuthInfo className='justify-between' />}
                     <ModeSwitch className='w-8 h-8' />
                 </div>

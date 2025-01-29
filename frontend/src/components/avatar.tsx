@@ -1,10 +1,11 @@
-import { useSaveUserInfo } from "@app/global";
+import { useSaveToken, useSaveUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 import { useState } from "react";
 
 export const Avatar = (props: any) => {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const saveUserInfo = useSaveUserInfo();
+    const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
 
     const toggleMenu = () => {
@@ -83,6 +84,7 @@ export const Avatar = (props: any) => {
                                 type='button'
                                 onClick={() => {
                                     saveUserInfo(null);
+                                    saveToken('');
                                     redirect('/')
                                 }}
                                 className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"

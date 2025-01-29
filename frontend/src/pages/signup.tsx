@@ -10,7 +10,7 @@ export const SignUp = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
-    const { hideLoading } = useLoading();
+    const { hideLoading, initLoading } = useLoading();
     const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
@@ -67,6 +67,7 @@ export const SignUp = () => {
             }
         ).then(res => {
             saveToken(res.data.token);
+            initLoading(res.data.token);
             hideVerifyCode();
             redirect('/');
         }).catch(err => {

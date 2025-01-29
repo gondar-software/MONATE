@@ -225,8 +225,10 @@ namespace Controllers
                 else if (user.Information == null)
                     return StatusCode((int)ErrorType.InforNotFound, ErrorType.InforNotFound.ToString());
                 else {
-                    var infoData = new InformationData
+                    var infoData = new InformationResponse
                     {
+                        EmailAddr = user.EmailAddr,
+                        UserType = user.Type,
                         FirstName = user.Information.FirstName,
                         MiddleName = user.Information.MiddleName,
                         LastName = user.Information.LastName,

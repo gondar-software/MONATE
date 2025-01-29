@@ -6,6 +6,7 @@ export const initialStates = {
     oasisProgress: 0,
     unityBackgroundMode: 'oasis',
     token: '',
+    userInfo: null,
 };
 
 export default initialStates;

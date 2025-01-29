@@ -1,7 +1,11 @@
+import { useSaveUserInfo } from "@app/global";
+import { useRedirectionHelper } from "@app/helpers";
 import { useState } from "react";
 
 export const Avatar = (props: any) => {
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const saveUserInfo = useSaveUserInfo();
+    const redirect = useRedirectionHelper();
 
     const toggleMenu = () => {
         setMenuOpen((prev) => !prev);
@@ -11,8 +15,8 @@ export const Avatar = (props: any) => {
         <div {...props}>
             <div className="relative inline-block">
                 <div className="relative flex items-center gap-2 cursor-pointer" onClick={toggleMenu}>
-                    {props.img ? (
-                        <img className="w-10 h-10 rounded-full" src={props.img} alt="Avatar" />
+                    {props.info.avatar ? (
+                        <img className="w-10 h-10 rounded-full" src={props.info.avatar} alt="Avatar" />
                     ) : (
                         <div className="relative w-10 h-10 overflow-hidden flex bg-gray-100 rounded-full dark:bg-gray-600">
                             <svg
@@ -60,26 +64,31 @@ export const Avatar = (props: any) => {
                             </div>
                         )}
 
-                        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                        <ul className="py-2 w-full text-sm text-gray-700 dark:text-gray-200">
                             {props.dropDownMenu.map((item: any, index: number) => (
-                                <li key={index}>
-                                    <a
-                                        href={item.path}
-                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                <li key={index} className="w-full">
+                                    <button
+                                        type='button'
+                                        onClick={() => redirect(item.path)}
+                                        className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                     >
                                         {item.label}
-                                    </a>
+                                    </button>
                                 </li>
                             ))}
                         </ul>
 
-                        <div className="py-1">
-                            <a
-                                href="#"
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                        <div className="py-1 w-full">
+                            <button
+                                type='button'
+                                onClick={() => {
+                                    saveUserInfo(null);
+                                    redirect('/')
+                                }}
+                                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                             >
                                 Sign out
-                            </a>
+                            </button>
                         </div>
                     </div>
                 )}

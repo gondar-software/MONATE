@@ -13,7 +13,7 @@ export const Login = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
-    const { hideLoading } = useLoading();
+    const { hideLoading, initLoading } = useLoading();
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -32,6 +32,7 @@ export const Login = () => {
             }
         ).then(res => {
             saveToken(res.data.token);
+            initLoading(res.data.token);
             setSubmitting(false);
             redirect('/');
         }).catch(err => {

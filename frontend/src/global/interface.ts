@@ -9,6 +9,7 @@ import {
     setUnityBackgroundMode,
     setToken,
     setInitialValue,
+    setUserInfo,
 } from '@app/global';
 
 export const useSaveLightMode = () => {
@@ -39,6 +40,10 @@ export const useSaveToken = () => {
     const dispatch = useDispatch();
     return (token: string) => dispatch(setToken(token));
 };
+export const useSaveUserInfo = () => {
+    const dispatch = useDispatch();
+    return (userInfo: any) => dispatch(setUserInfo(userInfo));
+};
 
 export const useLightMode = () => {
     return useSelector((state: any) => state.lightMode);
@@ -60,6 +65,9 @@ export const useUnityBackgroundMode = () => {
 };
 export const useToken = () => {
     return useSelector((state: any) => state.token);
+};
+export const useUserInfo = () => {
+    return useSelector((state: any) => state.userInfo);
 };
 
 export const useSetInitialValue = () => {

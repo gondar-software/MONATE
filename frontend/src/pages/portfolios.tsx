@@ -5,12 +5,11 @@ import { useEffect } from "react";
 
 export const Portfolios = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { showLoading, hideLoading } = useLoading();
+    const { hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
     useEffect(() => {
-        showLoading();
         jsonClient.get(
             '/portfolio'
         ).then(

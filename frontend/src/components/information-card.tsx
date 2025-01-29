@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ImageUploader } from '@app/components';
 import { genderTypes } from '@app/constants';
+import { useUserInfo } from '@app/global';
 
 export const InformationCard = (props: any) => {
+    const userInfo = useUserInfo();
+
     const [firstName, setFirstName] = useState('');
     const [middleName, setMiddleName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -14,7 +17,7 @@ export const InformationCard = (props: any) => {
     const [state, setState] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [country, setCountry] = useState('');
-    const [avatar, setAvatar] = useState<any>(props.initUrl ? 'original' : null);
+    const [avatar, setAvatar] = useState<any>(userInfo.avatar ? 'original' : null);
     const [githubUrl, setGithubUrl] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     
@@ -24,28 +27,25 @@ export const InformationCard = (props: any) => {
             return acc;
         }, {});
 
-        if (!props.info) {
+        if (!userInfo) {
             return;
         }
     
-        setFirstName(props.info.firstName);
-        setMiddleName(props.info.middleName);
-        setLastName(props.info.lastName);
-        setGender(genderMap[props.info.gender]); // Map gender number to string
-        setDob(props.info.dob);
-        setAddress1(props.info.address1);
-        setAddress2(props.info.address2);
-        setCity(props.info.city);
-        setState(props.info.state);
-        setZipCode(props.info.zipCode);
-        setCountry(props.info.country);
-        setGithubUrl(props.info.githubUrl);
-        setPhoneNumber(props.info.phoneNumber);
-    }, [props.info]);
-
-    useEffect(() => {
-        setAvatar(props.initUrl ? 'original' : null);
-    }, [props.initUrl]);
+        setFirstName(userInfo.firstName);
+        setMiddleName(userInfo.middleName);
+        setLastName(userInfo.lastName);
+        setGender(genderMap[userInfo.gender]);
+        setDob(userInfo.dob);
+        setAddress1(userInfo.address1);
+        setAddress2(userInfo.address2);
+        setCity(userInfo.city);
+        setState(userInfo.state);
+        setZipCode(userInfo.zipCode);
+        setCountry(userInfo.country);
+        setAvatar(userInfo.avatar ? 'original' : null);
+        setGithubUrl(userInfo.githubUrl);
+        setPhoneNumber(userInfo.phoneNumber);
+    }, [userInfo]);
 
     const handleAvatarUpload = (file: File) => {
         setAvatar(file);
@@ -81,7 +81,7 @@ export const InformationCard = (props: any) => {
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center">
                         Avatar
                     </label>
-                    <ImageUploader initUrl={props.initUrl} className='w-40 h-40' maxWidth={2048} maxHeight={2048} onImageUpload={handleAvatarUpload} />
+                    <ImageUploader initUrl={userInfo.avatar} className='w-40 h-40' maxWidth={2048} maxHeight={2048} onImageUpload={handleAvatarUpload} />
                 </div>
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

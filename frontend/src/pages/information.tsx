@@ -1,58 +1,34 @@
 import { useEffect, useState } from "react";
 import { InformationCard } from "@app/components";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from "@app/middlewares";
+import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { genderTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
-import { useSaveUnityBackgroundMode, useToken } from "@app/global";
+import { useSaveUnityBackgroundMode, useSaveUserInfo, useToken, useUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { formClient } = useFormCryptionMiddleware();
-    const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
     const { addAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
+    const { hideLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
     const [saving, setSaving] = useState(false);
-    const [initUrl, setInitUrl] = useState('');
-    const [info, setInfo] = useState<any>();
     const token = useToken();
+    const userInfo = useUserInfo();
+    const saveUserInfo = useSaveUserInfo();
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
     useEffect(() => {
-        showLoading();
         jsonClient.get('user/info',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
-        ).then(res => {
-            setInfo(res.data);
-            if (res.data.avatar)
-            {
-                jsonOnlyRequestClient.get(
-                    `/download/image?filePath=${res.data.avatar}`,
-                    {
-                        responseType: 'blob',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        }
-                    }
-                ).then(res => {
-                    const url = URL.createObjectURL(res.data);
-                    setInitUrl(url);
-                }).catch(err => {
-                    handleNetworkError(err, addAlert);
-                }).finally(() => {
-                    initialSuccess();
-                });
-            }
-            else
-                initialSuccess();
-        }).catch(err => {
+        ).then(_ => initialSuccess()
+        ).catch(err => {
             if (err.response.status === 513)
                 initialSuccess();
             else
@@ -119,6 +95,12 @@ export const Information = () => {
             },
         ).then(_ => {
             setSaving(false);
+            saveUserInfo({
+                ...formData,
+                avatar: formData.avatar === 'original' ? (userInfo ? userInfo.avatar : '') : 
+                    (formData.avatar ? URL.createObjectURL(formData.avatar) : null),
+                emailAddr: userInfo ? userInfo.emailAddr : '',
+            });
             redirect('/');
         }).catch(err => 
             handleNetworkError(err, addAlert)
@@ -129,7 +111,7 @@ export const Information = () => {
 
     return (
         <div className='flex w-full min-h-screen justify-center items-center'>
-            <InformationCard info={info} onSubmit={handleSubmit} initUrl={initUrl} saving={saving} />
+            <InformationCard onSubmit={handleSubmit} saving={saving} />
         </div>
     );
 };

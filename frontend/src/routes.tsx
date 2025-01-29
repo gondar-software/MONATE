@@ -73,7 +73,7 @@ export const routes = [
         ],
     },
     {
-        layout: 'member',
+        layout: 'team',
         pages: [
         ],
     },

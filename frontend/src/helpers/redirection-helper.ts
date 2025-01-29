@@ -1,13 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useLoading } from "@app/providers";
 
 export const useRedirectionHelper = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { showLoading } = useLoading();
 
     const redirect = (url: string) => {
-        showLoading();
-        navigate(url);
+        if (location.pathname !== url) {
+            console.log(location.pathname);
+            showLoading();
+            navigate(url);
+        }
     };
 
     return redirect;

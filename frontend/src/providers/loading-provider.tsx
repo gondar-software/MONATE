@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { LoadingMonate } from '@app/components';
 import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from '@app/middlewares';
-import { setUserInfo, useSaveUserInfo, useToken } from '@app/global';
+import { useSaveUserInfo, useToken } from '@app/global';
 import { userTypes } from '@app/constants';
 
 const LoadingContext = createContext<any | undefined>(undefined);
@@ -55,7 +55,7 @@ export const LoadingProvider = (props: any) => {
                     type: userMap[res.data.userType],
                 });
         }).catch(_ => {
-            setUserInfo(null);
+            saveUserInfo(null);
         }).finally(() => setUserInfoLoaded(true));
     }
 

@@ -28,6 +28,10 @@ export const dropDownMenus = {
             label: 'Profile',
             path: '/user/profile'
         },
+        {
+            label: 'Upload Portfolio',
+            path: '/admin/upload-portfolio'
+        }
     ],
 };
 

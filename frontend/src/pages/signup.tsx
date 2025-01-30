@@ -65,9 +65,9 @@ export const SignUp = () => {
                 password: formData.password,
                 code: code,
             }
-        ).then(res => {
+        ).then(async(res) => {
             saveToken(res.data.token);
-            initLoading(res.data.token);
+            await initLoading(res.data.token);
             hideVerifyCode();
             redirect('/');
         }).catch(err => {

@@ -18,21 +18,21 @@ export const LoadingProvider = (props: any) => {
         initLoading(token);
     }, []);
 
-    const initLoading = (token: any) => {
+    const initLoading = async(token: any) => {
         const userMap = Object.entries(userTypes).reduce((acc: any, [key, value]) => {
             acc[value] = key;
             return acc;
         }, {});
-        jsonClient.get('user/info',
+        await jsonClient.get('user/info',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             }
-        ).then(res => {
+        ).then(async(res) =>{
             if (res.data.avatar)
             {
-                jsonOnlyRequestClient.get(
+                await jsonOnlyRequestClient.get(
                     `/download/image?filePath=${res.data.avatar}`,
                     {
                         responseType: 'blob',
@@ -47,16 +47,20 @@ export const LoadingProvider = (props: any) => {
                         avatar: url,
                         type: userMap[res.data.userType],
                     });
-                }).catch();
+                }).catch().finally(() => {
+                    setUserInfoLoaded(true);
+                });
             }
             else
                 saveUserInfo({
                     ...res.data,
                     type: userMap[res.data.userType],
                 });
+                setUserInfoLoaded(true);
         }).catch(_ => {
             saveUserInfo(null);
-        }).finally(() => setUserInfoLoaded(true));
+            setUserInfoLoaded(true);
+        });
     }
 
     const showLoading = () => {

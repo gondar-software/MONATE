@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 
 export function SlideViewer(props: any) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true);
   
   useEffect(() => {
     if (!paused) {
       const interval = setInterval(() => {
         nextSlide();
-      }, 500);
+      }, 1500);
       return () => clearInterval(interval);
     }
   }, [currentIndex, paused]);
@@ -25,8 +25,8 @@ export function SlideViewer(props: any) {
   return (
     <div
       className="relative w-full h-full mx-auto overflow-hidden rounded-lg bg-gray-400"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setPaused(false)}
+      onMouseLeave={() => setPaused(true)}
     >
       <motion.div
         key={currentIndex}

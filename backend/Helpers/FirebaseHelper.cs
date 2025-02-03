@@ -30,7 +30,7 @@ namespace Helpers
             return filePath;
         }
 
-        public static async Task<byte[]?> LoadAndCreateFormFile(string? path)
+        public static async Task<byte[]?> DownloadFile(string? path)
         {
             if (string.IsNullOrEmpty(path))
                 return null;

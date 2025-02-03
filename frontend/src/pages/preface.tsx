@@ -43,12 +43,12 @@ export const Preface = () => {
             <div className='xl:text-7xl md:text-6xl text-5xl'>Demand more out of your</div>
             <div className='xl:text-8xl md:text-7xl text-6xl'>{words[currentWord]}.</div>
             <div className='hidden lg:flex origin-center text-xl overflow-hidden mt-20'>
-                {routes.filter(layout => layout.layout === 'client')[0].pages.map((page, index) => (
+                {routes.filter(layout => layout.layout === '/client')[0].pages.map((page, index) => (
                     <TransparentButton className='h-12 w-48' key={index} label={page.label} path={`client${page.path}`} />
                 ))}
             </div>
             <div className='lg:hidden flex-col origin-center text-xl overflow-hidden mt-20'>
-                {routes.filter(layout => layout.layout === 'client')[0].pages.map((page, index) => (
+                {routes.filter(layout => layout.layout === '/client')[0].pages.map((page, index) => (
                     <TransparentButton className='h-12 w-48' key={index} label={page.label} path={`client${page.path}`} />
                 ))}
             </div>

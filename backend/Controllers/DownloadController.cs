@@ -36,5 +36,23 @@ namespace Controllers
                 return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
             }
         }
+
+        [Authorize]
+        [HttpGet("video")]
+        public async Task<IActionResult> DownloadVideo([FromQuery] string filePath)
+        {
+            try
+            {
+                var fileData = await FirebaseHelper.LoadAndCreateFormFile(filePath);
+                if (fileData == null)
+                    return StatusCode((int)ErrorType.FileNotFound, ErrorType.FileNotFound.ToString());
+                else
+                    return File(fileData, "application/octet-stream", filePath.Substring(filePath.IndexOf('/')));
+            }
+            catch
+            {
+                return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
+            }
+        }
     }
 }

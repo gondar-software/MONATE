@@ -1,4 +1,4 @@
-namespace Packets.Upload
+namespace Packets.File
 {
     public class ImageData
     {

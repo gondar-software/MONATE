@@ -3,7 +3,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { MonateIcon } from '@app/components';
-import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information } from '@app/pages';
+import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio } from '@app/pages';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -11,26 +11,26 @@ const icon = {
 
 export const routes = [
     {
-        layout: '',
+        layout: '/',
         pages: [
             {
                 icon: <MonateIcon {...icon} />,
                 name: 'preface',
                 label: 'Preface',
-                path: '/',
+                path: '',
                 element: <Preface />,
             },
             {
                 icon: <HomeIcon {...icon} />,
                 name: 'home',
                 label: 'Home',
-                path: '/home',
+                path: 'home',
                 element: <Home />,
             },
         ],
     },
     {
-        layout: 'auth',
+        layout: '/auth',
         pages: [
             {
                 icon: <MonateIcon {...icon} />,
@@ -56,7 +56,7 @@ export const routes = [
         ],
     },
     {
-        layout: 'user',
+        layout: '/user',
         pages: [
             {
                 icon: <MonateIcon {...icon} />,
@@ -68,17 +68,24 @@ export const routes = [
         ]
     },
     {
-        layout: 'admin',
+        layout: '/admin',
         pages: [
         ],
     },
     {
-        layout: 'team',
+        layout: '/team',
         pages: [
+            {
+                icon: <div />,
+                name: 'upload-portfolio',
+                label: 'Upload Portfolio',
+                path: '/upload-portfolio',
+                element: <UploadPortfolio />,
+            }
         ],
     },
     {
-        layout: 'client',
+        layout: '/client',
         pages: [
             {
                 icon: <div />,
@@ -118,7 +125,7 @@ export const routes = [
         ]
     },
     {
-        layout: 'contact',
+        layout: '/contact',
         pages: [
             {
                 icon: <div />,

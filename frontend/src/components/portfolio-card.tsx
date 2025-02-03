@@ -3,7 +3,7 @@ import { ImageUploader } from '@app/components';
 import { genderTypes } from '@app/constants';
 import { useUserInfo } from '@app/global';
 
-export const InformationCard = (props: any) => {
+export const PortfolioCard = (props: any) => {
     const userInfo = useUserInfo();
 
     const [firstName, setFirstName] = useState('');
@@ -312,4 +312,4 @@ export const InformationCard = (props: any) => {
     )
 }
 
-export default InformationCard;
+export default PortfolioCard;

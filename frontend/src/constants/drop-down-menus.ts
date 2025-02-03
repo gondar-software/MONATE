@@ -18,6 +18,10 @@ export const dropDownMenus = {
             label: 'Profile',
             path: '/user/profile'
         },
+        {
+            label: 'Upload Portfolio',
+            path: '/team/upload-portfolio'
+        },
     ],
     "admin": [
         {
@@ -30,8 +34,8 @@ export const dropDownMenus = {
         },
         {
             label: 'Upload Portfolio',
-            path: '/admin/upload-portfolio'
-        }
+            path: '/team/upload-portfolio'
+        },
     ],
 };
 

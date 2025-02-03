@@ -3,7 +3,7 @@ using Enums;
 using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Packets.Upload;
+using Packets.File;
 
 namespace Controllers
 {
@@ -27,6 +27,21 @@ namespace Controllers
             try
             {
                 var filePath = await FirebaseHelper.SaveFileAndGetPath(file.Image, FileType.Image);
+                return Ok(new { FilePath = filePath });
+            }
+            catch
+            {
+                return StatusCode((int)ErrorType.ImageUploadError, ErrorType.ImageUploadError.ToString());
+            }
+        }
+
+        [Authorize]
+        [HttpPost("video")]
+        public async Task<IActionResult> UploadVideo([FromForm] VideoData file)
+        {
+            try
+            {
+                var filePath = await FirebaseHelper.SaveFileAndGetPath(file.Video, FileType.Video);
                 return Ok(new { FilePath = filePath });
             }
             catch

@@ -96,16 +96,16 @@ export const routes = [
             },
             {
                 icon: <div />,
-                name: 'full-stack',
-                label: 'Full Stack',
-                path: '/full-stack',
+                name: 'chatbot',
+                label: 'Chatbot',
+                path: '/chatbot',
                 element: <div />,
             },
             {
                 icon: <div />,
-                name: 'gen-ai',
-                label: 'Generative AI',
-                path: '/gen-ai',
+                name: 'automation',
+                label: 'Automation',
+                path: '/automation',
                 element: <div />,
             },
             {

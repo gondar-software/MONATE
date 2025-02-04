@@ -52,7 +52,7 @@ namespace Controllers
             }
             catch
             {
-                return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
+                return StatusCode((int)ErrorType.VideoDownloadError, ErrorType.VideoDownloadError.ToString());
             }
         }
     }

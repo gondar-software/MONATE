@@ -33,7 +33,7 @@ export const LoadingProvider = (props: any) => {
             if (res.data.avatar)
             {
                 await jsonOnlyRequestClient.get(
-                    `/download/image?filePath=${res.data.avatar}`,
+                    `download/image?filePath=${res.data.avatar}`,
                     {
                         responseType: 'blob',
                         headers: {
@@ -52,11 +52,13 @@ export const LoadingProvider = (props: any) => {
                 });
             }
             else
+            {
                 saveUserInfo({
                     ...res.data,
                     type: userMap[res.data.userType],
                 });
                 setUserInfoLoaded(true);
+            }
         }).catch(_ => {
             saveUserInfo(null);
             setUserInfoLoaded(true);

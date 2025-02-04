@@ -21,26 +21,10 @@ export const Information = () => {
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
     useEffect(() => {
-        jsonClient.get('user/info',
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        ).then(_ => initialSuccess()
-        ).catch(err => {
-            if (err.response.status === 513)
-                initialSuccess();
-            else
-                redirect('/auth/login');
-        });
-    }, []);
-
-    const initialSuccess = () => {
         saveUnityBackgroundMode('garden');
         hideAuthInfo();
         hideLoading();
-    }
+    }, []);
 
     const handleSubmit = (formData: any) => {
         setSaving(true);

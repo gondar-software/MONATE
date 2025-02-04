@@ -16,3 +16,4 @@ export * from '@app/components/image-uploader';
 export * from '@app/components/portfolio-card';
 export * from '@app/components/slide-viewer';
 export * from '@app/components/upload-portfolio-card';
+export * from '@app/components/badge-picker';

@@ -1,19 +1,33 @@
 import { useSaveToken, useSaveUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const Avatar = (props: any) => {
-    const [isMenuOpen, setMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const saveUserInfo = useSaveUserInfo();
     const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
+    const menuRef = useRef<HTMLDivElement>(null);
 
     const toggleMenu = () => {
-        setMenuOpen((prev) => !prev);
+        setIsMenuOpen((prev) => !prev);
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div {...props}>
+        <div {...props} ref={menuRef}>
             <div className="relative inline-block">
                 <div className="relative flex items-center gap-2 cursor-pointer" onClick={toggleMenu}>
                     {props.info.avatar ? (
@@ -52,7 +66,7 @@ export const Avatar = (props: any) => {
                     )}
                 </div>
 
-                {props.dropDownMenu && (
+                {props.dropdownmenu && (
                     <div
                         className={`absolute right-0 z-10 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600
                             transition-all duration-300 ease-in-out origin-top-right ${
@@ -66,11 +80,14 @@ export const Avatar = (props: any) => {
                         )}
 
                         <ul className="py-2 w-full text-sm text-gray-700 dark:text-gray-200">
-                            {props.dropDownMenu.map((item: any, index: number) => (
+                            {props.dropdownmenu.map((item: any, index: number) => (
                                 <li key={index} className="w-full">
                                     <button
                                         type='button'
-                                        onClick={() => redirect(item.path)}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            redirect(item.path);
+                                        }}
                                         className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                     >
                                         {item.label}
@@ -83,9 +100,10 @@ export const Avatar = (props: any) => {
                             <button
                                 type='button'
                                 onClick={() => {
+                                    setIsMenuOpen(false);
                                     saveUserInfo(null);
                                     saveToken('');
-                                    redirect('/')
+                                    redirect('/');
                                 }}
                                 className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                             >

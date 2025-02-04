@@ -22,7 +22,7 @@ export const AuthInfo = (props: any) => {
                         location: userInfo.location,
                         email: userInfo.emailAddr,
                     }}
-                    dropDownMenu={dropDownMenus[userInfo.type as keyof typeof dropDownMenus]}
+                    dropdownmenu={dropDownMenus[userInfo.type as keyof typeof dropDownMenus]}
                 />}
         </div>
     )

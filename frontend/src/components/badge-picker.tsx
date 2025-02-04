@@ -93,10 +93,10 @@ const BadgePicker = (props: BadgePickerParams) => {
                 <Badge className='h-6' onClose={() => removeBadge(badge)} key={index} name={badge.name} mode={badgeModes[(index % 8) as keyof typeof badgeModes]} />
             ))}
             {props.selectedBadges.length !== props.maxBadges && !props.disabled && 
-            <div className="relative h-6 flex flex-col">
+            <div className="relative h-6 flex flex-col flex-grow">
                 <input
                     type="text"
-                    className="w-full h-full min-w-32 border-0 pl-0 text-sm bg-transparent dark:bg-transparent text-gray-900 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-0 focus:border-transparent"
+                    className="h-full w-full min-w-32 border-0 pl-0 text-sm bg-transparent dark:bg-transparent text-gray-900 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-0 focus:border-transparent"
                     placeholder={props.placeholder}
                     value={searchQuery}
                     onChange={handleSearchChange}
@@ -106,7 +106,7 @@ const BadgePicker = (props: BadgePickerParams) => {
                 />
 
                 {textInputFocused && searchedBadges.length !== 0 && (
-                    <div className="absolute overflow-y-auto left-0 right-0 z-10 mt-8 max-h-32 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg">
+                    <div className="absolute overflow-y-auto w-44 left-0 right-0 z-10 mt-8 max-h-32 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg">
                         {searchedBadges.map((badge: any, index: any) => (
                             <div
                                 key={index}

@@ -17,5 +17,6 @@ namespace Enums
         InforNotFound = 513,
         ImageDownloadError = 514,
         FileNotFound = 515,
+        VideoDownloadError = 516,
     }
 }

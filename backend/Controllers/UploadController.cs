@@ -12,9 +12,9 @@ namespace Controllers
     public class UploadController : ControllerBase
     {
         private readonly DatabaseContext _context;
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<UploadController> _logger;
 
-        public UploadController(DatabaseContext context, ILogger<UserController> logger)
+        public UploadController(DatabaseContext context, ILogger<UploadController> logger)
         {
             _context = context;
             _logger = logger;

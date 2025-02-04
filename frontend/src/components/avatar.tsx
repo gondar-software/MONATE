@@ -66,7 +66,7 @@ export const Avatar = (props: any) => {
                     )}
                 </div>
 
-                {props.dropdownmenu && (
+                {props.info.menu && (
                     <div
                         className={`absolute right-0 z-10 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600
                             transition-all duration-300 ease-in-out origin-top-right ${
@@ -80,7 +80,7 @@ export const Avatar = (props: any) => {
                         )}
 
                         <ul className="py-2 w-full text-sm text-gray-700 dark:text-gray-200">
-                            {props.dropdownmenu.map((item: any, index: number) => (
+                            {props.info.menu.map((item: any, index: number) => (
                                 <li key={index} className="w-full">
                                     <button
                                         type='button'

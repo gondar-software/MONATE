@@ -1,6 +1,6 @@
 import { useUserInfo } from '@app/global';
 import { useRedirectionHelper } from '@app/helpers';
-import { Avatar } from '@app/components';
+import { Avatar, TransparentButton2 } from '@app/components';
 import { dropDownMenus } from '@app/constants';
 
 export const AuthInfo = (props: any) => {
@@ -10,10 +10,8 @@ export const AuthInfo = (props: any) => {
     return (
         <div {...props}>
             {!userInfo ? <div className='flex gap-4'>
-                    <button type='button' className='cursor-pointer transition-all duration-300 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-600'
-                        onClick={() => redirect('auth/login')}>Login</button>
-                    <button type='button' className='cursor-pointer transition-all duration-300 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-600'
-                        onClick={() => redirect('auth/signup')}>Sign up</button>
+                    <TransparentButton2 onClick={() => redirect('auth/login')}>Login</TransparentButton2>
+                    <TransparentButton2 onClick={() => redirect('auth/signup')}>Sign up</TransparentButton2>
                 </div> : 
                 <Avatar className='flex items-center'
                     info={{
@@ -21,8 +19,8 @@ export const AuthInfo = (props: any) => {
                         name: userInfo.firstName,
                         location: userInfo.location,
                         email: userInfo.emailAddr,
+                        menu: dropDownMenus[userInfo.type as keyof typeof dropDownMenus],
                     }}
-                    dropdownmenu={dropDownMenus[userInfo.type as keyof typeof dropDownMenus]}
                 />}
         </div>
     )

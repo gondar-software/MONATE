@@ -1,4 +1,4 @@
-import { UploadPortfolioCard } from "@app/components";
+import { UploadPortfolioCard } from "@app/controls";
 import { useSaveUnityBackgroundMode, useUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 import { useHeader, useLoading } from "@app/providers";

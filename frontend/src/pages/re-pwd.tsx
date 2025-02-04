@@ -1,4 +1,4 @@
-import { AuthCard, CodeVerify } from "@app/components";
+import { AuthCard, CodeVerify } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";

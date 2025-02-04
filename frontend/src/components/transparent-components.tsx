@@ -1,7 +1,7 @@
 import { useSaveUnityBackgroundMode } from '@app/global';
 import { useRedirectionHelper } from '@app/helpers';
 
-export const TransparentButton = (props: any) => {
+export const TransparentButton1 = (props: any) => {
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
@@ -18,4 +18,9 @@ export const TransparentButton = (props: any) => {
     );
 };
 
-export default TransparentButton;
+export const TransparentButton2 = (props: any) => {
+    return (
+        <button type='button' className='cursor-pointer transition-all duration-300 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-600'
+            onClick={props.onClick}>{props.children}</button>
+    )
+}

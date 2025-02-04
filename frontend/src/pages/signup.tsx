@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AuthCard, CodeVerify } from "@app/components";
+import { AuthCard, CodeVerify } from "@app/controls";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useSaveToken, useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";

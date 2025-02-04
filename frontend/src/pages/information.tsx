@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { InformationCard } from "@app/components";
+import { InformationCard } from "@app/controls";
 import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
-import { genderTypes } from "@app/constants";
+import { genderTypes, userTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useSaveUnityBackgroundMode, useSaveUserInfo, useToken, useUserInfo } from "@app/global";
@@ -55,6 +55,11 @@ export const Information = () => {
     }
 
     const saveInfo = (formData: any, res: any = null) => {
+        const userMap = Object.entries(userTypes).reduce((acc: any, [key, value]) => {
+            acc[value] = key;
+            return acc;
+        }, {});
+
         jsonClient.post('/user/info',
             {
                 firstName: formData.firstName,
@@ -84,6 +89,7 @@ export const Information = () => {
                 avatar: formData.avatar === 'original' ? (userInfo ? userInfo.avatar : '') : 
                     (formData.avatar ? URL.createObjectURL(formData.avatar) : null),
                 emailAddr: userInfo ? userInfo.emailAddr : '',
+                type: userMap[userInfo.userType],
             });
             redirect('/');
         }).catch(err => 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AuthCard } from "@app/components";
+import { AuthCard } from "@app/controls";
 import { useSaveToken, useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";

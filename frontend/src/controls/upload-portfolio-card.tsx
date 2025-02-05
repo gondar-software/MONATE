@@ -1,36 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BadgePicker from "./badge-picker";
 import { FormHeader2, FormSelect1, FormSubmitButton1, FormTextField1 } from "@app/components";
-
-const categories = [
-    {
-        id: 0,
-        name: 'blue',
-    },
-    {
-        id: 1,
-        name: 'gray',
-    },
-    {
-        id: 2,
-        name: 'red',
-    },
-    {
-        id: 3,
-        name: 'green',
-    },
-    {
-        id: 4,
-        name: 'yellow',
-    },
-    {
-        id: 5,
-        name: 'indigo',
-    },
-]
+import { useJsonCryptionMiddleware } from "@app/middlewares";
+import { useToken } from "@app/global";
 
 export const UploadPortfolioCard = (props: any) => {
+    const token = useToken();
     const [selectedBadges, setSelectedBadges] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
+    const { jsonClient } = useJsonCryptionMiddleware();
+
+    useEffect(() => {
+        jsonClient.get('category',
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        ).then((res) => {
+            setCategories(res.data.categories);
+        });
+    }, []);
 
     const handleSubmit = () => {
 

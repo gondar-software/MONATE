@@ -23,7 +23,7 @@ interface BadgePickerParams
     disabled? : boolean;
 }
 
-const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadges = 3, placeholder, disabled }: BadgePickerParams) => {
+export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadges = 3, placeholder, disabled }: BadgePickerParams) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchedBadges, setSearchedBadges] = useState(badges);
     const [textInputFocused, setTextInputFocused] = useState(false);

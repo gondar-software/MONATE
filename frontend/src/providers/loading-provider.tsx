@@ -47,7 +47,7 @@ export const LoadingProvider = (props: any) => {
                         avatar: url,
                         type: userMap[res.data.userType],
                     });
-                }).catch().finally(() => {
+                }).catch(_ => {}).finally(() => {
                     setUserInfoLoaded(true);
                 });
             }

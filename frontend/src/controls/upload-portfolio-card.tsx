@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
-import BadgePicker from "./badge-picker";
-import { FormHeader2, FormSelect1, FormSubmitButton1, FormTextField1 } from "@app/components";
+import { BadgePicker } from "@app/controls";
+import { FormFileItem1, FormFileUploader1, FormHeader2, FormSelect1, FormSubmitButton1, FormTextField1 } from "@app/components";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useToken } from "@app/global";
+import { useAlert } from "@app/providers";
 
 export const UploadPortfolioCard = (props: any) => {
     const token = useToken();
-    const [selectedBadges, setSelectedBadges] = useState<any[]>([]);
+    const [title, setTitle] = useState('');
+    const [portfolioType, setPortfolioType] = useState('');
+    const [url, setUrl] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
+    const [slides, setSlides] = useState<any[]>([]);
     const { jsonClient } = useJsonCryptionMiddleware();
+    const { addAlert } = useAlert();
 
     useEffect(() => {
         jsonClient.get('category',
@@ -22,8 +28,33 @@ export const UploadPortfolioCard = (props: any) => {
         });
     }, []);
 
-    const handleSubmit = () => {
+    const handleSetFileData = (file: any, fileType: any) => {
+        if (fileType === 'image' ||  fileType === 'video') {
+            setSlides([...slides, { file: file, fileType: fileType }]);
+        }
+        else
+        {
+            addAlert({
+                mode: 'danger',
+                title: 'Error',
+                message: 'File type is not correct.',
+            });
+        }
+    }
 
+    const deleteSlide = (index: number) => {
+        setSlides(slides.filter((_, i) => i !== index));
+    }
+
+    const handleSubmit = (event: any) => {
+        event.preventDefault();
+        props.onSubmit({
+            title: title,
+            type: portfolioType,
+            url: url,
+            categories: selectedCategories,
+            slides: slides,
+        });
     }
 
     return (
@@ -37,6 +68,8 @@ export const UploadPortfolioCard = (props: any) => {
                     type="title"
                     name="title"
                     id="title"
+                    value={title}
+                    onChange={(e: any) => setTitle(e.target.value)}
                     placeholder="Portfolio Title"
                     required
                 />
@@ -45,6 +78,8 @@ export const UploadPortfolioCard = (props: any) => {
                     name="type"
                     id="type"
                     placeholder="Select your portfolio type"
+                    value={portfolioType}
+                    onChange={(e: any) => setPortfolioType(e.target.value)}
                     options={[
                         {
                             value: 'web',
@@ -69,6 +104,8 @@ export const UploadPortfolioCard = (props: any) => {
                     type="url"
                     name="url"
                     id="url"
+                    value={url}
+                    onChange={(e: any) => setUrl(e.target.value)}
                     placeholder="https://..."
                 />
                 <div>
@@ -77,13 +114,26 @@ export const UploadPortfolioCard = (props: any) => {
                     </label>
                     <BadgePicker 
                         badges={categories} 
-                        selectedBadges={selectedBadges} 
-                        setSelectedBadges={setSelectedBadges} 
+                        selectedBadges={selectedCategories} 
+                        setSelectedBadges={setSelectedCategories} 
                         placeholder='Input category...'
                     />
                 </div>
+                <div className="space-y-2 w-full">
+                    {slides.map((slide: any, index: number) => (
+                        <FormFileItem1
+                            key={index}
+                            value={slide.file.name}
+                            onDelete={() => deleteSlide(index)}
+                        />
+                    ))}
+                    <FormFileUploader1
+                        label="Choose image/video"
+                        setFileData={handleSetFileData}
+                    />
+                </div>
                 <FormSubmitButton1 submitting={props.uploading}>
-                    Upload
+                    Upload Portfolio
                 </FormSubmitButton1>
             </form>
         </div>

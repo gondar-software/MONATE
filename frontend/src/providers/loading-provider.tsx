@@ -3,12 +3,14 @@ import { LoadingMonate } from '@app/components';
 import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from '@app/middlewares';
 import { useSaveUserInfo, useToken } from '@app/global';
 import { userTypes } from '@app/constants';
+import { useNavigate } from 'react-router-dom';
 
 const LoadingContext = createContext<any | undefined>(undefined);
 
 export const LoadingProvider = (props: any) => {
     const token = useToken();
     const saveUserInfo = useSaveUserInfo();
+    const navigate = useNavigate();
     const { jsonClient } = useJsonCryptionMiddleware();
     const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -23,7 +25,7 @@ export const LoadingProvider = (props: any) => {
             acc[value] = key;
             return acc;
         }, {});
-        await jsonClient.get('user/info',
+        await jsonClient.get('/user/info',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -33,7 +35,7 @@ export const LoadingProvider = (props: any) => {
             if (res.data.avatar)
             {
                 await jsonOnlyRequestClient.get(
-                    `download/image?filePath=${res.data.avatar}`,
+                    `/download/image?filePath=${res.data.avatar}`,
                     {
                         responseType: 'blob',
                         headers: {
@@ -59,7 +61,9 @@ export const LoadingProvider = (props: any) => {
                 });
                 setUserInfoLoaded(true);
             }
-        }).catch(_ => {
+        }).catch(err => {
+            if (err.response.status === 513)
+                navigate('/user/info');
             saveUserInfo(null);
             setUserInfoLoaded(true);
         });

@@ -69,7 +69,7 @@ export const SignUp = () => {
             saveToken(res.data.token);
             await initLoading(res.data.token);
             hideVerifyCode();
-            redirect('/');
+            redirect('/user/info');
         }).catch(err => {
             handleNetworkError(err, addAlert);
         });

@@ -89,11 +89,13 @@ export const Information = () => {
                 avatar: formData.avatar === 'original' ? (userInfo ? userInfo.avatar : '') : 
                     (formData.avatar ? URL.createObjectURL(formData.avatar) : null),
                 emailAddr: userInfo ? userInfo.emailAddr : '',
-                type: userMap[userInfo.userType],
+                type: userInfo ? userMap[userInfo.userType] : '',
             });
             redirect('/');
-        }).catch(err => 
+        }).catch(err => {
+            console.log(err);
             handleNetworkError(err, addAlert)
+        }
         ).finally(() => {
             setSaving(false);
         });

@@ -17,7 +17,7 @@ export const InformationCard = (props: any) => {
     const [state, setState] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [country, setCountry] = useState('');
-    const [avatar, setAvatar] = useState<any>(userInfo.avatar ? 'original' : null);
+    const [avatar, setAvatar] = useState<any>(userInfo?.avatar ? 'original' : null);
     const [githubUrl, setGithubUrl] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     
@@ -81,7 +81,7 @@ export const InformationCard = (props: any) => {
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center">
                         Avatar
                     </label>
-                    <ImageUploader initUrl={userInfo.avatar} className='w-40 h-40' maxWidth={2048} maxHeight={2048} onImageUpload={handleAvatarUpload} />
+                    <ImageUploader initUrl={userInfo?.avatar} className='w-40 h-40' maxWidth={2048} maxHeight={2048} onImageUpload={handleAvatarUpload} />
                 </div>
                 <FormTextField1
                     label="First Name"
@@ -183,7 +183,7 @@ export const InformationCard = (props: any) => {
                     value={zipCode}
                     onChange={(e: any) => setZipCode(e.target.value)}
                     aria-describedby="helper-text-explanation" 
-                    placeholder="90210" 
+                    placeholder="90012" 
                     required
                 />
                 <FormTextField1

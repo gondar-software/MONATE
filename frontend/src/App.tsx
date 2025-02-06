@@ -33,12 +33,12 @@ export const App = () => {
   }, [lightMode]);
 
   return (
-    <Router>
-      <LoadingProvider>
-        <UnityBackgroundProvider>
-          <HeaderProvider>
-            <FooterProvider>
-              <AlertProvider>
+    <AlertProvider>
+      <Router>
+        <LoadingProvider>
+          <UnityBackgroundProvider>
+            <HeaderProvider>
+              <FooterProvider>
                 <Routes>
                   {routes.map((layout) => (
                     layout.pages.map((page) => (
@@ -46,12 +46,12 @@ export const App = () => {
                     ))
                   ))}
                 </Routes>
-              </AlertProvider>
-            </FooterProvider>
-          </HeaderProvider>
-        </UnityBackgroundProvider>
-      </LoadingProvider>
-    </Router>
+              </FooterProvider>
+            </HeaderProvider>
+          </UnityBackgroundProvider>
+        </LoadingProvider>
+      </Router>
+    </AlertProvider>
   );
 };
 

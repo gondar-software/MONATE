@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using Databases;
 using Databases.EndpointData;
@@ -58,23 +59,29 @@ namespace Controllers
         {
             try
             {
+                var categoryIds = packet.Categories?.Select(ca => ca.Id).ToList();
+
                 var portfolio = new Portfolio
                 {
                     Type = packet.Type,
                     Name = packet.Name,
                     Url = packet.Url,
-                    Categories = packet.Categories?.Select(c => new Category { Name = c }).ToList(),
+                    Categories = categoryIds != null && categoryIds.Any()
+                        ? await _context.Categories
+                            .Where(c => categoryIds.Contains(c.Id))
+                            .ToListAsync()
+                        : null,
                     Items = packet.Items?.Select(i => new PortfolioItem
-                        {
-                            Type = i.Type,
-                            Path = i.Path,
-                        }).ToList(),
+                    {
+                        Type = i.Type,
+                        Path = i.Path,
+                    }).ToList(),
                 };
 
                 _context.Portfolios.Add(portfolio);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetPortfolio), new { id = portfolio.Id }, portfolio);
+                return Ok(new { id = portfolio.Id });
             }
             catch (Exception ex)
             {
@@ -105,7 +112,7 @@ namespace Controllers
                         Type = portfolio.Type,
                         Name = portfolio.Name,
                         Url = portfolio.Url,
-                        Categories = portfolio.Categories?.Select(c => c.Name).ToList(),
+                        Categories = portfolio.Categories?.ToList(),
                         Items = portfolio.Items?.Select(i => new PortfolioItemData
                             {
                                 Type = i.Type,

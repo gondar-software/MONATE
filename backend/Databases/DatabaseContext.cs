@@ -141,9 +141,9 @@ namespace Databases
 
         private void ConfigureTeamTables(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Portfolio>()
-                .HasMany(p => p.Categories)
-                .WithMany(c => c.Portfolios);
+            //modelBuilder.Entity<Portfolio>()
+            //    .HasMany(p => p.Categories)
+            //    .WithMany(c => c.Portfolios);
             modelBuilder.Entity<PortfolioItem>()
                 .HasOne(p => p.Portfolio)
                 .WithMany(p => p.Items)
@@ -153,6 +153,9 @@ namespace Databases
 
         private void ConfigureEndpointTables(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Portfolios)
+                .WithMany(c => c.Categories);
             modelBuilder.Entity<Commit>()
                 .HasOne(c => c.User)
                 .WithMany(u => u.Commits)

@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Text;
 using Databases;
+using Databases.Dto;
 using Databases.EndpointData;
 using Databases.TeamData;
 using Enums;
@@ -25,6 +26,7 @@ namespace Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetIds([FromQuery] int page = 1, [FromQuery] string? query = null)
         {
@@ -90,6 +92,7 @@ namespace Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPortfolio(int id)
         {
@@ -112,7 +115,12 @@ namespace Controllers
                         Type = portfolio.Type,
                         Name = portfolio.Name,
                         Url = portfolio.Url,
-                        Categories = portfolio.Categories?.ToList(),
+                        Categories = portfolio.Categories?.Select(c => new CategoryDto
+                            {
+                                Id = c.Id,
+                                Name = c.Name,
+                                Description = c.Description,
+                            }).ToList(),
                         Items = portfolio.Items?.Select(i => new PortfolioItemData
                             {
                                 Type = i.Type,

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { AuthCard, CodeVerify } from "@app/controls";
-import { useJsonCryptionMiddleware } from "@app/middlewares";
+import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 import { useSaveToken, useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useRedirectionHelper } from "@app/helpers";
 
 export const SignUp = () => {
-    const { jsonClient } = useJsonCryptionMiddleware();
+    const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
     const { hideLoading, initLoading } = useLoading();
@@ -27,7 +27,7 @@ export const SignUp = () => {
 
     const handleSubmit = (data: any) => {
         setSubmitting(true);
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/register',
             {
                 emailAddr: data.email,
@@ -44,7 +44,7 @@ export const SignUp = () => {
     };
 
     const handleResendCode = () => {
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/register',
             {
                 emailAddr: formData.email,
@@ -58,7 +58,7 @@ export const SignUp = () => {
     }
 
     const handleComplete = (code: string) => {
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/verify',
             {
                 emailAddr: formData.email,

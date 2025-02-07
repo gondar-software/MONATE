@@ -3,14 +3,14 @@ import { AuthCard } from "@app/controls";
 import { useSaveToken, useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
-import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
+import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 
 export const Login = () => {
     const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
-    const { jsonClient } = useJsonCryptionMiddleware();
+    const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
     const { hideLoading, initLoading } = useLoading();
@@ -24,7 +24,7 @@ export const Login = () => {
 
     const handleSubmit = (formData: any) => {
         setSubmitting(true);
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/login',
             {
                 emailAddr: formData.email,

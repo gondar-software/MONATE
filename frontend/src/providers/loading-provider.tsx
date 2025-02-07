@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { LoadingMonate } from '@app/components';
-import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from '@app/middlewares';
+import { useJsonNoTokenCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from '@app/middlewares';
 import { useSaveUserInfo, useToken } from '@app/global';
 import { userTypes } from '@app/constants';
 import { useNavigate } from 'react-router-dom';
@@ -8,28 +8,28 @@ import { useNavigate } from 'react-router-dom';
 const LoadingContext = createContext<any | undefined>(undefined);
 
 export const LoadingProvider = (props: any) => {
-    const token = useToken();
     const saveUserInfo = useSaveUserInfo();
     const navigate = useNavigate();
-    const { jsonClient } = useJsonCryptionMiddleware();
+    const token = useToken();
     const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
+    const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [userInfoLoaded, setUserInfoLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        initLoading(token);
+        initLoading();
     }, []);
 
-    const initLoading = async(token: any) => {
+    const initLoading = async(tokenData: string = token) => {
         const userMap = Object.entries(userTypes).reduce((acc: any, [key, value]) => {
             acc[value] = key;
             return acc;
         }, {});
-        await jsonClient.get('/user/info',
+        await jsonNoTokenClient.get('/user/info',
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                    Authorization: `Bearer ${tokenData}`
+                }
             }
         ).then(async(res) =>{
             if (res.data.avatar)
@@ -38,9 +38,6 @@ export const LoadingProvider = (props: any) => {
                     `/download/image?filePath=${res.data.avatar}`,
                     {
                         responseType: 'blob',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        }
                     }
                 ).then(avatar => {
                     const url = URL.createObjectURL(avatar.data);

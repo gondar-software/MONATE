@@ -2,14 +2,14 @@ import { AuthCard, CodeVerify } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
-import { useJsonCryptionMiddleware } from "@app/middlewares";
+import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useEffect, useState } from "react";
 
 export const RePassword = () => {
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
-    const { jsonClient } = useJsonCryptionMiddleware();
+    const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
     const { hideLoading } = useLoading();
@@ -25,7 +25,7 @@ export const RePassword = () => {
 
     const handleSubmit = (formData: any) => {
         setSubmitting(true);
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/re-pwd',
             {
                 emailAddr: formData.email,
@@ -42,7 +42,7 @@ export const RePassword = () => {
     };
 
     const handleResendCode = () => {
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/re-pwd',
             {
                 emailAddr: formData.email,
@@ -56,7 +56,7 @@ export const RePassword = () => {
     }
 
     const handleComplete = (code: string) => {
-        jsonClient.post(
+        jsonNoTokenClient.post(
             '/user/verify',
             {
                 emailAddr: formData.email,

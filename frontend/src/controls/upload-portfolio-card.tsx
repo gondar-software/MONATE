@@ -2,11 +2,9 @@ import { useState, useEffect } from "react";
 import { BadgePicker } from "@app/controls";
 import { FormFileItem1, FormFileUploader1, FormHeader2, FormSelect1, FormSubmitButton1, FormTextField1 } from "@app/components";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
-import { useToken } from "@app/global";
 import { useAlert } from "@app/providers";
 
 export const UploadPortfolioCard = (props: any) => {
-    const token = useToken();
     const [title, setTitle] = useState('');
     const [portfolioType, setPortfolioType] = useState('');
     const [url, setUrl] = useState('');
@@ -17,15 +15,10 @@ export const UploadPortfolioCard = (props: any) => {
     const { addAlert } = useAlert();
 
     useEffect(() => {
-        jsonClient.get('category',
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        ).then((res) => {
-            setCategories(res.data.categories);
-        });
+        jsonClient.get('category')
+            .then((res) => {
+                setCategories(res.data.categories);
+            });
     }, []);
 
     const handleSetFileData = (file: any, fileType: any) => {

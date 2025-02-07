@@ -1,13 +1,16 @@
 import axios from 'axios';
 import { useCryptionHelper } from '@app/helpers';
+import { useToken } from '@app/global';
 
 export const useJsonOnlyRequestCryptionMiddleware = () => {
     const { encrypt } = useCryptionHelper();
+    const token = useToken();
 
     const jsonOnlyRequestClient = axios.create({
         baseURL: `/api`,
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 

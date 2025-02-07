@@ -4,7 +4,7 @@ import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middl
 import { genderTypes, userTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
-import { useSaveUnityBackgroundMode, useSaveUserInfo, useToken, useUserInfo } from "@app/global";
+import { useSaveUnityBackgroundMode, useSaveUserInfo, useUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 
 export const Information = () => {
@@ -14,7 +14,6 @@ export const Information = () => {
     const { hideLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
     const [saving, setSaving] = useState(false);
-    const token = useToken();
     const userInfo = useUserInfo();
     const saveUserInfo = useSaveUserInfo();
     const redirect = useRedirectionHelper();
@@ -34,12 +33,7 @@ export const Information = () => {
             formDt.append('image', formData.avatar);
             formClient.post(
                 '/upload/image',
-                formDt,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                formDt
             ).then(res => {
                 saveInfo(formData, res)
             }).catch(err => 
@@ -76,12 +70,7 @@ export const Information = () => {
                 avatar: res ? res.data.filePath : 'original',
                 githubUrl: formData.githubUrl,
                 phoneNumber: formData.phoneNumber,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            },
+            }
         ).then(_ => {
             setSaving(false);
             saveUserInfo({

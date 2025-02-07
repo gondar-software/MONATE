@@ -1,20 +1,17 @@
 import axios from 'axios';
 import { useCryptionHelper } from '@app/helpers';
-import { useToken } from '@app/global';
 
-export const useJsonCryptionMiddleware = () => {
+export const useJsonNoTokenCryptionMiddleware = () => {
     const { encrypt, decrypt } = useCryptionHelper();
-    const token = useToken();
 
-    const jsonClient = axios.create({
+    const jsonNoTokenClient = axios.create({
         baseURL: `/api`,
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
         },
     });
 
-    jsonClient.interceptors.request.use(async(config) => {
+    jsonNoTokenClient.interceptors.request.use(async(config) => {
         if (config.data) {
             config.data = await encrypt(JSON.stringify(config.data));
         }
@@ -23,7 +20,7 @@ export const useJsonCryptionMiddleware = () => {
         return Promise.reject(error);
     });
 
-    jsonClient.interceptors.response.use(async(response) => {
+    jsonNoTokenClient.interceptors.response.use(async(response) => {
         if (response.data) {
             const decrypted = await decrypt(response.data);
             response.data = decrypted && JSON.parse(decrypted);
@@ -33,7 +30,7 @@ export const useJsonCryptionMiddleware = () => {
         return Promise.reject(error);
     });
 
-    return { jsonClient };
+    return { jsonNoTokenClient };
 };
 
-export default useJsonCryptionMiddleware;
+export default useJsonNoTokenCryptionMiddleware;

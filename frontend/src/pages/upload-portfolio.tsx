@@ -1,7 +1,7 @@
 import { fileTypes } from "@app/constants";
 import { portfolioTypes } from "@app/constants/portfolio-types";
 import { UploadPortfolioCard } from "@app/controls";
-import { useSaveUnityBackgroundMode, useToken, useUserInfo } from "@app/global";
+import { useSaveUnityBackgroundMode, useUserInfo } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
@@ -15,7 +15,6 @@ export const UploadPortfolio = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
     const userInfo = useUserInfo();
-    const token = useToken();
     const redirect = useRedirectionHelper();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
 
@@ -45,12 +44,7 @@ export const UploadPortfolio = () => {
 
                 await formClient.post(
                     `/upload/${slide.fileType}`,
-                    formDt,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    formDt
                 ).then(res => {
                     formData.slides[index] = { ...slide, filePath: res.data.filePath }
                 }).catch(err => {
@@ -71,18 +65,11 @@ export const UploadPortfolio = () => {
             items: items,
         }
 
-        jsonClient.post('/portfolio/create',
-            packet,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        ).then()
-        .catch(err => handleNetworkError(err, addAlert))
-        .finally(() => {
-            setUploading(false);
-        });
+        jsonClient.post('/portfolio/create', packet).then()
+            .catch(err => handleNetworkError(err, addAlert))
+            .finally(() => {
+                setUploading(false);
+            });
     }
 
     return (

@@ -1,4 +1,4 @@
-import { FormHeader2 } from "@app/components";
+import { FormHeader2, Pagenation } from "@app/components";
 import { PortfolioCard } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
@@ -15,26 +15,33 @@ export const Portfolios = () => {
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
     const redirect = useRedirectionHelper();
     const [portfolioIds, setPortfolioIds] = useState<any[]>([]);
+    const [maxPage, setMaxPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const fetchPortfolios = async (page = 1) => {
+        await jsonClient.get(`/portfolio?page=${page}`)
+            .then(res => {
+                setPortfolioIds(res.data.portfolioIds);
+                setMaxPage(res.data.maxPage);
+            }).catch(err => {
+                handleNetworkError(err, addAlert)
+                if (err.response.status === 401)
+                    redirect('/auth/login');
+            }
+            ).finally(() => {
+                saveUnityBackgroundMode('garden');
+                showAuthInfo();
+                hideLoading();
+            });
+    };
 
     useEffect(() => {
-        const fetchPortfolios = async () => {
-            await jsonClient.get('/portfolio')
-                .then(res => {
-                    setPortfolioIds(res.data.portfolioIds);
-                }).catch(err => {
-                    handleNetworkError(err, addAlert)
-                    if (err.response.status === 401)
-                        redirect('/auth/login');
-                }
-                ).finally(() => {
-                    saveUnityBackgroundMode('garden');
-                    showAuthInfo();
-                    hideLoading();
-                });
-        };
+        fetchPortfolios(currentPage);
+    }, [currentPage]);
 
-        fetchPortfolios();
-    }, []);
+    const handleChangePage = (page: number) => {
+        setCurrentPage(page);
+    }
 
     return (
         <div className="min-h-screen w-full">
@@ -47,6 +54,53 @@ export const Portfolios = () => {
                 {portfolioIds.map((id: number, index: number) => (
                     <PortfolioCard id={id} key={index} />
                 ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+                {portfolioIds.map((id: number, index: number) => (
+                    <PortfolioCard id={id} key={index} />
+                ))}
+            </div>
+            <div className="fixed bottom-24 w-full flex items-center justify-center">
+                <div className="backdrop-blur-xl min-w-[400px] rounded-lg p-2 flex items-center justify-center gap-2">
+                    <Pagenation maxPage={maxPage} onChangePage={handleChangePage} />
+                </div>
             </div>
         </div>
     )

@@ -35,11 +35,11 @@ export function SlideViewer(props: any) {
         transition={{ duration: 0.2 }}
         className="w-full h-full flex items-center justify-center"
       >
-        {props.slides[currentIndex].type === "image" ? (
-          <img src={props.slides[currentIndex].src} alt="slide" className="w-full h-full object-cover" />
+        {props.slides[currentIndex]?.type === "image" ? (
+          <img src={props.slides[currentIndex]?.url} alt="slide" className="w-full h-full object-cover" />
         ) : (
           <video
-            src={props.slides[currentIndex].src}
+            src={props.slides[currentIndex]?.url}
             autoPlay
             muted
             loop

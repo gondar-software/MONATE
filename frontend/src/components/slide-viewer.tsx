@@ -24,9 +24,13 @@ export function SlideViewer(props: any) {
 
   return (
     <div
-      className="relative w-full h-full mx-auto overflow-hidden rounded-lg bg-gray-400"
+      className="cursor-pointer relative w-full h-full mx-auto overflow-hidden rounded-lg bg-gray-400"
       onMouseEnter={() => setPaused(false)}
       onMouseLeave={() => setPaused(true)}
+      onClick={() => {
+        if (!props.slidingButton)
+          nextSlide();
+      }}
     >
       <motion.div
         key={currentIndex}

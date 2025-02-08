@@ -48,7 +48,9 @@ export const UploadPortfolio = () => {
                 ).then(res => {
                     formData.slides[index] = { ...slide, filePath: res.data.filePath }
                 }).catch(err => {
-                    handleNetworkError(err, addAlert);
+                    handleNetworkError(err, addAlert)
+                    if (err.response.status === 401)
+                        redirect('/auth/login');
                 });
             })
         );
@@ -66,7 +68,11 @@ export const UploadPortfolio = () => {
         }
 
         jsonClient.post('/portfolio/create', packet).then()
-            .catch(err => handleNetworkError(err, addAlert))
+            .catch(err => {
+                handleNetworkError(err, addAlert)
+                if (err.response.status === 401)
+                    redirect('/auth/login');
+            })
             .finally(() => {
                 setUploading(false);
             });

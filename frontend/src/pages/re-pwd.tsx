@@ -33,10 +33,10 @@ export const RePassword = () => {
             }
         ).then(_ => {
             setFormData(formData);
-            setSubmitting(false);
             showVerifyCode();
         }).catch(err => {
             handleNetworkError(err, addAlert);
+        }).finally(() => {
             setSubmitting(false);
         });
     };

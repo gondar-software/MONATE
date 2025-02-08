@@ -5,7 +5,7 @@ export const Pagenation = (props: any) => {
     const [showingPages, setShowingPages] = useState<number[]>([]);
 
     useEffect(() => {
-        const totalPages = props.maxPage;
+        const totalPages = props.maxPage ?? 1;
         const pagesToShow = [];
         
         const range = 2;

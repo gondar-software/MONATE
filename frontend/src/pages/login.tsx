@@ -33,10 +33,10 @@ export const Login = () => {
         ).then(async(res) => {
             saveToken(res.data.token);
             await initLoading(res.data.token);
-            setSubmitting(false);
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert);
+        }).finally(() => {
             setSubmitting(false);
         });
     };

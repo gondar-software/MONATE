@@ -3,6 +3,8 @@ import { BadgePicker } from "@app/controls";
 import { FormFileItem1, FormFileUploader1, FormHeader2, FormSelect1, FormSubmitButton1, FormTextField1 } from "@app/components";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert } from "@app/providers";
+import { handleNetworkError } from "@app/handlers";
+import { useRedirectionHelper } from "@app/helpers";
 
 export const UploadPortfolioCard = (props: any) => {
     const [title, setTitle] = useState('');
@@ -13,11 +15,16 @@ export const UploadPortfolioCard = (props: any) => {
     const [slides, setSlides] = useState<any[]>([]);
     const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
+    const redirect = useRedirectionHelper();
 
     useEffect(() => {
         jsonClient.get('category')
             .then((res) => {
                 setCategories(res.data.categories);
+            }).catch(err => {
+                handleNetworkError(err, addAlert)
+                if (err.response.status === 401)
+                    redirect('/auth/login');
             });
     }, []);
 

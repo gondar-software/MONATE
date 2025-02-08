@@ -36,9 +36,11 @@ export const Information = () => {
                 formDt
             ).then(res => {
                 saveInfo(formData, res)
-            }).catch(err => 
+            }).catch(err => {
                 handleNetworkError(err, addAlert)
-            ).finally(() => {
+                if (err.response.status === 401)
+                    redirect('/auth/login');
+            }).finally(() => {
                 setSaving(false);
             });
         }
@@ -82,10 +84,10 @@ export const Information = () => {
             });
             redirect('/');
         }).catch(err => {
-            console.log(err);
             handleNetworkError(err, addAlert)
-        }
-        ).finally(() => {
+            if (err.response.status === 401)
+                redirect('/auth/login');
+        }).finally(() => {
             setSaving(false);
         });
     }

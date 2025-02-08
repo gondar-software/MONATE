@@ -1,6 +1,7 @@
-import { LoadingMonate, SlideViewer } from "@app/components";
+import { LoadingSpin, SlideViewer } from "@app/components";
 import { fileTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
+import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from "@app/middlewares";
 import { useAlert } from "@app/providers";
 import { useEffect, useState } from "react"
@@ -11,6 +12,7 @@ export const PortfolioCard = (props: any) => {
     const { addAlert } = useAlert();
     const [loading, setLoading] = useState(true);
     const [slides, setSlides] = useState<any[]>([]);
+    const redirect = useRedirectionHelper();
 
     useEffect(() => {
         init(props.id);
@@ -23,7 +25,9 @@ export const PortfolioCard = (props: any) => {
         }, {});
         
         const response = await jsonClient.get(`/portfolio/${id}`).catch(err => {
-            handleNetworkError(err, addAlert);
+            handleNetworkError(err, addAlert)
+            if (err.response.status === 401)
+                redirect('/auth/login');
             return null;
         });
 
@@ -36,7 +40,9 @@ export const PortfolioCard = (props: any) => {
                         responseType: 'blob',
                     }
                 ).catch(err => {
-                    handleNetworkError(err, addAlert);
+                    handleNetworkError(err, addAlert)
+                    if (err.response.status === 401)
+                        redirect('/auth/login');
                     return null;
                 });
 
@@ -57,7 +63,9 @@ export const PortfolioCard = (props: any) => {
         <div className="w-full max-w-sm p-4 flex-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <form>
                 {loading ? 
-                    <LoadingMonate /> :
+                    <div className="w-full h-full justify-center items-center">
+                        <LoadingSpin className='w-12 h-12' />
+                    </div> :
                     <div className="space-y-2">
                         <div className="w-full h-52">
                             <SlideViewer slides={slides} />

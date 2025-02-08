@@ -1,6 +1,5 @@
 export * from '@app/controls/unity-garden-control';
 export * from '@app/controls/unity-oasis-control';
-export * from '@app/controls/portfolios-control';
 export * from '@app/controls/portfolio-card';
 export * from '@app/controls/auth-card';
 export * from '@app/controls/information-card';

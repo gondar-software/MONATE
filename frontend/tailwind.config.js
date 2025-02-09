@@ -2,6 +2,7 @@
 import fontExtensions from './src/extensions/font-extensions';
 import animationExtensions from './src/extensions/animation-extensions';
 import keyframeExtensions from './src/extensions/keyframe-extensions';
+import heightExtensions from './src/extensions/height-extensions';
 
 export default {
   content: [
@@ -19,6 +20,9 @@ export default {
       },
       keyframes: {
         ...keyframeExtensions,
+      },
+      height: {
+        ...heightExtensions,
       },
     },
   },

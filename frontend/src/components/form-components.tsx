@@ -70,6 +70,14 @@ export const FormHeader2 = (props: any) => {
     )
 }
 
+export const FormHeader3 = (props: any) => {
+    return (
+        <h5 className="text-xl w-full truncate font-medium text-gray-900 dark:text-white">
+            {props.children}
+        </h5>
+    )
+}
+
 export const FormSelect1 = (props: any) => {
     return (
         <div>
@@ -188,5 +196,22 @@ export const FormFileItem1 = (props: any) => {
                 <span className="sr-only">Delete</span>
             </button>
         </div>
+    )
+}
+
+export const FormLinkButton1 = (props: any) => {
+    return (
+        <a 
+            href={props.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-normal text-gray-900 dark:text-white">
+            {props.icon ? 
+                <span className="flex items-center cursor-pointer">
+                    {props.icon}&nbsp;
+                    <div className="w-full truncate">{props.children}</div>
+                </span>
+                : <div className="w-full truncate cursor-pointer">{props.children}</div>}
+        </a>
     )
 }

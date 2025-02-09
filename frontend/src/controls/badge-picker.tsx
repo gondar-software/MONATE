@@ -15,11 +15,11 @@ const badgeModes =
 
 interface BadgePickerParams
 {
-    badges: any[];
+    badges?: any[];
     selectedBadges: any[];
-    setSelectedBadges: (badges: any[]) => void;
+    setSelectedBadges?: (badges: any[]) => void;
     maxBadges? : number;
-    placeholder: string;
+    placeholder?: string;
     disabled? : boolean;
 }
 
@@ -33,7 +33,7 @@ export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadg
             if (!selectedBadges)
                 setSearchedBadges([]);
 
-            const initializedSerchedBadges = badges.filter((badge: any) =>
+            const initializedSerchedBadges = badges?.filter((badge: any) =>
                 !selectedBadges.some((selected: any) => selected.id === badge.id)
             );
             setSearchedBadges(initializedSerchedBadges);
@@ -42,7 +42,7 @@ export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadg
     }, [badges, selectedBadges]);
 
     const removeBadge = (badge: any) => {
-        setSelectedBadges(selectedBadges.filter((_badge: any) => _badge.id !== badge.id));
+        setSelectedBadges?.(selectedBadges.filter((_badge: any) => _badge.id !== badge.id));
         updateSearchedBadges(searchQuery, selectedBadges.filter((_badge: any) => _badge.id !== badge.id));
     };
 
@@ -57,7 +57,7 @@ export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadg
 
     const selectBadge = (badge: any) => {
         if (!selectedBadges.some((selected: any) => selected.id === badge.id)) {
-            setSelectedBadges([...selectedBadges, badge]);
+            setSelectedBadges?.([...selectedBadges, badge]);
         }
         setSearchQuery('');
         updateSearchedBadges('', [...selectedBadges, badge]);
@@ -71,7 +71,7 @@ export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadg
     };
 
     const updateSearchedBadges = (query: any, currentSelectedBadges: any) => {
-        const filteredBadges = badges.filter((badge: any) =>
+        const filteredBadges = badges?.filter((badge: any) =>
             badge.name.toLowerCase().includes(query.toLowerCase()) &&
             !currentSelectedBadges.some((selected: any) => selected.id === badge.id)
         );
@@ -88,9 +88,15 @@ export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadg
     };
 
     return (
-        <div className="pl-3 flex items-center flex-wrap bg-gray-50 dark:bg-gray-600 border border-gray-300 rounded-lg p-2 gap-y-2 dark:border-gray-500">
+        <div className={disabled ? "flex gap-1 w-full overflow-hidden" : "pl-3 flex items-center flex-wrap bg-gray-50 dark:bg-gray-600 border border-gray-300 rounded-lg p-2 gap-y-2 dark:border-gray-500"}>
             {selectedBadges.map((badge: any, index: any) => (
-                <Badge className='h-6' onClose={() => removeBadge(badge)} key={index} name={badge.name} mode={badgeModes[(index % 8) as keyof typeof badgeModes]} />
+                <div className={!disabled ? "h-6" : ""} key={index}>
+                    <Badge 
+                        onClose={() => removeBadge(badge)} 
+                        hiddenRemoveButton={disabled}
+                        name={badge.name} 
+                        mode={badgeModes[(index % 8) as keyof typeof badgeModes]} />
+                </div>
             ))}
             {selectedBadges.length !== maxBadges && !disabled && 
             <div className="relative h-6 flex flex-col flex-grow">
@@ -105,9 +111,9 @@ export const BadgePicker = ({ badges, selectedBadges, setSelectedBadges, maxBadg
                     onKeyDown={handleKeyDown}
                 />
 
-                {textInputFocused && searchedBadges.length !== 0 && (
+                {textInputFocused && searchedBadges?.length !== 0 && (
                     <div className="absolute overflow-y-auto w-44 left-0 right-0 z-10 mt-8 max-h-32 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg">
-                        {searchedBadges.map((badge: any, index: any) => (
+                        {searchedBadges?.map((badge: any, index: any) => (
                             <div
                                 key={index}
                                 className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white"

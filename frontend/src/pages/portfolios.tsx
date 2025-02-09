@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 export const Portfolios = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { hideLoading } = useLoading();
+    const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
@@ -19,6 +19,7 @@ export const Portfolios = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     const fetchPortfolios = async (page = 1) => {
+        showLoading();
         await jsonClient.get(`/portfolio?page=${page}`)
             .then(res => {
                 setPortfolioIds(res.data.portfolioIds);
@@ -51,48 +52,6 @@ export const Portfolios = () => {
                         Portfolios
                     </FormHeader2>
                 </div>
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
                 {portfolioIds.map((id: number, index: number) => (
                     <PortfolioCard id={id} key={index} />
                 ))}

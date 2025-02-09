@@ -33,8 +33,8 @@ export const Pagenation = (props: any) => {
                         </svg>
                     </button>
                 </li>
-                {showingPages.map((page: number, index: number) => (<li>
-                    <button type='button' onClick={() => handleClick(page)} key={index} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{page}</button>
+                {showingPages.map((page: number, index: number) => (<li key={index}>
+                    <button type='button' onClick={() => handleClick(page)} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{page}</button>
                 </li>))}
                 <li>
                     <button disabled={currentPage >= props.maxPage} type='button' onClick={() => handleClick(currentPage + 1)} className="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">

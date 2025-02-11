@@ -5,6 +5,7 @@ using Databases.TeamData;
 using Databases.UserData;
 using Databases.ChatbotData;
 using Microsoft.EntityFrameworkCore;
+using Databases.SystemData;
 
 namespace Databases
 {
@@ -54,6 +55,11 @@ namespace Databases
 
         #region ChatbotTables
         public DbSet<ChatbotHistory> ChatbotHistories { get; set; } = null!;
+        public DbSet<ChatbotCache> ChatbotCaches { get; set; } = null!;
+        #endregion
+
+        #region SystemTables
+        public DbSet<EnvValue> EnvValues { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -66,6 +72,11 @@ namespace Databases
             ConfigureEcommerceTables(modelBuilder);
             ConfigureCommunicationTables(modelBuilder);
             ConfigureChatbotTables(modelBuilder);
+            ConfigureSystemTables(modelBuilder);
+        }
+
+        private void ConfigureSystemTables(ModelBuilder modelBuilder)
+        {
         }
 
         private void ConfigureUserTables(ModelBuilder modelBuilder)
@@ -272,6 +283,11 @@ namespace Databases
                 .HasOne(c => c.User)
                 .WithMany(u => u.ChatbotHistories)
                 .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ChatbotCache>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.ChatbotCache)
+                .HasForeignKey<ChatbotCache>(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

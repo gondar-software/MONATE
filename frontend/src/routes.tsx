@@ -3,7 +3,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { MonateIcon } from '@app/components';
-import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio } from '@app/pages';
+import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot } from '@app/pages';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -99,7 +99,7 @@ export const routes = [
                 name: 'chatbot',
                 label: 'Chatbot',
                 path: '/chatbot',
-                element: <div />,
+                element: <Chatbot />,
             },
             {
                 icon: <div />,

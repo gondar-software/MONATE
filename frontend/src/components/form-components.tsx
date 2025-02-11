@@ -1,9 +1,9 @@
 export const FormTextField1 = (props: any) => {
     return (
         <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            {props.label && <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 {`${props.label}${props.required ? ' *' : ''}`}
-            </label>
+            </label>}
             <input
                 type={props.type}
                 name={props.name}
@@ -21,9 +21,9 @@ export const FormTextField1 = (props: any) => {
 export const FormTextField2 = (props: any) => {
     return (
         <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            {props.label && <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 {props.label}
-            </label>
+            </label>}
             <input
                 type={props.type}
                 name={props.name}

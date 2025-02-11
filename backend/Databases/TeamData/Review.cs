@@ -1,4 +1,4 @@
-namespace Database.TeamData
+namespace Databases.TeamData
 {
     public class Review
     {

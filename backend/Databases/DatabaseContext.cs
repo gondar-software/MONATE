@@ -1,9 +1,9 @@
-﻿using Database.TeamData;
-using Databases.CommunicationData;
+﻿using Databases.CommunicationData;
 using Databases.EcommerceData;
 using Databases.EndpointData;
 using Databases.TeamData;
 using Databases.UserData;
+using Databases.ChatbotData;
 using Microsoft.EntityFrameworkCore;
 
 namespace Databases
@@ -52,6 +52,10 @@ namespace Databases
         public DbSet<Mail> Mails { get; set; } = null!;
         #endregion
 
+        #region ChatbotTables
+        public DbSet<ChatbotHistory> ChatbotHistories { get; set; } = null!;
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +65,7 @@ namespace Databases
             ConfigureEndpointTables(modelBuilder);
             ConfigureEcommerceTables(modelBuilder);
             ConfigureCommunicationTables(modelBuilder);
+            ConfigureChatbotTables(modelBuilder);
         }
 
         private void ConfigureUserTables(ModelBuilder modelBuilder)
@@ -258,6 +263,15 @@ namespace Databases
                 .HasOne(m => m.ReceiverUser)
                 .WithMany(u => u.ReceivedMails)
                 .HasForeignKey(m => m.ReceiverUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        private void ConfigureChatbotTables(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChatbotHistory>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.ChatbotHistories)
+                .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -1,11 +1,7 @@
-using System.Linq;
 using System.Text;
 using Databases;
-using Databases.Dto;
-using Databases.EndpointData;
 using Databases.TeamData;
 using Enums;
-using Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -110,22 +106,22 @@ namespace Controllers
                 }
                 else
                 {
-                    var packet = new PortfolioPacket
+                    var packet = new
                     {
                         Type = portfolio.Type,
                         Name = portfolio.Name,
                         Url = portfolio.Url,
-                        Categories = portfolio.Categories?.Select(c => new CategoryDto
+                        Categories = portfolio.Categories?.Select(c => new
                             {
                                 Id = c.Id,
                                 Name = c.Name,
                                 Description = c.Description,
-                            }).ToList(),
-                        Items = portfolio.Items?.Select(i => new PortfolioItemData
+                            }).ToList() ?? [],
+                        Items = portfolio.Items?.Select(i => new
                             {
                                 Type = i.Type,
                                 Path = i.Path,
-                            }).ToList(),
+                            }).ToList() ?? [],
                     };
 
                     return Ok(packet);

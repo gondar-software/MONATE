@@ -25,7 +25,7 @@ export const Portfolios = () => {
                 setPortfolioIds(res.data.portfolioIds);
                 setMaxPage(res.data.maxPage);
             }).catch(err => {
-                handleNetworkError(err, addAlert)
+                handleNetworkError(err, addAlert);
                 if (err.response.status === 401)
                     redirect('/auth/login');
             }

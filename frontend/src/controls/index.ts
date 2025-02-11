@@ -6,3 +6,4 @@ export * from '@app/controls/information-card';
 export * from '@app/controls/upload-portfolio-card';
 export * from '@app/controls/badge-picker';
 export * from '@app/controls/code-verify';
+export * from '@app/controls/chatbot-navbar-card';

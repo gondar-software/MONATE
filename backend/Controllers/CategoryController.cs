@@ -22,7 +22,7 @@ namespace Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.AsNoTracking().ToListAsync();
             return Ok(new { Categories = categories });
         }
     }

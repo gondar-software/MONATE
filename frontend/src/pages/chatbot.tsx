@@ -1,21 +1,18 @@
 import { LoadingSpin } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
-import { useSaveUnityBackgroundMode, useToken } from "@app/global";
+import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
-import { useCryptionHelper, useRedirectionHelper } from "@app/helpers";
-import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from "@app/middlewares";
+import { useRedirectionHelper } from "@app/helpers";
+import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { ArrowUpCircleIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const Chatbot = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
-    const { encrypt } = useCryptionHelper();
-    const token = useToken();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
     const redirect = useRedirectionHelper();
     const [chatHistories, setChatHistories] = useState<any[]>([]);
@@ -24,8 +21,27 @@ export const Chatbot = () => {
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [currentHistory, setCurrentHistory] = useState<any[]>([]);
     const [rag, setRag] = useState(false);
-
+    const [chatId, setChatId] = useState('');
     const [answer, setAnswer] = useState('');
+    
+    const [socket, setSocket] = useState<WebSocket>();
+    const [websocket, setWebsocket] = useState<WebSocket>();
+
+    const hookRef = useRef({
+        processing: false, 
+        chatId: '', 
+        socket, 
+        websocket,
+    });
+
+    useEffect(() => {
+        hookRef.current = {
+            processing: processing,
+            chatId: chatId,
+            socket: socket,
+            websocket: websocket
+        };
+    }, [processing, chatId, socket, websocket]);
     
     const fetchHistories = async () => {
         showLoading();
@@ -48,6 +64,64 @@ export const Chatbot = () => {
         fetchHistories();
     }, []);
 
+    useEffect(() => {
+        const initializeWebsocket = () => {
+            const ws = new WebSocket('ws://localhost:5000/ws/chatbot');
+            setWebsocket(ws);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+            };
+
+            ws.onmessage = (event) => {
+                const msg = event.data;
+                const msgData = JSON.parse(msg);
+
+                msgData.map((m: any) => {
+                    if (m.Type === 0)
+                    {
+                        setAnswer((prev) => prev + m.Message);
+                    }
+                    else if (m.Type === 2) {
+                        setProcessing(false);
+                    }
+                    else if (m.Type === 1) {
+                        addAlert('danger', m.Message);
+                        setProcessing(false);
+                    }
+                })
+
+                if (hookRef.current.processing)
+                {
+                    const id = hookRef.current.chatId;
+                    sendMessage(id);
+                }
+            }
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error', error);
+            };
+
+            setSocket(ws);
+
+            return () => {
+                ws.close();
+                setSocket(undefined);
+            };
+        }
+        initializeWebsocket();
+    }, []);
+
+    const sendMessage = (message: string) => {
+        if (hookRef.current.socket && hookRef.current.socket.readyState === WebSocket.OPEN) {
+            hookRef.current.socket.send(message);
+        }
+    };
+
     const handleHistoryChoose = (index: number) => {
         setLoadingHistory(true);
 
@@ -61,6 +135,7 @@ export const Chatbot = () => {
                     redirect('/auth/login');
             }).finally(() => {
                 setLoadingHistory(false);
+                setChatId(his.chatId);
             });
 
         setChatHistories((prev) =>
@@ -81,56 +156,21 @@ export const Chatbot = () => {
 
     const handlePrompt = async() => {
         setProcessing(true);
-        try {
-            const response = await fetch(`/api/chatbot/prompt`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                body: await encrypt(JSON.stringify({ query: prompt, rag: true })),
-            });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
+        jsonClient.post('/chatbot/prompt',
+            {
+                query: prompt,
+                rag: rag,
+                id: chatId,
             }
-
-            console.log(response);
-
-            const reader = response.body?.getReader();
-            const decoder = new TextDecoder();
-            
-            if (!reader) {
-                throw new Error("No response stream available.");
-            }
-
-            let result = ""; // To accumulate the response text
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                const chunk = decoder.decode(value, { stream: true });
-
-                result += chunk; // Accumulate chunk to result
-
-                // Update the state with the new chunk
-                setAnswer((prev) => prev + chunk);
-
-                console.log(chunk); // For debugging, log the chunk
-
-                // Optionally, you can also throttle the updates to prevent too many state updates if needed
-            }
-
-            // After the loop finishes, you can also handle any finalization (e.g., logging the complete result)
-            console.log("Final Answer: ", result);
-
-        } catch (err) {
-            console.error("Error:", err);
-        } finally {
-            setProcessing(false);
-        }
-
+        ).then((res) => {
+            setChatId(res.data.id);
+            sendMessage(res.data.id);
+        }).catch((err) => {
+            handleNetworkError(err, addAlert);
+            if (err.response.status === 401)
+                redirect('/auth/login');
+        });
     }
 
     return (

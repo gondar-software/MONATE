@@ -1,4 +1,5 @@
 using System.Text;
+using Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -42,7 +43,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+app.UseRouting();
+
 app.UseMiddleware<Middlewares.CryptionMiddleware>();
+
+app.UseWebSockets();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/ws/chatbot")
+    {
+        if (context.WebSockets.IsWebSocketRequest)
+        {
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            await WebSocketHelper.HandleWebSocketAsync(webSocket);
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

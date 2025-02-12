@@ -5,9 +5,12 @@ using Enums;
 using Databases;
 using Newtonsoft.Json;
 using Packets.Chatbot;
-using Microsoft.AspNetCore.SignalR;
 using System.Text;
 using Databases.ChatbotData;
+using NBitcoin.Secp256k1;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using Temp;
 
 namespace Controllers
 {
@@ -58,7 +61,7 @@ namespace Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("history")]
         public async Task<IActionResult> GetChatbotHistory(string id)
         {
             try
@@ -98,19 +101,14 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("prompt")]
-        public async Task Prompt(PromptRequest request)
+        public async Task<IActionResult> Prompt([FromBody] PromptRequest request)
         {
             try
             {
-                Response.ContentType = "text/plain";
-                Response.StatusCode = 200;
-
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
                 if (string.IsNullOrEmpty(userEmail))
                 {
-                    Response.StatusCode = (int)ErrorType.Unauthorized;
-                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(ErrorType.Unauthorized.ToString()));
-                    return;
+                    return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
                 }
 
                 var user = await _context.Users
@@ -120,86 +118,43 @@ namespace Controllers
 
                 if (user == null)
                 {
-                    Response.StatusCode = (int)ErrorType.UserNotFound;
-                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(ErrorType.UserNotFound.ToString()));
-                    return;
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
                 }
 
-                var history = user.ChatbotHistories?
-                    .FirstOrDefault(c => c.ChatId == request.Id);
-
-                List<(string, string)> his = history?.HistoryFilePath == null || user.ChatbotCache?.LastId == request.Id ? 
-                    new List<(string, string)>() : 
-                    (List<(string, string)>)(JsonConvert.DeserializeObject(
+                var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
+                List<(string, string)> his = history?.HistoryFilePath == null || user.ChatbotCache?.LastId == request.Id
+                    ? new List<(string, string)>()
+                    : (List<(string, string)>)(JsonConvert.DeserializeObject(
                         System.IO.File.ReadAllText(history.HistoryFilePath)
                     ) ?? new List<(string, string)>());
 
-                var qwenAPI = await _context.EnvValues
-                    .AsNoTracking()
+                var qwenAPI = await _context.EnvValues.AsNoTracking()
                     .FirstOrDefaultAsync(e => e.Type == EnvType.QWEN_API_URL);
                 var url = qwenAPI?.Value ?? "";
 
                 if (user.ChatbotCache != null && user.ChatbotCache.LastId != request.Id)
                 {
-                    try
-                    {
-                        using var res = await _httpClient.GetAsync($"{url}/del-history?id={user.ChatbotCache.LastId}");
-                    }
+                    try { await _httpClient.GetAsync($"{url}/del-history?id={user.ChatbotCache.LastId}"); }
                     catch { }
                 }
 
-                var id = request.Id ?? $"{Guid.NewGuid()}";
+                var id = string.IsNullOrEmpty(request.Id) ? $"{Guid.NewGuid()}" : request.Id;
+                ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
+                {
+                    Type = ChatbotMessageType.Data,
+                    Message = ""
+                });
+
+                var path = $"Chatbot/{id}.txt";
 
                 if (user.ChatbotCache == null)
                 {
-                    await _context.ChatbotCaches.AddAsync(new ChatbotCache
-                    {
-                        User = user,
-                        LastId = id,
-                    });
+                    await _context.ChatbotCaches.AddAsync(new ChatbotCache { User = user, LastId = id });
                 }
                 else
+                {
                     user.ChatbotCache.LastId = id;
-
-                await _context.SaveChangesAsync();
-
-                using var response = await _httpClient.PostAsync(url,
-                    new StringContent(JsonConvert.SerializeObject(new { 
-                        Id = id,
-                        Query = request.Query,
-                        History = his,
-                        Rag = request.Rag,
-                    }), System.Text.Encoding.UTF8, "application/json"));
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    Response.StatusCode = (int)ErrorType.QwenServerError;
-                    await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(ErrorType.QwenServerError.ToString()));
-                    return;
                 }
-
-                var stream = await response.Content.ReadAsStreamAsync();
-                using var reader = new StreamReader(stream);
-
-                string generatedText = "";
-                while (!reader.EndOfStream)
-                {
-                    var chunk = await reader.ReadLineAsync();
-                    if (chunk != null)
-                    {
-                        generatedText += chunk;
-
-                        await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(chunk));
-                        await Response.Body.FlushAsync();
-                    }
-                }
-
-                his.Add((request.Query, generatedText));
-
-                var path = $"Chatbot/{id}.txt";
-                if (!Directory.Exists(Path.GetDirectoryName(path)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
-                System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(his));
 
                 if (history == null)
                 {
@@ -213,13 +168,75 @@ namespace Controllers
                 }
 
                 await _context.SaveChangesAsync();
+
+                Thread thread = new Thread(async () =>
+                {
+                    try
+                    {
+                        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url)
+                        {
+                            Content = new StringContent(JsonConvert.SerializeObject(new
+                            {
+                                Id = id,
+                                Query = request.Query,
+                                History = his,
+                                Rag = request.Rag ?? false,
+                            }), Encoding.UTF8, "application/json")
+                        };
+
+                        using var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
+
+                        var stream = await response.Content.ReadAsStreamAsync();
+                        using var reader = new StreamReader(stream, Encoding.UTF8);
+
+                        string generatedText = "";
+                        Console.WriteLine("Success");
+
+                        char[] buffer = new char[1024];
+                        while (!reader.EndOfStream)
+                        {
+                            int readCount = await reader.ReadAsync(buffer, 0, buffer.Length);
+                            if (readCount > 0)
+                            {
+                                var chunk = new string(buffer, 0, readCount);
+                                generatedText += chunk;
+
+                                ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
+                                {
+                                    Type = ChatbotMessageType.Data,
+                                    Message = chunk,
+                                });
+                            }
+                        }
+                        reader.Close();
+
+                        ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
+                        {
+                            Type = ChatbotMessageType.End,
+                            Message = generatedText
+                        });
+
+                        his.Add((request.Query, generatedText));
+                        Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
+                        System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(his));
+                    }
+                    catch (Exception ex)
+                    {
+                        ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
+                        {
+                            Type = ChatbotMessageType.Error,
+                            Message = ex.Message,
+                        });
+                    }
+                });
+                thread.Start();
+
+                return Ok(new { Id = id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error prompting");
-                Response.StatusCode = (int)ErrorType.Unknown;
-                await Response.Body.WriteAsync(Encoding.UTF8.GetBytes(ErrorType.Unknown.ToString()));
-                return;
+                _logger.LogError(ex, "Error getting chatbot histories");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
     }

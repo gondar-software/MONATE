@@ -19,6 +19,6 @@ namespace Enums
         FileNotFound = 515,
         VideoDownloadError = 516,
         ChatbotHistoryNotFound = 517,
-        QWEN_SERVER_ERROR = 518,
+        QwenServerError = 518,
     }
 }

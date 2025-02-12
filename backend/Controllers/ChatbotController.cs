@@ -11,6 +11,9 @@ using NBitcoin.Secp256k1;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Temp;
+using System.Collections.Generic;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Text.Json;
 
 namespace Controllers
 {
@@ -88,7 +91,7 @@ namespace Controllers
                     return Ok();
 
                 var str = System.IO.File.ReadAllText(history.HistoryFilePath);
-                var his = JsonConvert.DeserializeObject(str);
+                var his = DeserialiseHistory(str);
 
                 return Ok(his);
             }
@@ -122,21 +125,16 @@ namespace Controllers
                 }
 
                 var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
-                List<(string, string)> his = history?.HistoryFilePath == null || user.ChatbotCache?.LastId == request.Id
-                    ? new List<(string, string)>()
-                    : (List<(string, string)>)(JsonConvert.DeserializeObject(
+                List<List<string>> his = history?.HistoryFilePath == null || user.ChatbotCache?.LastId == request.Id
+                    ? new List<List<string>>()
+                    : DeserialiseHistory(
                         System.IO.File.ReadAllText(history.HistoryFilePath)
-                    ) ?? new List<(string, string)>());
+                    ) ?? new List<List<string>>();
+                var hisTemp = history?.HistoryFilePath == null ?
+                    new List<List<string>>() : DeserialiseHistory(System.IO.File.ReadAllText(history.HistoryFilePath)) ?? new List<List<string>>();
 
                 var qwenAPI = await _context.EnvValues.AsNoTracking()
                     .FirstOrDefaultAsync(e => e.Type == EnvType.QWEN_API_URL);
-                var url = qwenAPI?.Value ?? "";
-
-                if (user.ChatbotCache != null && user.ChatbotCache.LastId != request.Id)
-                {
-                    try { await _httpClient.GetAsync($"{url}/del-history?id={user.ChatbotCache.LastId}"); }
-                    catch { }
-                }
 
                 var id = string.IsNullOrEmpty(request.Id) ? $"{Guid.NewGuid()}" : request.Id;
                 ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
@@ -144,6 +142,19 @@ namespace Controllers
                     Type = ChatbotMessageType.Data,
                     Message = ""
                 });
+
+                var url = qwenAPI?.Value ?? "";
+                var ragUrl = $"{url}/rag-doc?id={id}";
+
+                if (user.ChatbotCache != null && user.ChatbotCache.LastId != request.Id)
+                {
+                    try
+                    {
+                        await _httpClient.GetAsync($"{url}/del-history?id={user.ChatbotCache.LastId}");
+                        await _httpClient.GetAsync($"{url}/del-rag-doc?id={user.ChatbotCache.LastId}");
+                    }
+                    catch { }
+                }
 
                 var path = $"Chatbot/{id}.txt";
 
@@ -190,7 +201,6 @@ namespace Controllers
                         using var reader = new StreamReader(stream, Encoding.UTF8);
 
                         string generatedText = "";
-                        Console.WriteLine("Success");
 
                         char[] buffer = new char[1024];
                         while (!reader.EndOfStream)
@@ -210,15 +220,30 @@ namespace Controllers
                         }
                         reader.Close();
 
+                        if (request.Rag == true)
+                        {
+                            HttpResponseMessage res = await _httpClient.GetAsync(ragUrl);
+
+                            if (res.IsSuccessStatusCode)
+                            {
+                                string jsonResponse = await res.Content.ReadAsStringAsync();
+                                ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
+                                {
+                                    Type = ChatbotMessageType.RAGDoc,
+                                    Message = jsonResponse,
+                                });
+                            }
+                        }
+
                         ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
                         {
                             Type = ChatbotMessageType.End,
                             Message = generatedText
                         });
 
-                        his.Add((request.Query, generatedText));
+                        hisTemp.Add([request.Query, generatedText]);
                         Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
-                        System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(his));
+                        System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
                     }
                     catch (Exception ex)
                     {
@@ -238,6 +263,51 @@ namespace Controllers
                 _logger.LogError(ex, "Error getting chatbot histories");
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
+        }
+
+        [Authorize]
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteHistory(string id)
+        {
+            try
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+                }
+
+                var user = await _context.Users
+                    .Include(u => u.ChatbotHistories)
+                    .Include(u => u.ChatbotCache)
+                    .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
+
+                if (user == null)
+                {
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                }
+
+                var history = user.ChatbotHistories?
+                    .FirstOrDefault(c => c.ChatId == id);
+
+                if (history == null)
+                    return StatusCode((int)ErrorType.ChatbotHistoryNotFound, ErrorType.ChatbotHistoryNotFound.ToString());
+
+                user.ChatbotHistories?.Remove(history);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting chatbot history");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        private List<List<string>>? DeserialiseHistory(string str)
+        {
+            var deserialized = JsonConvert.DeserializeObject<List<List<string>>>(str);
+            return deserialized;
         }
     }
 }

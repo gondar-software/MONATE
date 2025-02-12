@@ -6,7 +6,7 @@ import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { ArrowUpCircleIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const Chatbot = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
@@ -21,6 +21,27 @@ export const Chatbot = () => {
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [currentHistory, setCurrentHistory] = useState<any[]>([]);
     const [rag, setRag] = useState(false);
+    const [chatId, setChatId] = useState('');
+    const [answer, setAnswer] = useState('');
+    
+    const [socket, setSocket] = useState<WebSocket>();
+    const [websocket, setWebsocket] = useState<WebSocket>();
+
+    const hookRef = useRef({
+        processing: false, 
+        chatId: '', 
+        socket, 
+        websocket,
+    });
+
+    useEffect(() => {
+        hookRef.current = {
+            processing: processing,
+            chatId: chatId,
+            socket: socket,
+            websocket: websocket
+        };
+    }, [processing, chatId, socket, websocket]);
     
     const fetchHistories = async () => {
         showLoading();
@@ -43,11 +64,69 @@ export const Chatbot = () => {
         fetchHistories();
     }, []);
 
+    useEffect(() => {
+        const initializeWebsocket = () => {
+            const ws = new WebSocket('ws://localhost:5000/ws/chatbot');
+            setWebsocket(ws);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+            };
+
+            ws.onmessage = (event) => {
+                const msg = event.data;
+                const msgData = JSON.parse(msg);
+
+                msgData.map((m: any) => {
+                    if (m.Type === 0)
+                    {
+                        setAnswer((prev) => prev + m.Message);
+                    }
+                    else if (m.Type === 2) {
+                        setProcessing(false);
+                    }
+                    else if (m.Type === 1) {
+                        addAlert('danger', m.Message);
+                        setProcessing(false);
+                    }
+                })
+
+                if (hookRef.current.processing)
+                {
+                    const id = hookRef.current.chatId;
+                    sendMessage(id);
+                }
+            }
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error', error);
+            };
+
+            setSocket(ws);
+
+            return () => {
+                ws.close();
+                setSocket(undefined);
+            };
+        }
+        initializeWebsocket();
+    }, []);
+
+    const sendMessage = (message: string) => {
+        if (hookRef.current.socket && hookRef.current.socket.readyState === WebSocket.OPEN) {
+            hookRef.current.socket.send(message);
+        }
+    };
+
     const handleHistoryChoose = (index: number) => {
         setLoadingHistory(true);
 
         const his = chatHistories[index];
-        jsonClient.get(`/chatbot?id=${his.chatId}`)
+        jsonClient.get(`/chatbot/history?id=${his.chatId}`)
             .then(res => {
                 setCurrentHistory(res.data);
             }).catch(err => {
@@ -56,6 +135,7 @@ export const Chatbot = () => {
                     redirect('/auth/login');
             }).finally(() => {
                 setLoadingHistory(false);
+                setChatId(his.chatId);
             });
 
         setChatHistories((prev) =>
@@ -74,8 +154,23 @@ export const Chatbot = () => {
         textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
     }
 
-    const handlePrompt = () => {
+    const handlePrompt = async() => {
         setProcessing(true);
+
+        jsonClient.post('/chatbot/prompt',
+            {
+                query: prompt,
+                rag: rag,
+                id: chatId,
+            }
+        ).then((res) => {
+            setChatId(res.data.id);
+            sendMessage(res.data.id);
+        }).catch((err) => {
+            handleNetworkError(err, addAlert);
+            if (err.response.status === 401)
+                redirect('/auth/login');
+        });
     }
 
     return (
@@ -90,6 +185,7 @@ export const Chatbot = () => {
                                 <div className="w-full text-wrap text-right">{chat[1]}</div>
                             </div>
                         ))}
+                        <div className="w-full text-wrap">{answer}</div>
                     </div>
                     <div className="max-w-3xl w-full gap-2 flex flex-col mb-2 px-2 py-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                         <textarea

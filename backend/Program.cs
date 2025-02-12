@@ -15,6 +15,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddDbContext<Databases.DatabaseContext>(options =>
 {
     options.UseNpgsql(connectionString);

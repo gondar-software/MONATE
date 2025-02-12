@@ -5,5 +5,6 @@
         Data = 0,
         Error = 1,
         End = 2,
+        RAGDoc = 3,
     }
 }

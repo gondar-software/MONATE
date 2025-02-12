@@ -20,5 +20,6 @@ namespace Enums
         VideoDownloadError = 516,
         ChatbotHistoryNotFound = 517,
         QwenServerError = 518,
+        TargetDocNotFound = 519,
     }
 }

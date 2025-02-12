@@ -37,8 +37,8 @@ export const UnityBackgroundProvider = (props: any) => {
                     className="w-full h-full absolute left-0 top-0"
                     progress={(oasisProgress + gardenProgress) / 2.}
                 />} */}
-            <div className={`w-full min-h-screen absolute left-0 top-0 transition-all duration-300 \
-                ${/*(oasisLoaded && gardenLoaded) ? */'opacity-100'/* : 'opacity-0'*/} \
+            <div className={`w-full min-h-screen absolute left-0 top-0 transition-all duration-300 
+                ${/*(oasisLoaded && gardenLoaded) ? */'opacity-100'/* : 'opacity-0'*/} 
                 ${hasInteracted ? 'bg-gray-100 bg-opacity-80 dark:bg-black dark:bg-opacity-80' : 'bg-transparent'}`}
                 onMouseMove={handleMouseMove}>
                 <div className={`w-full min-h-screen left-0 top-0 flex justify-center items-center ${hasInteracted ? 'opacity-100' : 'opacity-0'}`}>

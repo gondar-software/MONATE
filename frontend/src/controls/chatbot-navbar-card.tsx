@@ -9,19 +9,20 @@ export const ChatbotNavbarCard = (props: any) => {
             <button
                 disabled={props.disabled}
                 type='button'
-                className='w-full bg-transparent dark:bg-transparent disabled:bg-transparent dark:disabled:bg-transparent ml-4 mr-2 px-3 py-1 mt-6 mb-4 text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600'>
+                onClick={props.onNewChat}
+                className='w-full text-left bg-transparent dark:bg-transparent disabled:bg-transparent dark:disabled:bg-transparent ml-4 mr-2 px-6 py-1 mt-6 mb-4 text-gray-900 dark:text-white rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600'>
                 New Chat
             </button>
             <div className="w-full h-1 ml-4 mr-2 px-3 mb-3 bg-gray-400" />
             <div className="w-full h-full overflow-y-auto pr-4 pl-2 overflow-x-hidden pb-2">
-                {props.chatbotHistories && props.chatbotHistories.map((chatbotHistory: any, index: number) => (
+                {props.chatbotHistories && props.chatbotHistories.slice().reverse().map((chatbotHistory: any, index: number) => (
                     <button
-                        disabled={props.disabled}
+                        disabled={chatbotHistory.selected}
                         type='button'
                         key={index} 
-                        className={`flex flex-row bg-transparent dark:bg-transparent disabled:bg-transparent dark:disabled:bg-transparent items-center w-full ml-4 mr-2 px-3 py-1 mb-2 text-gray-900 dark:text-white rounded-lg cursor-pointer \
-                            ${chatbotHistory.selected ? 'bg-gray-300 dark:bg-gray-500' : 'hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
-                            <div className="w-full truncate" onClick={() => props.onHistoryChoose(index)}>
+                        className={`flex flex-row bg-transparent dark:bg-transparent disabled:bg-transparent dark:disabled:bg-transparent items-center w-full ml-4 mr-2 pr-2 pl-5 py-1 mb-2 text-gray-900 dark:text-white rounded-lg cursor-pointer 
+                            ${chatbotHistory.selected ? 'bg-gray-300 dark:bg-gray-500 disabled:bg-gray-300 dark:disabled:bg-gray-500' : 'hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
+                            <div className="w-full truncate text-left" onClick={() => props.onHistoryChoose(index)}>
                                 {chatbotHistory.title}
                             </div>
                             <EllipsisVerticalIcon className="w-6 h-6" />

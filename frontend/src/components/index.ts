@@ -12,3 +12,4 @@ export * from '@app/components/image-uploader';
 export * from '@app/components/slide-viewer';
 export * from '@app/components/form-components';
 export * from '@app/components/pagenation';
+export * from '@app/components/mark-preview';

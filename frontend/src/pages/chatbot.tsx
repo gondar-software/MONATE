@@ -1,18 +1,21 @@
 import { LoadingSpin } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
-import { useSaveUnityBackgroundMode } from "@app/global";
+import { useSaveUnityBackgroundMode, useToken } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
-import { useRedirectionHelper } from "@app/helpers";
-import { useJsonCryptionMiddleware } from "@app/middlewares";
+import { useCryptionHelper, useRedirectionHelper } from "@app/helpers";
+import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { ArrowUpCircleIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 export const Chatbot = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
+    const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
+    const { encrypt } = useCryptionHelper();
+    const token = useToken();
     const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
     const redirect = useRedirectionHelper();
     const [chatHistories, setChatHistories] = useState<any[]>([]);
@@ -21,6 +24,8 @@ export const Chatbot = () => {
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [currentHistory, setCurrentHistory] = useState<any[]>([]);
     const [rag, setRag] = useState(false);
+
+    const [answer, setAnswer] = useState('');
     
     const fetchHistories = async () => {
         showLoading();
@@ -47,7 +52,7 @@ export const Chatbot = () => {
         setLoadingHistory(true);
 
         const his = chatHistories[index];
-        jsonClient.get(`/chatbot?id=${his.chatId}`)
+        jsonClient.get(`/chatbot/history?id=${his.chatId}`)
             .then(res => {
                 setCurrentHistory(res.data);
             }).catch(err => {
@@ -74,8 +79,58 @@ export const Chatbot = () => {
         textarea.style.height = `${Math.min(textarea.scrollHeight, 160)}px`;
     }
 
-    const handlePrompt = () => {
+    const handlePrompt = async() => {
         setProcessing(true);
+        try {
+            const response = await fetch(`/api/chatbot/prompt`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: await encrypt(JSON.stringify({ query: prompt, rag: true })),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            console.log(response);
+
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
+            
+            if (!reader) {
+                throw new Error("No response stream available.");
+            }
+
+            let result = ""; // To accumulate the response text
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+
+                result += chunk; // Accumulate chunk to result
+
+                // Update the state with the new chunk
+                setAnswer((prev) => prev + chunk);
+
+                console.log(chunk); // For debugging, log the chunk
+
+                // Optionally, you can also throttle the updates to prevent too many state updates if needed
+            }
+
+            // After the loop finishes, you can also handle any finalization (e.g., logging the complete result)
+            console.log("Final Answer: ", result);
+
+        } catch (err) {
+            console.error("Error:", err);
+        } finally {
+            setProcessing(false);
+        }
+
     }
 
     return (
@@ -90,6 +145,7 @@ export const Chatbot = () => {
                                 <div className="w-full text-wrap text-right">{chat[1]}</div>
                             </div>
                         ))}
+                        <div className="w-full text-wrap">{answer}</div>
                     </div>
                     <div className="max-w-3xl w-full gap-2 flex flex-col mb-2 px-2 py-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                         <textarea

@@ -1,4 +1,4 @@
-import { LoadingSpin } from "@app/components";
+import { LoadingSpin, MarkupPreviewer } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
@@ -22,7 +22,6 @@ export const Chatbot = () => {
     const [currentHistory, setCurrentHistory] = useState<any[]>([]);
     const [rag, setRag] = useState(false);
     const [chatId, setChatId] = useState('');
-    const [answer, setAnswer] = useState('');
     
     const [socket, setSocket] = useState<WebSocket>();
     const [websocket, setWebsocket] = useState<WebSocket>();
@@ -80,7 +79,11 @@ export const Chatbot = () => {
                 msgData.map((m: any) => {
                     if (m.Type === 0)
                     {
-                        setAnswer((prev) => prev + m.Message);
+                        setCurrentHistory((prev) =>
+                            prev.map((history, i) => 
+                                i === prev.length - 1 ? 
+                                    [history[0], history[1] + m.Message] : history)
+                        );
                     }
                     else if (m.Type === 2) {
                         setProcessing(false);
@@ -88,6 +91,10 @@ export const Chatbot = () => {
                     else if (m.Type === 1) {
                         addAlert('danger', m.Message);
                         setProcessing(false);
+                    }
+                    else if (m.Type === 3) {
+                        const ragDoc = JSON.parse(m.Message);
+                        console.log(ragDoc);
                     }
                 })
 
@@ -125,7 +132,8 @@ export const Chatbot = () => {
     const handleHistoryChoose = (index: number) => {
         setLoadingHistory(true);
 
-        const his = chatHistories[index];
+        const idx = chatHistories.length - index - 1;
+        const his = chatHistories[idx];
         jsonClient.get(`/chatbot/history?id=${his.chatId}`)
             .then(res => {
                 setCurrentHistory(res.data);
@@ -134,16 +142,15 @@ export const Chatbot = () => {
                 if (err.response.status === 401)
                     redirect('/auth/login');
             }).finally(() => {
-                setLoadingHistory(false);
                 setChatId(his.chatId);
+                setChatHistories((prev) => (
+                    prev.map((history, i) => ({
+                        ...history,
+                        selected: i === idx,
+                    }))
+                ));
+                setLoadingHistory(false);
             });
-
-        setChatHistories((prev) =>
-            prev.map((history, i) => ({
-                ...history,
-                selected: i === index,
-            }))
-        );
     }
 
     const handlePromptChange = (e: any) => {
@@ -157,13 +164,33 @@ export const Chatbot = () => {
     const handlePrompt = async() => {
         setProcessing(true);
 
+        const query = prompt;
+        setCurrentHistory(prev => [
+            ...prev,
+            [query, '']
+        ]);
+        setPrompt('');
+
         jsonClient.post('/chatbot/prompt',
             {
-                query: prompt,
+                query: query,
                 rag: rag,
                 id: chatId,
             }
         ).then((res) => {
+            if (!chatId) {
+                setChatHistories((prev) => [
+                    ...(prev.map((history) => ({
+                        ...history,
+                        selected: false,
+                    }))),
+                    {
+                        chatId: res.data.id,
+                        title: query,
+                        selected: true,
+                    }
+                ]);
+            }
             setChatId(res.data.id);
             sendMessage(res.data.id);
         }).catch((err) => {
@@ -172,20 +199,33 @@ export const Chatbot = () => {
                 redirect('/auth/login');
         });
     }
+    
+    const handlePromptKeyDown = (e: any) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handlePrompt();
+        }
+    };
+    
+    const handleNewChat = () => {
+        setChatId('');
+        setCurrentHistory([]);
+    };
 
     return (
         <div className="h-screen w-full py-16 px-2">
             <div className="w-full h-full flex rounded-lg bg-white dark:bg-gray-800">
-                <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} />
+                <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} />
                 <div className="relative w-full h-full flex flex-col items-center">
-                    <div className='w-full max-w-3xl p-2 overflow-y-auto h-full'>
+                    <div className='w-full flex flex-col gap-8 max-w-3xl p-2 overflow-y-auto h-full'>
                         {currentHistory && currentHistory.map((chat: any, index: number) => (
-                            <div key={index} className="flex flex-col w-full">
-                                <div className="w-full text-wrap">{chat[0]}</div>
-                                <div className="w-full text-wrap text-right">{chat[1]}</div>
+                            <div key={index} className="flex gap-3 flex-col w-full items-end">
+                                {chat[0] && <div className="max-w-sm flex">
+                                    <MarkupPreviewer user text={chat[0]} />
+                                </div>}
+                                {chat[1] && <MarkupPreviewer text={chat[1]} />}
                             </div>
                         ))}
-                        <div className="w-full text-wrap">{answer}</div>
                     </div>
                     <div className="max-w-3xl w-full gap-2 flex flex-col mb-2 px-2 py-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                         <textarea
@@ -194,12 +234,13 @@ export const Chatbot = () => {
                             value={prompt}
                             disabled={processing}
                             onChange={handlePromptChange}
+                            onKeyDown={handlePromptKeyDown}
                             placeholder="Type your prompt here..."
                             className="w-full p-2 text-sm max-h-40 overflow-y-hidden bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             rows={2}
                         />
                         <div className="w-full flex justify-between">
-                            <div className={`h-10 flex items-center gap-2 cursor-pointer \
+                            <div className={`h-10 flex items-center gap-2 cursor-pointer 
                                 ${rag ? 'text-blue-700 dark:text-blue-400' : 'text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-400'}`}
                                 onClick={() => setRag(!rag)}>
                                 <GlobeAltIcon className="w-6 h-6" />

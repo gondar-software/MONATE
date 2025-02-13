@@ -153,6 +153,27 @@ export const Chatbot = () => {
             });
     }
 
+    const handleDelete = (index: number) => {
+        setLoadingHistory(true);
+
+        const idx = chatHistories.length - index - 1;
+        const his = chatHistories[idx];
+        jsonClient.post(`/chatbot/delete`,
+            his.chatId
+        ).then(_ => {
+            setChatHistories((prev) => (
+                prev.filter((_, i) => i !== idx)
+            ));
+            handleNewChat();
+        }).catch(err => {
+            handleNetworkError(err, addAlert);
+            if (err.response.status === 401)
+                redirect('/auth/login');
+        }).finally(() => {
+            setLoadingHistory(false);
+        });
+    }
+
     const handlePromptChange = (e: any) => {
         const textarea = e.target;
         setPrompt(textarea.value);
@@ -215,7 +236,7 @@ export const Chatbot = () => {
     return (
         <div className="h-screen w-full py-16 px-2">
             <div className="w-full h-full flex rounded-lg bg-white dark:bg-gray-800">
-                <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} />
+                <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} onDelete={handleDelete} />
                 <div className="relative w-full h-full flex flex-col items-center">
                     <div className='w-full flex flex-col gap-8 max-w-3xl p-2 overflow-y-auto h-full'>
                         {currentHistory && currentHistory.map((chat: any, index: number) => (

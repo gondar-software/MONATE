@@ -1,4 +1,4 @@
-import { LoadingSpin, MarkupPreviewer } from "@app/components";
+import { LoadingSpin, MarkdownPreviewer } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
@@ -242,9 +242,9 @@ export const Chatbot = () => {
                         {currentHistory && currentHistory.map((chat: any, index: number) => (
                             <div key={index} className="flex gap-3 flex-col w-full items-end">
                                 {chat[0] && <div className="max-w-sm flex">
-                                    <MarkupPreviewer user text={chat[0]} />
+                                    <MarkdownPreviewer user text={chat[0]} />
                                 </div>}
-                                {chat[1] && <MarkupPreviewer text={chat[1]} />}
+                                {chat[1] && <MarkdownPreviewer text={chat[1]} />}
                             </div>
                         ))}
                     </div>

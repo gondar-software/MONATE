@@ -13,6 +13,14 @@ namespace Temp
             _temp = new Dictionary<string, Queue<ChatbotMessage>>();
         }
 
+        public static void ClearMessages(string id)
+        {
+            lock (_lock)
+            {
+                _temp.Remove(id);
+            }
+        }
+
         public static string GetMessages(string id)
         {
             var msg = new List<ChatbotMessage>();

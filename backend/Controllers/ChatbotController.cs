@@ -7,13 +7,7 @@ using Newtonsoft.Json;
 using Packets.Chatbot;
 using System.Text;
 using Databases.ChatbotData;
-using NBitcoin.Secp256k1;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using Temp;
-using System.Collections.Generic;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Text.Json;
 
 namespace Controllers
 {
@@ -40,7 +34,7 @@ namespace Controllers
             {
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
                 if (string.IsNullOrEmpty(userEmail))
-                    return StatusCode((int)ErrorType.Unauthorized, ErrorType.Unauthorized.ToString()); 
+                    return StatusCode((int)ErrorType.Unauthorized, ErrorType.Unauthorized.ToString());
 
                 var user = await _context.Users
                     .AsNoTracking()
@@ -126,17 +120,17 @@ namespace Controllers
 
                 var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
                 List<List<string>> his = history?.HistoryFilePath == null || user.ChatbotCache?.LastId == request.Id
-                    ? new List<List<string>>()
-                    : DeserialiseHistory(
+                    ? [] : DeserialiseHistory(
                         System.IO.File.ReadAllText(history.HistoryFilePath)
-                    ) ?? new List<List<string>>();
+                    ) ?? [];
                 var hisTemp = history?.HistoryFilePath == null ?
-                    new List<List<string>>() : DeserialiseHistory(System.IO.File.ReadAllText(history.HistoryFilePath)) ?? new List<List<string>>();
+                    [] : DeserialiseHistory(System.IO.File.ReadAllText(history.HistoryFilePath)) ?? [];
 
                 var qwenAPI = await _context.EnvValues.AsNoTracking()
                     .FirstOrDefaultAsync(e => e.Type == EnvType.QWEN_API_URL);
 
                 var id = string.IsNullOrEmpty(request.Id) ? $"{Guid.NewGuid()}" : request.Id;
+                ChatbotTemp.ClearMessages(id);
                 ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
                 {
                     Type = ChatbotMessageType.Data,
@@ -180,7 +174,7 @@ namespace Controllers
 
                 await _context.SaveChangesAsync();
 
-                Thread thread = new Thread(async () =>
+                Thread thread = new(async () =>
                 {
                     try
                     {
@@ -267,7 +261,7 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("delete")]
-        public async Task<IActionResult> DeleteHistory(string id)
+        public async Task<IActionResult> DeleteHistory([FromBody] string id)
         {
             try
             {
@@ -278,6 +272,7 @@ namespace Controllers
                 }
 
                 var user = await _context.Users
+                    .AsNoTracking()
                     .Include(u => u.ChatbotHistories)
                     .Include(u => u.ChatbotCache)
                     .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
@@ -293,7 +288,8 @@ namespace Controllers
                 if (history == null)
                     return StatusCode((int)ErrorType.ChatbotHistoryNotFound, ErrorType.ChatbotHistoryNotFound.ToString());
 
-                user.ChatbotHistories?.Remove(history);
+                _context.ChatbotHistories?.Remove(history);
+                await _context.SaveChangesAsync();
 
                 return Ok();
             }
@@ -304,7 +300,7 @@ namespace Controllers
             }
         }
 
-        private List<List<string>>? DeserialiseHistory(string str)
+        private static List<List<string>>? DeserialiseHistory(string str)
         {
             var deserialized = JsonConvert.DeserializeObject<List<List<string>>>(str);
             return deserialized;

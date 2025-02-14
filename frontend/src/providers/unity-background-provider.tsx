@@ -41,9 +41,9 @@ export const UnityBackgroundProvider = (props: any) => {
                 ${(oasisLoaded && gardenLoaded) ? 'opacity-100' : 'opacity-0'} 
                 ${hasInteracted ? 'bg-gray-100 bg-opacity-80 dark:bg-black dark:bg-opacity-80' : 'bg-transparent'}`}
                 onMouseMove={handleMouseMove}>
-                <div className={`w-full min-h-screen left-0 top-0 flex justify-center items-center ${hasInteracted ? 'opacity-100' : 'opacity-0'}`}>
+                {(oasisLoaded && gardenLoaded) && <div className={`w-full min-h-screen left-0 top-0 flex justify-center items-center`}>
                     {props.children}
-                </div>
+                </div>}
             </div>
         </UnityBackgroundContext.Provider>
     );

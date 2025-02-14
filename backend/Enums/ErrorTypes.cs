@@ -21,5 +21,6 @@ namespace Enums
         ChatbotHistoryNotFound = 517,
         QwenServerError = 518,
         TargetDocNotFound = 519,
+        CouldNotFoundAIServer = 520,
     }
 }

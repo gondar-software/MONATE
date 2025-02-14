@@ -147,7 +147,10 @@ namespace Controllers
                         await _httpClient.GetAsync($"{url}/del-history?id={user.ChatbotCache.LastId}");
                         await _httpClient.GetAsync($"{url}/del-rag-doc?id={user.ChatbotCache.LastId}");
                     }
-                    catch { }
+                    catch 
+                    {
+                        return StatusCode((int)ErrorType.CouldNotFoundAIServer, ErrorType.CouldNotFoundAIServer.ToString());
+                    }
                 }
 
                 var path = $"Chatbot/{id}.txt";

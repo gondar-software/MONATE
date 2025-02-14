@@ -7,6 +7,9 @@ export const initialStates = {
     unityBackgroundMode: 'oasis',
     token: '',
     userInfo: null,
+    video1Loaded: false,
+    video2Loaded: false,
+    videoBackgroundMode: 1,
 };
 
 export default initialStates;

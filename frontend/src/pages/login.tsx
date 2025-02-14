@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AuthCard } from "@app/controls";
-import { useSaveToken, useSaveUnityBackgroundMode } from "@app/global";
+import { useSaveToken, useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
@@ -9,7 +9,7 @@ import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 export const Login = () => {
     const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
@@ -17,7 +17,7 @@ export const Login = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        saveUnityBackgroundMode('garden');
+        saveVideoBackgroundMode(1);
         hideAuthInfo();
         hideLoading();
     }, []);

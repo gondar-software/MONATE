@@ -4,7 +4,7 @@ import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middl
 import { genderTypes, userTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
-import { useSaveUnityBackgroundMode, useSaveUserInfo, useUserInfo } from "@app/global";
+import { useSaveUserInfo, useSaveVideoBackgroundMode, useUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 
 export const Information = () => {
@@ -17,10 +17,10 @@ export const Information = () => {
     const userInfo = useUserInfo();
     const saveUserInfo = useSaveUserInfo();
     const redirect = useRedirectionHelper();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
     useEffect(() => {
-        saveUnityBackgroundMode('garden');
+        saveVideoBackgroundMode(1);
         hideAuthInfo();
         hideLoading();
     }, []);

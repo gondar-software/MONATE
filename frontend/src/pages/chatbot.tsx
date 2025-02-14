@@ -1,6 +1,6 @@
 import { LoadingSpin, MarkdownPreviewer, RagDocPreviewer } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
-import { useSaveUnityBackgroundMode } from "@app/global";
+import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
@@ -13,7 +13,7 @@ export const Chatbot = () => {
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
     const [chatHistories, setChatHistories] = useState<any[]>([]);
     const [prompt, setPrompt] = useState('');
@@ -54,7 +54,7 @@ export const Chatbot = () => {
                     redirect('/auth/login');
             }
             ).finally(() => {
-                saveUnityBackgroundMode('garden');
+                saveVideoBackgroundMode(1);
                 showAuthInfo();
                 hideLoading();
             });
@@ -261,7 +261,7 @@ export const Chatbot = () => {
     return (
         <div className="h-screen w-full py-16 px-2">
             <div className="w-full h-full flex rounded-lg bg-white dark:bg-gray-800">
-                <div className={`${showNavBar ? 'visible' : 'hidden'}`}>
+                <div className={`${showNavBar ? 'visible' : 'hidden'} w-80`}>
                     <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} onDelete={handleDelete} />
                 </div>
                 <div className="relative w-full h-full flex flex-col items-center">

@@ -14,3 +14,4 @@ export * from '@app/components/form-components';
 export * from '@app/components/pagenation';
 export * from '@app/components/mark-preview';
 export * from '@app/components/rag-doc-previewer';
+export * from '@app/components/background-video';

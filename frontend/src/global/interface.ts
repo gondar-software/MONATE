@@ -9,6 +9,9 @@ import {
     setUnityBackgroundMode,
     setToken,
     setInitialValue,
+    setVideo1Loaded,
+    setVideo2Loaded,
+    setVideoBackgroundMode,
     setUserInfo,
 } from '@app/global';
 
@@ -40,6 +43,18 @@ export const useSaveToken = () => {
     const dispatch = useDispatch();
     return (token: string) => dispatch(setToken(token));
 };
+export const useSaveVideo1Loaded = () => {
+    const dispatch = useDispatch();
+    return (video1Loaded: boolean) => dispatch(setVideo1Loaded(video1Loaded));
+};
+export const useSaveVideo2Loaded = () => {
+    const dispatch = useDispatch();
+    return (video2Loaded: boolean) => dispatch(setVideo2Loaded(video2Loaded));
+};
+export const useSaveVideoBackgroundMode = () => {
+    const dispatch = useDispatch();
+    return (videoBackgroundMode: number) => dispatch(setVideoBackgroundMode(videoBackgroundMode));
+};
 export const useSaveUserInfo = () => {
     const dispatch = useDispatch();
     return (userInfo: any) => dispatch(setUserInfo(userInfo));
@@ -69,6 +84,18 @@ export const useToken = () => {
 export const useUserInfo = () => {
     return useSelector((state: any) => state.userInfo);
 };
+export const useVideo1Loaded = () => {
+    return useSelector((state: any) => state.video1Loaded);
+};
+
+export const useVideo2Loaded = () => {
+    return useSelector((state: any) => state.video2Loaded);
+};
+
+export const useVideoBackgroundMode = () => {
+    return useSelector((state: any) => state.videoBackgroundMode);
+};
+
 
 export const useSetInitialValue = () => {
     const dispatch = useDispatch();

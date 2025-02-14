@@ -1,6 +1,6 @@
 import { FormHeader2, Pagenation } from "@app/components";
 import { PortfolioCard } from "@app/controls";
-import { useSaveUnityBackgroundMode } from "@app/global";
+import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
@@ -12,7 +12,7 @@ export const Portfolios = () => {
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
     const [portfolioIds, setPortfolioIds] = useState<any[]>([]);
     const [maxPage, setMaxPage] = useState(1);
@@ -30,7 +30,7 @@ export const Portfolios = () => {
                     redirect('/auth/login');
             }
             ).finally(() => {
-                saveUnityBackgroundMode('garden');
+                saveVideoBackgroundMode(1);
                 showAuthInfo();
                 hideLoading();
             });

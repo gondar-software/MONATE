@@ -64,12 +64,12 @@ export const LoadingProvider = (props: any) => {
                 setUserInfoLoaded(true);
             }
         }).catch(err => {
+            setUserInfoLoaded(true);
             if (err.response.status === 513)
                 navigate('/user/info');
             else
             {
                 saveUserInfo(null);
-                setUserInfoLoaded(true);
             }
         });
     }

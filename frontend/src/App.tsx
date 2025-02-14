@@ -9,9 +9,9 @@ import '@app/App.css';
 import { 
   HeaderProvider, 
   LoadingProvider, 
-  UnityBackgroundProvider, 
   FooterProvider, 
-  AlertProvider
+  AlertProvider,
+  VideoBackgroundProvider
 } from '@app/providers';
 import { routes } from '@app/routes';
 import { useLightMode, useSetInitialValue } from '@app/global';
@@ -36,7 +36,7 @@ export const App = () => {
     <AlertProvider>
       <Router>
         <LoadingProvider>
-          <UnityBackgroundProvider>
+          <VideoBackgroundProvider>
             <HeaderProvider>
               <FooterProvider>
                 <Routes>
@@ -48,7 +48,7 @@ export const App = () => {
                 </Routes>
               </FooterProvider>
             </HeaderProvider>
-          </UnityBackgroundProvider>
+          </VideoBackgroundProvider>
         </LoadingProvider>
       </Router>
     </AlertProvider>

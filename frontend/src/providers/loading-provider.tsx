@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { LoadingMonate } from '@app/components';
 import { useJsonNoTokenCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from '@app/middlewares';
-import { useGardenLoaded, useOasisLoaded, useSaveUserInfo, useToken } from '@app/global';
+import { useSaveUserInfo, useToken, useVideo1Loaded, useVideo2Loaded } from '@app/global';
 import { userTypes } from '@app/constants';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,8 +11,8 @@ export const LoadingProvider = (props: any) => {
     const saveUserInfo = useSaveUserInfo();
     const navigate = useNavigate();
     const token = useToken();
-    const oasisLoaded = useOasisLoaded();
-    const gardenLoaded = useGardenLoaded();
+    const video1Loaded = useVideo1Loaded();
+    const video2Loaded = useVideo2Loaded();
     const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -79,7 +79,7 @@ export const LoadingProvider = (props: any) => {
     return(
         <LoadingContext.Provider value={{ showLoading, hideLoading, initLoading }}>
             {props.children}
-            {(!userInfoLoaded || isLoading) && (oasisLoaded && gardenLoaded) && <div className='fixed w-full h-full left-0 top-0'>
+            {(!userInfoLoaded || isLoading) && (video1Loaded && video2Loaded) && <div className='fixed w-full h-full left-0 top-0'>
                 <LoadingMonate className='w-full h-full' />
             </div>}
         </LoadingContext.Provider>

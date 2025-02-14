@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthCard, CodeVerify } from "@app/controls";
 import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
-import { useSaveToken, useSaveUnityBackgroundMode } from "@app/global";
+import { useSaveToken, useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useRedirectionHelper } from "@app/helpers";
@@ -13,14 +13,14 @@ export const SignUp = () => {
     const { hideLoading, initLoading } = useLoading();
     const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
     const [formData, setFormData] = useState<any>();
     const [isOpen, setIsOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        saveUnityBackgroundMode('garden');
+        saveVideoBackgroundMode(1);
         hideAuthInfo();
         hideLoading();
     }, []);

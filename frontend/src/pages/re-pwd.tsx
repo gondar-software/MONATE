@@ -1,5 +1,5 @@
 import { AuthCard, CodeVerify } from "@app/controls";
-import { useSaveUnityBackgroundMode } from "@app/global";
+import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export const RePassword = () => {
     const redirect = useRedirectionHelper();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
@@ -18,7 +18,7 @@ export const RePassword = () => {
     const [formData, setFormData] = useState<any>();
 
     useEffect(() => {
-        saveUnityBackgroundMode('garden');
+        saveVideoBackgroundMode(1);
         hideAuthInfo();
         hideLoading();
     }, []);

@@ -1,7 +1,7 @@
 import { fileTypes } from "@app/constants";
 import { portfolioTypes } from "@app/constants/portfolio-types";
 import { UploadPortfolioCard } from "@app/controls";
-import { useSaveUnityBackgroundMode, useUserInfo } from "@app/global";
+import { useSaveVideoBackgroundMode, useUserInfo } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
@@ -16,14 +16,14 @@ export const UploadPortfolio = () => {
     const { addAlert } = useAlert();
     const userInfo = useUserInfo();
     const redirect = useRedirectionHelper();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
     const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         if (userInfo && (userInfo.type === 'admin' || userInfo.type === 'team'))
         {
-            saveUnityBackgroundMode('garden');
+            saveVideoBackgroundMode(1);
             showAuthInfo();
             hideLoading();
         }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { 
     useLightMode,
-    useSaveUnityBackgroundMode,
+    useSaveVideoBackgroundMode,
 } from "@app/global";
 import { TransparentButton1 } from "@app/components";
 import { routes } from '@app/routes';
@@ -9,7 +9,7 @@ import { useHeader, useLoading } from "@app/providers";
 
 export const Preface = () => {
     const lightMode = useLightMode();
-    const saveUnityBackgroundMode = useSaveUnityBackgroundMode();
+    const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
     const { showAuthInfo } = useHeader();
     const { hideLoading } = useLoading();
@@ -24,7 +24,7 @@ export const Preface = () => {
     const [currentWord, setCurrentWord] = useState(0);
 
     useEffect(() => {
-        saveUnityBackgroundMode('oasis');
+        saveVideoBackgroundMode(0);
         showAuthInfo();
         hideLoading();
     }, []);

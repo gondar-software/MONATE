@@ -9,6 +9,9 @@ export const SET_UNITY_BACKGROUND_MODE = 'SET_UNITY_BACKGROUND_MODE';
 export const SET_TOKEN = 'SET_TOKEN';
 export const SET_USER_INFO = 'SET_USER_INFO';
 export const SET_INITIAL_VALUE = 'SET_INITIAL_VALUE';
+export const SET_VIDEO1_LOADED = 'SET_VIDEO1_LOADED';
+export const SET_VIDEO2_LOADED = 'SET_VIDEO2_LOADED';
+export const SET_VIDEO_BACKGROUND_MODE = 'SET_VIDEO_BACKGROUND_MODE';
 
 export const reducer = (state = initialStates, action: any) => {
     switch (action.type) {
@@ -51,6 +54,21 @@ export const reducer = (state = initialStates, action: any) => {
             return {
                 ...state,
                 userInfo: action.payload,
+            };
+        case SET_VIDEO1_LOADED:
+            return {
+                ...state,
+                video1Loaded: action.payload,
+            };
+        case SET_VIDEO2_LOADED:
+            return {
+                ...state,
+                video2Loaded: action.payload,
+            };
+        case SET_VIDEO_BACKGROUND_MODE:
+            return {
+                ...state,
+                videoBackgroundMode: action.payload,
             };
         case SET_INITIAL_VALUE:
             return {
@@ -96,6 +114,18 @@ export const setToken = (token: string) => ({
 export const setUserInfo = (userInfo: any) => ({
     type: SET_USER_INFO,
     payload: userInfo,
+});
+export const setVideo1Loaded = (video1Loaded: boolean) => ({
+    type: SET_VIDEO1_LOADED,
+    payload: video1Loaded,
+});
+export const setVideo2Loaded = (video2Loaded: boolean) => ({
+    type: SET_VIDEO2_LOADED,
+    payload: video2Loaded,
+});
+export const setVideoBackgroundMode = (videoBackgroundMode: number) => ({
+    type: SET_VIDEO_BACKGROUND_MODE,
+    payload: videoBackgroundMode,
 });
 export const setInitialValue = () => ({
     type: SET_INITIAL_VALUE,

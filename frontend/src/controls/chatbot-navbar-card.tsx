@@ -2,7 +2,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 
 export const ChatbotNavbarCard = (props: any) => {
     return (
-        <div className="max-w-xs flex flex-col w-full h-full bg-white border border-gray-200 rounded-lg shadow p-8 dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col w-full h-full bg-white border border-gray-200 rounded-lg shadow p-8 dark:bg-gray-800 dark:border-gray-700">
             <div className="left-6 font-calibri text-3xl text-gray-900 dark:text-white">
                 Qwen 2.5
             </div>

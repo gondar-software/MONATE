@@ -66,7 +66,7 @@ export const Chatbot = () => {
 
     useEffect(() => {
         const initializeWebsocket = () => {
-            const ws = new WebSocket('ws://localhost:5000/ws/chatbot');
+            const ws = new WebSocket(`ws://${import.meta.env.VITE_HOST_NAME}/ws/chatbot`);
             setWebsocket(ws);
 
             ws.onopen = () => {

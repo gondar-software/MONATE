@@ -130,6 +130,7 @@ namespace Controllers
                     .FirstOrDefaultAsync(e => e.Type == EnvType.QWEN_API_URL);
 
                 var id = string.IsNullOrEmpty(request.Id) ? $"{Guid.NewGuid()}" : request.Id;
+                ChatbotTemp.ClearMessages(id);
                 ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
                 {
                     Type = ChatbotMessageType.Data,
@@ -248,8 +249,6 @@ namespace Controllers
                     }
                 });
                 thread.Start();
-
-                ChatbotTemp.ClearMessages(id);
 
                 return Ok(new { Id = id });
             }

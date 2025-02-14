@@ -1,11 +1,11 @@
-import { LoadingSpin, MarkupPreviewer } from "@app/components";
+import { LoadingSpin, MarkdownPreviewer, RagDocPreviewer } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
-import { ArrowUpCircleIcon, GlobeAltIcon } from "@heroicons/react/24/solid";
+import { ArrowUpCircleIcon, Bars3Icon, GlobeAltIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 
 export const Chatbot = () => {
@@ -22,6 +22,7 @@ export const Chatbot = () => {
     const [currentHistory, setCurrentHistory] = useState<any[]>([]);
     const [rag, setRag] = useState(false);
     const [chatId, setChatId] = useState('');
+    const [showNavBar, setShowNavBar] = useState(() => window.innerWidth >= 1120);
     
     const [socket, setSocket] = useState<WebSocket>();
     const [websocket, setWebsocket] = useState<WebSocket>();
@@ -65,7 +66,7 @@ export const Chatbot = () => {
 
     useEffect(() => {
         const initializeWebsocket = () => {
-            const ws = new WebSocket('ws://localhost:5000/ws/chatbot');
+            const ws = new WebSocket(`ws://${import.meta.env.VITE_HOST_NAME}/ws/chatbot`);
             setWebsocket(ws);
 
             ws.onopen = () => {
@@ -79,11 +80,13 @@ export const Chatbot = () => {
                 msgData.map((m: any) => {
                     if (m.Type === 0)
                     {
-                        setCurrentHistory((prev) =>
-                            prev.map((history, i) => 
-                                i === prev.length - 1 ? 
-                                    [history[0], history[1] + m.Message] : history)
-                        );
+                        setCurrentHistory((prev) => {
+                            if (prev.length === 0) return prev;
+                            return [
+                                ...prev.slice(0, -1), 
+                                [prev[prev.length - 1][0], prev[prev.length - 1][1] + m.Message]
+                            ];
+                        });                    
                     }
                     else if (m.Type === 2) {
                         setProcessing(false);
@@ -94,7 +97,13 @@ export const Chatbot = () => {
                     }
                     else if (m.Type === 3) {
                         const ragDoc = JSON.parse(m.Message);
-                        console.log(ragDoc);
+                        setCurrentHistory((prev) => {
+                            if (prev.length === 0) return prev;
+                            return [
+                                ...prev.slice(0, -1), 
+                                [prev[prev.length - 1][0], prev[prev.length - 1][1], ragDoc]
+                            ];
+                        });  
                     }
                 })
 
@@ -137,6 +146,8 @@ export const Chatbot = () => {
         jsonClient.get(`/chatbot/history?id=${his.chatId}`)
             .then(res => {
                 setCurrentHistory(res.data);
+                if (window.innerWidth < 1120)
+                    setShowNavBar(false);
             }).catch(err => {
                 handleNetworkError(err, addAlert);
                 if (err.response.status === 401)
@@ -151,6 +162,41 @@ export const Chatbot = () => {
                 ));
                 setLoadingHistory(false);
             });
+    }
+    
+    useEffect(() => {
+        const handleResize = () => {
+            setShowNavBar(window.innerWidth >= 1128);
+        };
+    
+        window.addEventListener("resize", handleResize);
+        
+        handleResize();
+    
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    const handleDelete = (index: number) => {
+        setLoadingHistory(true);
+
+        const idx = chatHistories.length - index - 1;
+        const his = chatHistories[idx];
+        jsonClient.post(`/chatbot/delete`,
+            his.chatId
+        ).then(_ => {
+            setChatHistories((prev) => (
+                prev.filter((_, i) => i !== idx)
+            ));
+            handleNewChat();
+        }).catch(err => {
+            handleNetworkError(err, addAlert);
+            if (err.response.status === 401)
+                redirect('/auth/login');
+        }).finally(() => {
+            setLoadingHistory(false);
+        });
     }
 
     const handlePromptChange = (e: any) => {
@@ -215,19 +261,27 @@ export const Chatbot = () => {
     return (
         <div className="h-screen w-full py-16 px-2">
             <div className="w-full h-full flex rounded-lg bg-white dark:bg-gray-800">
-                <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} />
+                <div className={`${showNavBar ? 'visible' : 'hidden'}`}>
+                    <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} onDelete={handleDelete} />
+                </div>
                 <div className="relative w-full h-full flex flex-col items-center">
-                    <div className='w-full flex flex-col gap-8 max-w-3xl p-2 overflow-y-auto h-full'>
+                    <div className="w-full">
+                        <button type="button" onClick={() => setShowNavBar(!showNavBar)} className={`w-12 h-12 m-2 bg-gray-300 dark:bg-gray-700 p-2 rounded-lg flex justify-center items-center hover:text-gray-900 dark:hover:text-white text-gray-500 dark:text-gray-500 active:text-gray-900 dark:active:text-white`}>
+                            {showNavBar ? <XMarkIcon className="w-10 h-10" /> : <Bars3Icon className="w-10 h-10" />}
+                        </button>
+                    </div>
+                    {(window.innerWidth >= 1120 || !showNavBar) && <div className='w-full flex flex-col gap-8 max-w-3xl p-2 overflow-y-auto h-full'>
                         {currentHistory && currentHistory.map((chat: any, index: number) => (
                             <div key={index} className="flex gap-3 flex-col w-full items-end">
                                 {chat[0] && <div className="max-w-sm flex">
-                                    <MarkupPreviewer user text={chat[0]} />
+                                    <MarkdownPreviewer user text={chat[0]} />
                                 </div>}
-                                {chat[1] && <MarkupPreviewer text={chat[1]} />}
+                                {chat[1] && <MarkdownPreviewer text={chat[1]} />}
+                                {chat[2] && <RagDocPreviewer doc={chat[2]} />}
                             </div>
                         ))}
-                    </div>
-                    <div className="max-w-3xl w-full gap-2 flex flex-col mb-2 px-2 py-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    </div>}
+                    {(window.innerWidth >= 1120 || !showNavBar) && <div className="max-w-3xl w-full gap-2 flex flex-col mb-2 px-2 py-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                         <textarea
                             name="prompt"
                             id="prompt"
@@ -258,7 +312,7 @@ export const Chatbot = () => {
                                 </svg> : <ArrowUpCircleIcon className="w-6 h-6" />}
                             </button>
                         </div>
-                    </div>
+                    </div>}
                     {loadingHistory && <div className="absolute max-w-3xl w-full h-full px-2 flex justify-center items-center rounded-lg backdrop-blur-xl">
                         <LoadingSpin className='w-20 h-20' />
                     </div>}

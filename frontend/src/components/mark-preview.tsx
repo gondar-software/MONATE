@@ -75,7 +75,7 @@ export const MarkdownPreviewer = (props: any) => {
                                 {String(children).replace(/\n$/, "")}
                             </SyntaxHighlighter>
                         ) : (
-                            <code className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-1 rounded">
+                            <code className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-1 rounded-lg">
                                 {children}
                             </code>
                         );

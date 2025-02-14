@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import { InformationCard } from "@app/controls";
 import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
-import { genderTypes, userTypes } from "@app/constants";
+import { genderTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
-import { useSaveUserInfo, useSaveVideoBackgroundMode, useUserInfo } from "@app/global";
+import { useSaveVideoBackgroundMode } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
 
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { formClient } = useFormCryptionMiddleware();
     const { addAlert } = useAlert();
-    const { hideLoading } = useLoading();
+    const { hideLoading, initLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
     const [saving, setSaving] = useState(false);
-    const userInfo = useUserInfo();
-    const saveUserInfo = useSaveUserInfo();
     const redirect = useRedirectionHelper();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
@@ -51,11 +49,6 @@ export const Information = () => {
     }
 
     const saveInfo = (formData: any, res: any = null) => {
-        const userMap = Object.entries(userTypes).reduce((acc: any, [key, value]) => {
-            acc[value] = key;
-            return acc;
-        }, {});
-
         jsonClient.post('/user/info',
             {
                 firstName: formData.firstName,
@@ -73,15 +66,9 @@ export const Information = () => {
                 githubUrl: formData.githubUrl,
                 phoneNumber: formData.phoneNumber,
             }
-        ).then(_ => {
+        ).then(async(_) => {
             setSaving(false);
-            saveUserInfo({
-                ...formData,
-                avatar: formData.avatar === 'original' ? (userInfo ? userInfo.avatar : '') : 
-                    (formData.avatar ? URL.createObjectURL(formData.avatar) : null),
-                emailAddr: userInfo ? userInfo.emailAddr : '',
-                type: userInfo ? userMap[userInfo.userType] : '',
-            });
+            await initLoading();
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert)

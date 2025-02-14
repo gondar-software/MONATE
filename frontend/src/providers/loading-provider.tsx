@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { LoadingMonate } from '@app/components';
-import { useJsonNoTokenCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from '@app/middlewares';
+import { useJsonNoTokenCryptionMiddleware, useJsonNoTokenOnlyRequestCryptionMiddleware } from '@app/middlewares';
 import { useSaveUserInfo, useToken, useVideo1Loaded, useVideo2Loaded } from '@app/global';
 import { userTypes } from '@app/constants';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ export const LoadingProvider = (props: any) => {
     const token = useToken();
     const video1Loaded = useVideo1Loaded();
     const video2Loaded = useVideo2Loaded();
-    const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
+    const { jsonNoTokenOnlyRequestClient } = useJsonNoTokenOnlyRequestCryptionMiddleware();
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [userInfoLoaded, setUserInfoLoaded] = useState<boolean>(false);
@@ -36,10 +36,13 @@ export const LoadingProvider = (props: any) => {
         ).then(async(res) =>{
             if (res.data.avatar)
             {
-                await jsonOnlyRequestClient.get(
+                await jsonNoTokenOnlyRequestClient.get(
                     `/download/image?filePath=${res.data.avatar}`,
                     {
                         responseType: 'blob',
+                        headers: {
+                            Authorization: `Bearer ${tokenData}`
+                        }
                     }
                 ).then(avatar => {
                     const url = URL.createObjectURL(avatar.data);

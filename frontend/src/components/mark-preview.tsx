@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import rehypeKatex from 'rehype-katex';
-import remarkMath from 'remark-math';
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useLightMode } from "@app/global";
 
 export const MarkdownPreviewer = (props: any) => {
-    const [text, setText] = useState('');
+    const [text, setText] = useState("");
+    const lightMode = useLightMode();
 
     const replaceHolder = (text: string) => {
         const regex = /(\\\[[\s\S]*?\\\])|(\\\([\s\S]*?\\\))|(```[\s\S]*?```)|(`.*?`)/g;
@@ -54,9 +59,31 @@ export const MarkdownPreviewer = (props: any) => {
                 'bg-white shadow-sm dark:bg-gray-800 dark:border-gray-500 text-gray-900 dark:text-white'}`}>
             <ReactMarkdown
                 rehypePlugins={[rehypeKatex]}
-                remarkPlugins={[remarkMath]}
-                children={replaceHolder(props.text)} 
-            />
+                remarkPlugins={[remarkMath, remarkGfm]}
+                components={{
+                    h3({ children }) {
+                        return (
+                            <h3 className="text-xl font-bold mt-4">
+                                {children}
+                            </h3>
+                        );
+                    },
+                    code({ inlist, children, className }) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        return !inlist && match ? (
+                            <SyntaxHighlighter style={lightMode ? oneLight : oneDark} language={match[1]} PreTag="div">
+                                {String(children).replace(/\n$/, "")}
+                            </SyntaxHighlighter>
+                        ) : (
+                            <code className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-1 rounded">
+                                {children}
+                            </code>
+                        );
+                    }
+                }}
+            >
+                {replaceHolder(props.text)}
+            </ReactMarkdown>
         </div>
     );
 };

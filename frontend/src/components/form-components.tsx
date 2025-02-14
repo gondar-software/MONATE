@@ -215,3 +215,16 @@ export const FormLinkButton1 = (props: any) => {
         </a>
     )
 }
+
+export const FormLinkButton2 = (props: any) => {
+    return (
+        <a 
+            href={props.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-md w-full font-normal text-gray-900 dark:text-white hover:text-blue-500 dark:hover:text-cyan-300 transition-colors duration-200"
+        >
+            {props.children}
+        </a>
+    )
+}

@@ -1,4 +1,4 @@
-import { LoadingSpin, MarkdownPreviewer } from "@app/components";
+import { LoadingSpin, MarkdownPreviewer, RagDocPreviewer } from "@app/components";
 import { ChatbotNavbarCard } from "@app/controls";
 import { useSaveUnityBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
@@ -79,11 +79,13 @@ export const Chatbot = () => {
                 msgData.map((m: any) => {
                     if (m.Type === 0)
                     {
-                        setCurrentHistory((prev) =>
-                            prev.map((history, i) => 
-                                i === prev.length - 1 ? 
-                                    [history[0], history[1] + m.Message] : history)
-                        );
+                        setCurrentHistory((prev) => {
+                            if (prev.length === 0) return prev;
+                            return [
+                                ...prev.slice(0, -1), 
+                                [prev[prev.length - 1][0], prev[prev.length - 1][1] + m.Message]
+                            ];
+                        });                    
                     }
                     else if (m.Type === 2) {
                         setProcessing(false);
@@ -94,7 +96,13 @@ export const Chatbot = () => {
                     }
                     else if (m.Type === 3) {
                         const ragDoc = JSON.parse(m.Message);
-                        console.log(ragDoc);
+                        setCurrentHistory((prev) => {
+                            if (prev.length === 0) return prev;
+                            return [
+                                ...prev.slice(0, -1), 
+                                [prev[prev.length - 1][0], prev[prev.length - 1][1], ragDoc]
+                            ];
+                        });  
                     }
                 })
 
@@ -245,6 +253,7 @@ export const Chatbot = () => {
                                     <MarkdownPreviewer user text={chat[0]} />
                                 </div>}
                                 {chat[1] && <MarkdownPreviewer text={chat[1]} />}
+                                {chat[2] && <RagDocPreviewer doc={chat[2]} />}
                             </div>
                         ))}
                     </div>

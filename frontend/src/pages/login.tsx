@@ -35,8 +35,6 @@ export const Login = () => {
             await initLoading(res.data.token);
             redirect('/');
         }).catch(err => {
-            if (err.response.status === 513)
-                redirect('/user/info');
             handleNetworkError(err, addAlert);
         }).finally(() => {
             setSubmitting(false);

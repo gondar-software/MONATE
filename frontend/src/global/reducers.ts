@@ -75,6 +75,8 @@ export const reducer = (state = initialStates, action: any) => {
                 ...state,
                 gardenLoaded: initialStates.gardenLoaded,
                 oasisLoaded: initialStates.oasisLoaded,
+                video1Loaded: initialStates.video1Loaded,
+                video2Loaded: initialStates.video2Loaded,
                 gardenProgress: initialStates.gardenProgress,
                 oasisProgress: initialStates.oasisProgress,
             };

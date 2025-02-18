@@ -26,8 +26,9 @@ jobs:
         
       - name: Install dependencies for frontend
         run: |
+          npm update
           npm install
-          npm audit fix
+          npm audit fix --force
         working-directory: ./frontend
 
       - name: Configure frontend dotenv

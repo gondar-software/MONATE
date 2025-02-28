@@ -3,6 +3,7 @@ using Databases.EcommerceData;
 using Databases.EndpointData;
 using Databases.ChatbotData;
 using Enums;
+using Databases.AutomationData;
 
 namespace Databases.UserData
 {
@@ -33,5 +34,6 @@ namespace Databases.UserData
         public ICollection<KnowUser>? KnownUsers { get; set; }
         public ICollection<KnowUser>? KnewUsers { get; set; }
         public ICollection<ChatbotHistory>? ChatbotHistories { get; set; }
+        public ICollection<Diagram>? Diagrams { get; set; }
     }
 }

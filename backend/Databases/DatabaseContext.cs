@@ -6,6 +6,7 @@ using Databases.UserData;
 using Databases.ChatbotData;
 using Microsoft.EntityFrameworkCore;
 using Databases.SystemData;
+using Databases.AutomationData;
 
 namespace Databases
 {
@@ -58,6 +59,10 @@ namespace Databases
         public DbSet<ChatbotCache> ChatbotCaches { get; set; } = null!;
         #endregion
 
+        #region AutomationTables
+        public DbSet<Diagram> Diagrams { get; set; } = null!;
+        #endregion
+
         #region SystemTables
         public DbSet<EnvValue> EnvValues { get; set; }
         #endregion
@@ -73,6 +78,16 @@ namespace Databases
             ConfigureCommunicationTables(modelBuilder);
             ConfigureChatbotTables(modelBuilder);
             ConfigureSystemTables(modelBuilder);
+            ConfigureAutomationTables(modelBuilder);
+        }
+
+        private void ConfigureAutomationTables(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Diagram>()
+                .HasOne(d => d.User)
+                .WithMany(u => u.Diagrams)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void ConfigureSystemTables(ModelBuilder modelBuilder)

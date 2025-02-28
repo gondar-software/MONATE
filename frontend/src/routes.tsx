@@ -4,6 +4,7 @@ import {
 
 import { MonateIcon } from '@app/components';
 import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot } from '@app/pages';
+import { Automation } from './pages/automation';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -106,7 +107,7 @@ export const routes = [
                 name: 'automation',
                 label: 'Automation',
                 path: '/automation',
-                element: <div />,
+                element: <Automation />,
             },
             {
                 icon: <div />,

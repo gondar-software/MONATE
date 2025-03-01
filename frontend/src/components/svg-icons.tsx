@@ -15,7 +15,7 @@ export const MonateIcon = (props: any) => {
 
 export const CopyrightIcon = (props: any) => {
     return (
-        <svg 
+        <svg
             viewBox="0 0 36 36"
             xmlns="http://www.w3.org/2000/svg"
             className={`${props.className}`}
@@ -28,7 +28,7 @@ export const CopyrightIcon = (props: any) => {
 
 export const LoadingSpin = (props: any) => {
     return (
-        <svg 
+        <svg
             viewBox="0 0 860.1 876.5"
             className={`${props.className}`}
         >
@@ -69,4 +69,21 @@ export const LoadingSpin = (props: any) => {
             />
         </svg>
     )
+}
+
+export const BsLightningFill = () => {
+    return (
+        <svg 
+            fill="currentColor" 
+            strokeWidth="0" 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 16 16" 
+            height="1em" 
+            width="1em" 
+            className="overflow-visible text-gray-900 dark:text-white w-full h-full"
+        >
+            <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641l2.5-8.5z">
+            </path>
+        </svg>
+    );
 }

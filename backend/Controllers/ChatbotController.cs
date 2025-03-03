@@ -8,6 +8,7 @@ using Packets.Chatbot;
 using System.Text;
 using Databases.ChatbotData;
 using Temp;
+using Helpers;
 
 namespace Controllers
 {
@@ -28,7 +29,7 @@ namespace Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetChatbotHistories()
+        public async Task<IActionResult> GetChatbotHistories(ChatbotType type = ChatbotType.OpenAI)
         {
             try
             {
@@ -45,6 +46,7 @@ namespace Controllers
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
 
                 var histories = user.ChatbotHistories?
+                    .Where(c => c.ChatbotType == type)
                     .Select(c => new { ChatId = c.ChatId, Title = c.Title })
                     .ToList() ?? [];
 
@@ -130,22 +132,13 @@ namespace Controllers
                     .FirstOrDefaultAsync(e => e.Type == EnvType.QWEN_API_URL);
 
                 var id = string.IsNullOrEmpty(request.Id) ? $"{Guid.NewGuid()}" : request.Id;
-                ChatbotTemp.ClearMessages(id);
-                ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
-                {
-                    Type = ChatbotMessageType.Data,
-                    Message = ""
-                });
-
-                var url = qwenAPI?.Value ?? "";
-                var ragUrl = $"{url}/rag-doc?id={id}";
 
                 if (user.ChatbotCache != null && user.ChatbotCache.LastId != request.Id)
                 {
                     try
                     {
-                        await _httpClient.GetAsync($"{url}/del-history?id={user.ChatbotCache.LastId}");
-                        await _httpClient.GetAsync($"{url}/del-rag-doc?id={user.ChatbotCache.LastId}");
+                        if (request.ChatbotType == ChatbotType.OpenAI) OpenAIHelper.DeleteHistory(id);
+                        else if (request.ChatbotType == ChatbotType.Qwen) await QwenHelper.DeleteHistory(id);
                     }
                     catch 
                     {
@@ -176,82 +169,6 @@ namespace Controllers
                 }
 
                 await _context.SaveChangesAsync();
-
-                Thread thread = new(async () =>
-                {
-                    try
-                    {
-                        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, url)
-                        {
-                            Content = new StringContent(JsonConvert.SerializeObject(new
-                            {
-                                Id = id,
-                                Query = request.Query,
-                                History = his,
-                                Rag = request.Rag ?? false,
-                            }), Encoding.UTF8, "application/json")
-                        };
-
-                        using var response = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead);
-
-                        var stream = await response.Content.ReadAsStreamAsync();
-                        using var reader = new StreamReader(stream, Encoding.UTF8);
-
-                        string generatedText = "";
-
-                        char[] buffer = new char[1024];
-                        while (!reader.EndOfStream)
-                        {
-                            int readCount = await reader.ReadAsync(buffer, 0, buffer.Length);
-                            if (readCount > 0)
-                            {
-                                var chunk = new string(buffer, 0, readCount);
-                                generatedText += chunk;
-
-                                ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
-                                {
-                                    Type = ChatbotMessageType.Data,
-                                    Message = chunk,
-                                });
-                            }
-                        }
-                        reader.Close();
-
-                        if (request.Rag == true)
-                        {
-                            HttpResponseMessage res = await _httpClient.GetAsync(ragUrl);
-
-                            if (res.IsSuccessStatusCode)
-                            {
-                                string jsonResponse = await res.Content.ReadAsStringAsync();
-                                ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
-                                {
-                                    Type = ChatbotMessageType.RAGDoc,
-                                    Message = jsonResponse,
-                                });
-                            }
-                        }
-
-                        ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
-                        {
-                            Type = ChatbotMessageType.End,
-                            Message = generatedText
-                        });
-
-                        hisTemp.Add([request.Query, generatedText]);
-                        Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
-                        System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
-                    }
-                    catch (Exception ex)
-                    {
-                        ChatbotTemp.SetMessage(id, new Models.ChatbotMessage
-                        {
-                            Type = ChatbotMessageType.Error,
-                            Message = ex.Message,
-                        });
-                    }
-                });
-                thread.Start();
 
                 return Ok(new { Id = id });
             }

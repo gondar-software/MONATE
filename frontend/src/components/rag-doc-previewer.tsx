@@ -1,4 +1,4 @@
-import { FormLinkButton2 } from "./form-components"
+import { FormLinkButton2 } from "@app/components"
 
 export const RagDocPreviewer = (props: any) => {
     return (

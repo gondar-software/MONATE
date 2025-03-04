@@ -33,14 +33,6 @@ namespace Temp
                         var chunk = _temp[id].Dequeue();
                         msg.Add(chunk);
                     }
-                else
-                {
-                    msg.Add(new ChatbotMessage
-                    {
-                        Type = ChatbotMessageType.Error,
-                        Message = "Can't find chat id."
-                    });
-                }
             }
 
             return JsonConvert.SerializeObject(msg);

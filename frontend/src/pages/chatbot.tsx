@@ -128,7 +128,7 @@ export const Chatbot = () => {
         ]);
         setPrompt('');
 
-        fetch("/api/prompt", {
+        fetch("/api/chatbot/prompt", {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",

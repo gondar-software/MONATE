@@ -41,7 +41,6 @@ namespace Helpers
             if (rag == true)
             {
                 var ragDocs = await GetRagDocs(_embeddingClient, query);
-                Console.WriteLine(JsonConvert.SerializeObject(ragDocs));
                 foreach (var doc in ragDocs)
                 {
                     messageList.Add(new SystemChatMessage($"Title: {doc.Title}\nSnippet: {doc.Snippet}\nText: {doc.Text}"));

@@ -35,16 +35,16 @@ namespace Helpers
                     messageList.Add(new UserChatMessage(item[0]));
                     messageList.Add(new AssistantChatMessage(item[1]));
                 }
+            }
 
-                if (rag == true)
+            if (rag == true)
+            {
+                var ragDocs = await GetRagDocs(_embeddingClient, query);
+                foreach (var doc in ragDocs)
                 {
-                    var ragDocs = await GetRagDocs(_embeddingClient, query);
-                    foreach (var doc in ragDocs)
-                    {
-                        messageList.Add(new SystemChatMessage($"Title: {doc.Title}\nSnippet: {doc.Snippet}\nText: {doc.Text}"));
-                    }
-                    _documents.AddOrUpdate(id, _ => ragDocs, (_, _) => ragDocs);
+                    messageList.Add(new SystemChatMessage($"Title: {doc.Title}\nSnippet: {doc.Snippet}\nText: {doc.Text}"));
                 }
+                _documents.AddOrUpdate(id, _ => ragDocs, (_, _) => ragDocs);
             }
 
             messageList.Add(new UserChatMessage(query));

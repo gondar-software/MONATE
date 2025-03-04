@@ -55,9 +55,9 @@ export const MarkdownPreviewer = (props: any) => {
 
     return (
         <div className={`h-full px-6 py-2 border rounded-lg w-full flex flex-col gap-2 
-            ${props.user ? 'bg-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-500 text-gray-900 dark:text-white text-wrap break-words' :
+            ${props.user ? 'bg-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-500 text-gray-900 dark:text-white' :
                 'bg-white shadow-sm dark:bg-gray-800 dark:border-gray-500 text-gray-900 dark:text-white'}`}>
-            {props.user && props.text}
+            {props.user && <pre className="break-all whitespace-pre-wrap">{props.text}</pre>}
             {!props.user && <ReactMarkdown
                 rehypePlugins={[rehypeKatex]}
                 remarkPlugins={[remarkMath, remarkGfm]}

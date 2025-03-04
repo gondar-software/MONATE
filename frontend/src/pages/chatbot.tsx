@@ -167,7 +167,7 @@ export const Chatbot = () => {
                             }))),
                             {
                                 chatId: newChatId,
-                                title: query,
+                                title: query.substring(0, Math.min(30, query.length)),
                                 selected: true,
                             }
                         ]);

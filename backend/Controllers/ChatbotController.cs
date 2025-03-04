@@ -147,8 +147,6 @@ namespace Controllers
                 }
 
                 var path = $"Chatbot/{id}.txt";
-                Response.StatusCode = 200;
-                await Response.StartAsync();
 
                 IAsyncEnumerable<string> messages;
                 if (request.ChatbotType == ChatbotType.OpenAI)
@@ -165,6 +163,8 @@ namespace Controllers
                     return;
                 }
 
+                Response.StatusCode = 200;
+                await Response.StartAsync();
                 await Response.WriteAsync($"{id},");
                 await Response.Body.FlushAsync();
 

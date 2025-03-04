@@ -166,16 +166,15 @@ namespace Controllers
                     return StatusCode((int)ErrorType.UnsupportedChatbotType, ErrorType.UnsupportedChatbotType.ToString());
                 }
 
-                List<string> conversation = new() { request.Query };
-
+                var generatedText = "";
                 await foreach (var message in messages)
                 {
-                    conversation.Add(message);
+                    generatedText += message;
                     await streamWriter.WriteAsync(message);
                     await streamWriter.FlushAsync();
                 }
 
-                hisTemp.Add(conversation);
+                hisTemp.Add([request.Query, generatedText]);
                 Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
                 System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
 
@@ -195,6 +194,7 @@ namespace Controllers
                         User = user,
                         ChatId = id,
                         Title = request.Query,
+                        ChatbotType = request.ChatbotType,
                         HistoryFilePath = path
                     });
                 }

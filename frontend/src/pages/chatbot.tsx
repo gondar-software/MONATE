@@ -25,7 +25,6 @@ export const Chatbot = () => {
     const [rag, setRag] = useState(false);
     const [chatId, setChatId] = useState('');
     const [showNavBar, setShowNavBar] = useState(() => window.innerWidth >= 1120);
-    const [promptRows, setPromptRows] = useState(2);
     
     const fetchHistories = async () => {
         showLoading();
@@ -54,7 +53,6 @@ export const Chatbot = () => {
         let processing = true;
 
         ws.onopen = () => {
-            console.log('WebSocket connected');
             sendMessage(id);
         };
 
@@ -102,12 +100,12 @@ export const Chatbot = () => {
 
         ws.onclose = () => {
             processing = false;
-            console.log('WebSocket disconnected');
         };
 
         ws.onerror = (error) => {
             processing = false;
             console.error('WebSocket error', error);
+            disconnect();
         };
 
         const disconnect = () => {
@@ -199,7 +197,11 @@ export const Chatbot = () => {
             [query, '']
         ]);
         setPrompt('');
-        setPromptRows(2);
+
+        const textarea = document.getElementById("prompt") as HTMLTextAreaElement;
+        if (textarea) {
+            textarea.style.height = "auto";
+        }
 
         jsonClient.post('/chatbot/prompt',
             {
@@ -274,8 +276,8 @@ export const Chatbot = () => {
                             onChange={handlePromptChange}
                             onKeyDown={handlePromptKeyDown}
                             placeholder="Type your prompt here..."
-                            className="w-full p-2 text-sm max-h-40 overflow-y-hidden bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                            rows={promptRows}
+                            className="w-full p-2 text-sm h-auto overflow-y-hidden bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            rows={2}
                         />
                         <div className="w-full flex justify-between">
                             <div className={`h-10 flex items-center gap-2 cursor-pointer 

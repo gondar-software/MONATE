@@ -175,6 +175,8 @@ namespace Controllers
                     generatedText += message;
                     await streamWriter.WriteAsync(message);
                     await streamWriter.FlushAsync();
+
+                    Console.Write(message);
                 }
 
                 hisTemp.Add([request.Query, generatedText]);

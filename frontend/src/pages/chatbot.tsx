@@ -149,12 +149,33 @@ export const Chatbot = () => {
             const reader = res.body.getReader();
             const decoder = new TextDecoder();
             let responseText = "";
-        
+            let newChatId = '';
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
-        
-                responseText += decoder.decode(value, { stream: true });
+
+                if (!newChatId)
+                {
+                    const message = decoder.decode(value, { stream: true });
+                    newChatId = message.substring(0, message.indexOf(','));
+                    responseText += message.substring(message.indexOf(',') + 1);
+                    if (!chatId) {
+                        setChatHistories((prev) => [
+                            ...(prev.map((history) => ({
+                                ...history,
+                                selected: false,
+                            }))),
+                            {
+                                chatId: newChatId,
+                                title: query,
+                                selected: true,
+                            }
+                        ]);
+                    }
+                    setChatId(newChatId);
+                }
+                else
+                    responseText += decoder.decode(value, { stream: true });
         
                 setCurrentHistory((prev) => {
                     if (prev.length === 0) return prev;

@@ -11,10 +11,10 @@ namespace Helpers
         {
             public string Title { get; set; } = "";
             public string Snippet { get; set; } = "";
-            public string Text { get; set; } = "";
+            public string? Text { get; set; }
             public string Link { get; set; } = "";
-            public float[] Embedding { get; set; } = Array.Empty<float>();
-            public float Similarity { get; set; }
+            public float[]? Embedding { get; set; }
+            public float? Similarity { get; set; }
         }
 
         private static readonly CustomSearchAPIService _customSearchAPIService;
@@ -82,7 +82,7 @@ namespace Helpers
 
             foreach (var doc in documents)
             {
-                doc.Similarity = CosineSimilarity(queryVector, doc.Embedding);
+                doc.Similarity = CosineSimilarity(queryVector, doc?.Embedding ?? []);
             }
 
             var topDocs = documents.OrderByDescending(doc => doc.Similarity).Take(topK).ToArray();

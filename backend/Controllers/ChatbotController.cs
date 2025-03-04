@@ -171,6 +171,8 @@ namespace Controllers
                             });
                         }
 
+                    if (request.Rag == true)
+                    {
                         Document[] ragDocs;
                         if (request.ChatbotType == ChatbotType.OpenAI)
                         {
@@ -190,6 +192,8 @@ namespace Controllers
                             return;
                         }
 
+                        Console.WriteLine(ragDocs.Length);
+
                         foreach (var document in ragDocs)
                         {
                             ChatbotTemp.SetMessage(id, new ChatbotMessage
@@ -198,8 +202,9 @@ namespace Controllers
                                 Message = JsonConvert.SerializeObject(document)
                             });
                         }
+                    }
 
-                        ChatbotTemp.SetMessage(id, new ChatbotMessage
+                    ChatbotTemp.SetMessage(id, new ChatbotMessage
                         {
                             Type = ChatbotMessageType.End,
                             Message = ""

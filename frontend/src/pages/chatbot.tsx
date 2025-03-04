@@ -1,20 +1,23 @@
 import { LoadingSpin, MarkdownPreviewer, RagDocPreviewer } from "@app/components";
+import { chatbotTypes } from "@app/constants";
 import { ChatbotNavbarCard } from "@app/controls";
-import { useSaveVideoBackgroundMode } from "@app/global";
+import { useSaveVideoBackgroundMode, useToken } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { ArrowUpCircleIcon, Bars3Icon, GlobeAltIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Chatbot = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
+    const token = useToken();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
+    const [model, setModel] = useState('open-ai');
     const [chatHistories, setChatHistories] = useState<any[]>([]);
     const [prompt, setPrompt] = useState('');
     const [processing, setProcessing] = useState(false);
@@ -24,28 +27,9 @@ export const Chatbot = () => {
     const [chatId, setChatId] = useState('');
     const [showNavBar, setShowNavBar] = useState(() => window.innerWidth >= 1120);
     
-    const [socket, setSocket] = useState<WebSocket>();
-    const [websocket, setWebsocket] = useState<WebSocket>();
-
-    const hookRef = useRef({
-        processing: false, 
-        chatId: '', 
-        socket, 
-        websocket,
-    });
-
-    useEffect(() => {
-        hookRef.current = {
-            processing: processing,
-            chatId: chatId,
-            socket: socket,
-            websocket: websocket
-        };
-    }, [processing, chatId, socket, websocket]);
-    
     const fetchHistories = async () => {
         showLoading();
-        await jsonClient.get(`/chatbot`)
+        await jsonClient.get(`/chatbot?type=${chatbotTypes[model as keyof typeof chatbotTypes]}`)
             .then(res => {
                 setChatHistories(res.data);
             }).catch(err => {
@@ -55,6 +39,7 @@ export const Chatbot = () => {
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
+                setCurrentHistory([])
                 showAuthInfo();
                 hideLoading();
             });
@@ -62,81 +47,7 @@ export const Chatbot = () => {
 
     useEffect(() => {
         fetchHistories();
-    }, []);
-
-    useEffect(() => {
-        const initializeWebsocket = () => {
-            const ws = new WebSocket(`/ws/chatbot`);
-            setWebsocket(ws);
-
-            ws.onopen = () => {
-                console.log('WebSocket connected');
-            };
-
-            ws.onmessage = (event) => {
-                const msg = event.data;
-                const msgData = JSON.parse(msg);
-
-                msgData.map((m: any) => {
-                    if (m.Type === 0)
-                    {
-                        setCurrentHistory((prev) => {
-                            if (prev.length === 0) return prev;
-                            return [
-                                ...prev.slice(0, -1), 
-                                [prev[prev.length - 1][0], prev[prev.length - 1][1] + m.Message]
-                            ];
-                        });                    
-                    }
-                    else if (m.Type === 2) {
-                        setProcessing(false);
-                    }
-                    else if (m.Type === 1) {
-                        addAlert('danger', m.Message);
-                        setProcessing(false);
-                    }
-                    else if (m.Type === 3) {
-                        const ragDoc = JSON.parse(m.Message);
-                        setCurrentHistory((prev) => {
-                            if (prev.length === 0) return prev;
-                            return [
-                                ...prev.slice(0, -1), 
-                                [prev[prev.length - 1][0], prev[prev.length - 1][1], ragDoc]
-                            ];
-                        });  
-                    }
-                })
-
-                if (hookRef.current.processing)
-                {
-                    const id = hookRef.current.chatId;
-                    sendMessage(id);
-                }
-            }
-
-            ws.onclose = () => {
-                console.log('WebSocket disconnected');
-            };
-
-            ws.onerror = (error) => {
-                console.error('WebSocket error', error);
-            };
-
-            setSocket(ws);
-
-            return () => {
-                ws.close();
-                setSocket(undefined);
-            };
-        }
-        initializeWebsocket();
-    }, []);
-
-    const sendMessage = (message: string) => {
-        if (hookRef.current.socket && hookRef.current.socket.readyState === WebSocket.OPEN) {
-            hookRef.current.socket.send(message);
-        }
-    };
+    }, [model]);
 
     const handleHistoryChoose = (index: number) => {
         setLoadingHistory(true);
@@ -217,33 +128,47 @@ export const Chatbot = () => {
         ]);
         setPrompt('');
 
-        jsonClient.post('/chatbot/prompt',
-            {
+        fetch("/api/prompt", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
                 query: query,
                 rag: rag,
                 id: chatId,
+                chatbotType: chatbotTypes[model as keyof typeof chatbotTypes],
+            }),
+        }).then(async(res) => {
+            if (!res.body) {
+                setProcessing(false);
+                return;
             }
-        ).then((res) => {
-            if (!chatId) {
-                setChatHistories((prev) => [
-                    ...(prev.map((history) => ({
-                        ...history,
-                        selected: false,
-                    }))),
-                    {
-                        chatId: res.data.id,
-                        title: query,
-                        selected: true,
-                    }
-                ]);
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let responseText = "";
+        
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+        
+                responseText += decoder.decode(value, { stream: true });
+        
+                setCurrentHistory((prev) => {
+                    if (prev.length === 0) return prev;
+                    return [
+                        ...prev.slice(0, -1), 
+                        [prev[prev.length - 1][0], responseText]
+                    ];
+                });
             }
-            setChatId(res.data.id);
-            sendMessage(res.data.id);
-        }).catch((err) => {
+        }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)
                 redirect('/auth/login');
-        });
+        })
     }
     
     const handlePromptKeyDown = (e: any) => {
@@ -262,7 +187,7 @@ export const Chatbot = () => {
         <div className="h-screen w-full py-16 px-2">
             <div className="w-full h-full flex rounded-lg bg-white dark:bg-gray-800">
                 <div className={`${showNavBar ? 'visible' : 'hidden'} w-80`}>
-                    <ChatbotNavbarCard disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} onDelete={handleDelete} />
+                    <ChatbotNavbarCard model={model} setModel={setModel} disabled={loadingHistory} chatbotHistories={chatHistories} onHistoryChoose={handleHistoryChoose} onNewChat={handleNewChat} onDelete={handleDelete} />
                 </div>
                 <div className="relative w-full h-full flex flex-col items-center">
                     <div className="w-full">

@@ -164,6 +164,7 @@ export const Chatbot = () => {
                     ];
                 });
             }
+            setProcessing(false);
         }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)

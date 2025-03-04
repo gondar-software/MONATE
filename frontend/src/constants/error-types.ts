@@ -17,9 +17,10 @@ export const errorTypes = {
     515: "Can not find file",
     516: "Error occurred when downloading video",
     517: "Can not find target chatbot history",
-    518: "Qwen server error",
+    518: "Chatbot server error",
     519: "Can not find RAG doc",
-    520: "Qwen server is not working now",
+    520: "Chatbot server is not working now",
+    521: "Chatbot type is not supported",
 }
 
 export default errorTypes;

@@ -4,7 +4,6 @@ import {
 
 import { MonateIcon } from '@app/components';
 import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot } from '@app/pages';
-import { Automation } from './pages/automation';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -104,10 +103,10 @@ export const routes = [
             },
             {
                 icon: <div />,
-                name: 'automation',
-                label: 'Automation',
-                path: '/automation',
-                element: <Automation />,
+                name: 'comfyui',
+                label: 'ComfyUI API',
+                path: '/comfyui',
+                element: <div />,
             },
             {
                 icon: <div />,
@@ -118,9 +117,9 @@ export const routes = [
             },
             {
                 icon: <div />,
-                name: 'about-us',
-                label: 'About Us',
-                path: '/about-us',
+                name: 'about-me',
+                label: 'About Me',
+                path: '/about-me',
                 element: <div />,
             },
         ]

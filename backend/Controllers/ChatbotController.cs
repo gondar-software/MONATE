@@ -201,9 +201,9 @@ namespace Controllers
                                     Type = ChatbotMessageType.RAGDoc,
                                     Message = JsonConvert.SerializeObject(new
                                     {
-                                        Link = document.Link,
-                                        Title = document.Title,
-                                        Snippet = document.Snippet,
+                                        link = document.Link,
+                                        title = document.Title,
+                                        snippet = document.Snippet,
                                     })
                                 });
                             }

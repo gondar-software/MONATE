@@ -1,4 +1,5 @@
-﻿using OpenAI;
+﻿using Newtonsoft.Json;
+using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using System.Collections.Concurrent;
@@ -40,6 +41,7 @@ namespace Helpers
             if (rag == true)
             {
                 var ragDocs = await GetRagDocs(_embeddingClient, query);
+                Console.WriteLine(JsonConvert.SerializeObject(ragDocs));
                 foreach (var doc in ragDocs)
                 {
                     messageList.Add(new SystemChatMessage($"Title: {doc.Title}\nSnippet: {doc.Snippet}\nText: {doc.Text}"));

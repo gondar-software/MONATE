@@ -1,7 +1,7 @@
 import { LoadingSpin, MarkdownPreviewer, RagDocPreviewer } from "@app/components";
 import { chatbotTypes } from "@app/constants";
 import { ChatbotNavbarCard } from "@app/controls";
-import { useSaveVideoBackgroundMode, useToken } from "@app/global";
+import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
@@ -14,7 +14,6 @@ export const Chatbot = () => {
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
-    const token = useToken();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
     const [model, setModel] = useState('open-ai');
@@ -48,6 +47,76 @@ export const Chatbot = () => {
     useEffect(() => {
         fetchHistories();
     }, [model]);
+
+    const connectWebsocket = (id: string) => {
+        const ws = new WebSocket(`/ws/chatbot`);
+        let processing = true;
+
+        ws.onopen = () => {
+            console.log('WebSocket connected');
+            sendMessage(id);
+        };
+
+        ws.onmessage = (event) => {
+            const msg = event.data;
+            const msgData = JSON.parse(msg);
+
+            msgData.map((m: any) => {
+                if (m.Type === 0)
+                {
+                    setCurrentHistory((prev) => {
+                        if (prev.length === 0) return prev;
+                        return [
+                            ...prev.slice(0, -1), 
+                            [prev[prev.length - 1][0], prev[prev.length - 1][1] + m.Message]
+                        ];
+                    });                    
+                }
+                else if (m.Type === 2) {
+                    setProcessing(false);
+                    disconnect();
+                }
+                else if (m.Type === 1) {
+                    addAlert('danger', m.Message);
+                    setProcessing(false);
+                    disconnect();
+                }
+                else if (m.Type === 3) {
+                    const ragDoc = JSON.parse(m.Message);
+                    setCurrentHistory((prev) => {
+                        if (prev.length === 0) return prev;
+                        return [
+                            ...prev.slice(0, -1), 
+                            [prev[prev.length - 1][0], prev[prev.length - 1][1], ragDoc]
+                        ];
+                    });  
+                }
+            })
+
+            if (processing)
+            {
+                sendMessage(id);
+            }
+        }
+
+        ws.onclose = () => {
+            processing = false;
+            console.log('WebSocket disconnected');
+        };
+
+        ws.onerror = (error) => {
+            processing = false;
+            console.error('WebSocket error', error);
+        };
+
+        const disconnect = () => {
+            ws.close();
+        };
+
+        const sendMessage = (message: string) => {
+            ws.send(message);
+        }
+    }
 
     const handleHistoryChoose = (index: number) => {
         setLoadingHistory(true);
@@ -128,71 +197,33 @@ export const Chatbot = () => {
         ]);
         setPrompt('');
 
-        fetch("/api/chatbot/prompt", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify({
+        jsonClient.post('/chatbot/prompt',
+            {
                 query: query,
                 rag: rag,
                 id: chatId,
-                chatbotType: chatbotTypes[model as keyof typeof chatbotTypes],
-            }),
-        }).then(async(res) => {
-            if (!res.body) {
-                setProcessing(false);
-                return;
             }
-
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            let responseText = "";
-            let newChatId = '';
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-
-                if (!newChatId)
-                {
-                    const message = decoder.decode(value, { stream: true });
-                    newChatId = message.substring(0, message.indexOf(','));
-                    responseText += message.substring(message.indexOf(',') + 1);
-                    if (!chatId) {
-                        setChatHistories((prev) => [
-                            ...(prev.map((history) => ({
-                                ...history,
-                                selected: false,
-                            }))),
-                            {
-                                chatId: newChatId,
-                                title: query.substring(0, Math.min(30, query.length)),
-                                selected: true,
-                            }
-                        ]);
+        ).then((res) => {
+            if (!chatId) {
+                setChatHistories((prev) => [
+                    ...(prev.map((history) => ({
+                        ...history,
+                        selected: false,
+                    }))),
+                    {
+                        chatId: res.data.id,
+                        title: query,
+                        selected: true,
                     }
-                    setChatId(newChatId);
-                }
-                else
-                    responseText += decoder.decode(value, { stream: true });
-
-                console.log(responseText);
-        
-                setCurrentHistory((prev) => {
-                    if (prev.length === 0) return prev;
-                    return [
-                        ...prev.slice(0, -1), 
-                        [prev[prev.length - 1][0], responseText]
-                    ];
-                });
+                ]);
             }
-            setProcessing(false);
-        }).catch(err => {
+            setChatId(res.data.id);
+            connectWebsocket(res.data.id);
+        }).catch((err) => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)
                 redirect('/auth/login');
-        })
+        });
     }
     
     const handlePromptKeyDown = (e: any) => {

@@ -9,6 +9,7 @@ using Databases.ChatbotData;
 using Helpers;
 using Temp;
 using Models;
+using static Helpers.RAGHelper;
 
 namespace Controllers
 {
@@ -167,6 +168,34 @@ namespace Controllers
                             {
                                 Type = ChatbotMessageType.Data,
                                 Message = message,
+                            });
+                        }
+
+                        Document[] ragDocs;
+                        if (request.ChatbotType == ChatbotType.OpenAI)
+                        {
+                            ragDocs = OpenAIHelper.GetRagDocuments(id);
+                        }
+                        else if (request.ChatbotType == ChatbotType.Qwen)
+                        {
+                            ragDocs = await QwenHelper.GetRagDocuments(id);
+                        }
+                        else
+                        {
+                            ChatbotTemp.SetMessage(id, new ChatbotMessage
+                            {
+                                Type = ChatbotMessageType.Error,
+                                Message = "This chatbot type is not valid"
+                            });
+                            return;
+                        }
+
+                        foreach (var document in ragDocs)
+                        {
+                            ChatbotTemp.SetMessage(id, new ChatbotMessage
+                            {
+                                Type = ChatbotMessageType.RAGDoc,
+                                Message = JsonConvert.SerializeObject(document)
                             });
                         }
 

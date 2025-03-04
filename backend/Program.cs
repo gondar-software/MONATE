@@ -1,11 +1,11 @@
 using System.Text;
+using Databases;
 using Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Services;
 using Middlewares;
-using Databases;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +48,40 @@ var app = builder.Build();
 app.UseRouting();
 
 app.UseMiddleware<CryptionMiddleware>();
+
+app.UseWebSockets();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/ws/chatbot")
+    {
+        if (context.WebSockets.IsWebSocketRequest)
+        {
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            await WebSocketHelper.HandleChatbotWebSocketAsync(webSocket);
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    }
+    else if (context.Request.Path == "/ws/comfyui")
+    {
+        if (context.WebSockets.IsWebSocketRequest)
+        {
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            await WebSocketHelper.HandleComfyUIWebSocketAsync(webSocket);
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Packets.Chatbot;
 using Databases.ChatbotData;
 using Helpers;
+using Temp;
+using Models;
 
 namespace Controllers
 {
@@ -98,19 +100,14 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("prompt")]
-        public async Task Prompt([FromBody] PromptRequest request)
+        public async Task<IActionResult> Prompt([FromBody] PromptRequest request)
         {
-            Response.Headers.Append("Content-Type", "text/event-stream");
-            Response.Headers.Append("Cache-Control", "no-cache");
-            Response.Headers.Append("Connection", "keep-alive");
-
             try
             {
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
                 if (string.IsNullOrEmpty(userEmail))
                 {
-                    Response.StatusCode = (int)ErrorType.Unknown;
-                    return;
+                    return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
                 }
 
                 var user = await _context.Users
@@ -120,8 +117,7 @@ namespace Controllers
 
                 if (user == null)
                 {
-                    Response.StatusCode = (int)ErrorType.UserNotFound;
-                    return;
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
                 }
 
                 var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
@@ -134,50 +130,66 @@ namespace Controllers
 
                 if (user.ChatbotCache != null && user.ChatbotCache.LastId != request.Id)
                 {
-                    try
-                    {
-                        if (request.ChatbotType == ChatbotType.OpenAI) OpenAIHelper.DeleteHistory(id);
-                        else if (request.ChatbotType == ChatbotType.Qwen) await QwenHelper.DeleteHistory(id);
-                    }
-                    catch
-                    {
-                        Response.StatusCode = (int)ErrorType.CouldNotFoundChatbotServer;
-                        return;
-                    }
+                    if (request.ChatbotType == ChatbotType.OpenAI) OpenAIHelper.DeleteHistory(id);
+                    else if (request.ChatbotType == ChatbotType.Qwen) await QwenHelper.DeleteHistory(id);
                 }
 
                 var path = $"Chatbot/{id}.txt";
-
-                IAsyncEnumerable<string> messages;
-                if (request.ChatbotType == ChatbotType.OpenAI)
+                ChatbotTemp.ClearMessages(id);
+                Thread thread = new Thread(async () =>
                 {
-                    messages = OpenAIHelper.Prompt(id, request.Query, request.Rag, his);
-                }
-                else if (request.ChatbotType == ChatbotType.Qwen)
-                {
-                    messages = QwenHelper.Prompt(id, request.Query, request.Rag, his);
-                }
-                else
-                {
-                    Response.StatusCode = (int)ErrorType.UnsupportedChatbotType;
-                    return;
-                }
+                    try
+                    {
+                        IAsyncEnumerable<string> messages;
+                        if (request.ChatbotType == ChatbotType.OpenAI)
+                        {
+                            messages = OpenAIHelper.Prompt(id, request.Query, request.Rag, his);
+                        }
+                        else if (request.ChatbotType == ChatbotType.Qwen)
+                        {
+                            messages = QwenHelper.Prompt(id, request.Query, request.Rag, his);
+                        }
+                        else
+                        {
+                            ChatbotTemp.SetMessage(id, new ChatbotMessage
+                            {
+                                Type = ChatbotMessageType.Error,
+                                Message = "This chatbot type is not valid"
+                            });
+                            return;
+                        }
 
-                await Response.StartAsync();
-                await Response.WriteAsync($"{id},");
-                await Response.Body.FlushAsync();
+                        var generatedText = "";
+                        await foreach (var message in messages)
+                        {
+                            generatedText += message;
+                            ChatbotTemp.SetMessage(id, new ChatbotMessage
+                            {
+                                Type = ChatbotMessageType.Data,
+                                Message = message,
+                            });
+                        }
 
-                var generatedText = "";
-                await foreach (var message in messages)
-                {
-                    generatedText += message;
-                    await Response.WriteAsync(message);
-                    await Response.Body.FlushAsync();
-                }
+                        ChatbotTemp.SetMessage(id, new ChatbotMessage
+                        {
+                            Type = ChatbotMessageType.End,
+                            Message = ""
+                        });
 
-                hisTemp.Add([request.Query, generatedText]);
-                Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
-                System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
+                        hisTemp.Add([request.Query, generatedText]);
+                        Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
+                        System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
+                    }
+                    catch
+                    {
+                        ChatbotTemp.SetMessage(id, new ChatbotMessage
+                        {
+                            Type = ChatbotMessageType.Error,
+                            Message = "Unknown error occurred"
+                        });
+                    }
+                });
+                thread.Start();
 
                 if (user.ChatbotCache == null)
                 {
@@ -199,17 +211,14 @@ namespace Controllers
                         HistoryFilePath = path
                     });
                 }
-
                 await _context.SaveChangesAsync();
+
+                return Ok(new { Id = id });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting chatbot response");
-                Response.StatusCode = (int)ErrorType.Unknown;
-            }
-            finally
-            {
-                await Response.CompleteAsync();
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 

@@ -81,9 +81,7 @@ export const Chatbot = () => {
                     disconnect();
                 }
                 else if (m.Type === 3) {
-                    console.log(m.Message);
                     const ragDoc = JSON.parse(m.Message);
-                    console.log(ragDoc);
                     setCurrentHistory((prev) => {
                         if (prev.length === 0) return prev;
                         return [

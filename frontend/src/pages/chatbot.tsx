@@ -110,7 +110,7 @@ export const Chatbot = () => {
         };
 
         const disconnect = () => {
-            ws.close();
+            if (ws.readyState == WebSocket.OPEN) ws.close();
         };
 
         const sendMessage = (message: string) => {

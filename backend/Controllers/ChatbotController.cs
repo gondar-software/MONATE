@@ -146,7 +146,29 @@ namespace Controllers
                     }
                 }
 
+                var generatedText = "";
                 var path = $"Chatbot/{id}.txt";
+                if (request.ChatbotType == ChatbotType.OpenAI)
+                {
+                    var messages = OpenAIHelper.Prompt(id, request.Query, request.Rag, his);
+                    await foreach (var message in messages)
+                    {
+                        Console.Write(message);
+                        generatedText += message;
+                    }
+                }
+                else if (request.ChatbotType == ChatbotType.Qwen)
+                {
+                    var messages = QwenHelper.Prompt(id, request.Query, request.Rag, his);
+                    await foreach (var message in messages)
+                    {
+                        Console.Write(message);
+                        generatedText += message;
+                    }
+                }
+                hisTemp.Add([request.Query, generatedText]);
+                Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
+                System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
 
                 if (user.ChatbotCache == null)
                 {

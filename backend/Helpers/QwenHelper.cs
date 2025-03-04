@@ -9,7 +9,7 @@ namespace Helpers
     {
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public static async IAsyncEnumerable<string> Prompt(string id, string query, bool? rag, List<string[]>? history)
+        public static async IAsyncEnumerable<string> Prompt(string id, string query, bool? rag, List<List<string>>? history)
         {
             using var requestMessage = new HttpRequestMessage(HttpMethod.Post, Environment.GetEnvironmentVariable("QWEN_URL"))
             {

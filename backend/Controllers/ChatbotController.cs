@@ -209,8 +209,10 @@ namespace Controllers
                         Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
                         System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
                     }
-                    catch
+                    catch (Exception ex) {
                     {
+                        Console.WriteLine(ex.Message);
+
                         ChatbotTemp.SetMessage(id, new ChatbotMessage
                         {
                             Type = ChatbotMessageType.Error,

@@ -139,8 +139,8 @@ namespace Controllers
                 ChatbotTemp.ClearMessages(id);
                 Thread thread = new Thread(async () =>
                 {
-                    //try
-                    //{
+                    try
+                    {
                         IAsyncEnumerable<string> messages;
                         if (request.ChatbotType == ChatbotType.OpenAI)
                         {
@@ -171,40 +171,45 @@ namespace Controllers
                             });
                         }
 
-                    if (request.Rag == true)
-                    {
-                        Document[] ragDocs;
-                        if (request.ChatbotType == ChatbotType.OpenAI)
+                        if (request.Rag == true)
                         {
-                            ragDocs = OpenAIHelper.GetRagDocuments(id);
-                        }
-                        else if (request.ChatbotType == ChatbotType.Qwen)
-                        {
-                            ragDocs = await QwenHelper.GetRagDocuments(id);
-                        }
-                        else
-                        {
-                            ChatbotTemp.SetMessage(id, new ChatbotMessage
+                            Document[] ragDocs;
+                            if (request.ChatbotType == ChatbotType.OpenAI)
                             {
-                                Type = ChatbotMessageType.Error,
-                                Message = "This chatbot type is not valid"
-                            });
-                            return;
-                        }
-
-                        Console.WriteLine(ragDocs.Length);
-
-                        foreach (var document in ragDocs)
-                        {
-                            ChatbotTemp.SetMessage(id, new ChatbotMessage
+                                ragDocs = OpenAIHelper.GetRagDocuments(id);
+                            }
+                            else if (request.ChatbotType == ChatbotType.Qwen)
                             {
-                                Type = ChatbotMessageType.RAGDoc,
-                                Message = JsonConvert.SerializeObject(document)
-                            });
-                        }
-                    }
+                                ragDocs = await QwenHelper.GetRagDocuments(id);
+                            }
+                            else
+                            {
+                                ChatbotTemp.SetMessage(id, new ChatbotMessage
+                                {
+                                    Type = ChatbotMessageType.Error,
+                                    Message = "This chatbot type is not valid"
+                                });
+                                return;
+                            }
 
-                    ChatbotTemp.SetMessage(id, new ChatbotMessage
+                            Console.WriteLine(ragDocs.Length);
+
+                            foreach (var document in ragDocs)
+                            {
+                                ChatbotTemp.SetMessage(id, new ChatbotMessage
+                                {
+                                    Type = ChatbotMessageType.RAGDoc,
+                                    Message = JsonConvert.SerializeObject(new
+                                    {
+                                        Link = document.Link,
+                                        Title = document.Title,
+                                        Snippet = document.Snippet,
+                                    })
+                                });
+                            }
+                        }
+
+                        ChatbotTemp.SetMessage(id, new ChatbotMessage
                         {
                             Type = ChatbotMessageType.End,
                             Message = ""
@@ -213,17 +218,15 @@ namespace Controllers
                         hisTemp.Add([request.Query, generatedText]);
                         Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
                         System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    Console.WriteLine(ex.Message);
-
-                    //    ChatbotTemp.SetMessage(id, new ChatbotMessage
-                    //    {
-                    //        Type = ChatbotMessageType.Error,
-                    //        Message = "Unknown error occurred"
-                    //    });
-                    //}
+                    }
+                    catch
+                    {
+                        ChatbotTemp.SetMessage(id, new ChatbotMessage
+                        {
+                            Type = ChatbotMessageType.Error,
+                            Message = "Unknown error occurred"
+                        });
+                    }
                 });
                 thread.Start();
 

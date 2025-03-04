@@ -98,19 +98,14 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("prompt")]
-        public async Task Prompt([FromBody] PromptRequest request)
+        public async IAsyncEnumerable<string> Prompt([FromBody] PromptRequest request)
         {
-            Response.Headers.Append("Content-Type", "text/event-stream");
-            Response.Headers.Append("Cache-Control", "no-cache");
-            Response.Headers.Append("Connection", "keep-alive");
-
             try
             {
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
                 if (string.IsNullOrEmpty(userEmail))
                 {
-                    Response.StatusCode = (int)ErrorType.Unknown;
-                    return;
+                    yield break;
                 }
 
                 var user = await _context.Users
@@ -120,8 +115,7 @@ namespace Controllers
 
                 if (user == null)
                 {
-                    Response.StatusCode= (int)ErrorType.UserNotFound;
-                    return;
+                    yield break;
                 }
 
                 var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
@@ -134,16 +128,8 @@ namespace Controllers
 
                 if (user.ChatbotCache != null && user.ChatbotCache.LastId != request.Id)
                 {
-                    try
-                    {
-                        if (request.ChatbotType == ChatbotType.OpenAI) OpenAIHelper.DeleteHistory(id);
-                        else if (request.ChatbotType == ChatbotType.Qwen) await QwenHelper.DeleteHistory(id);
-                    }
-                    catch
-                    {
-                        Response.StatusCode = (int)ErrorType.CouldNotFoundChatbotServer;
-                        return;
-                    }
+                    if (request.ChatbotType == ChatbotType.OpenAI) OpenAIHelper.DeleteHistory(id);
+                    else if (request.ChatbotType == ChatbotType.Qwen) await QwenHelper.DeleteHistory(id);
                 }
 
                 var path = $"Chatbot/{id}.txt";
@@ -159,21 +145,14 @@ namespace Controllers
                 }
                 else
                 {
-                    Response.StatusCode = (int)ErrorType.UnsupportedChatbotType;
-                    return;
+                    yield break;
                 }
-
-                Response.StatusCode = 200;
-                await Response.StartAsync();
-                await Response.WriteAsync($"{id},");
-                await Response.Body.FlushAsync();
 
                 var generatedText = "";
                 await foreach (var message in messages)
                 {
                     generatedText += message;
-                    await Response.WriteAsync(message);
-                    await Response.Body.FlushAsync();
+                    yield return message;
                 }
 
                 hisTemp.Add([request.Query, generatedText]);
@@ -200,17 +179,9 @@ namespace Controllers
                         HistoryFilePath = path
                     });
                 }
-
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting chatbot response");
-                Response.StatusCode = (int)ErrorType.Unknown;
             }
             finally
             {
-                await Response.CompleteAsync();
             }
         }
 

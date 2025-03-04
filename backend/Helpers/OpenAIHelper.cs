@@ -25,7 +25,7 @@ namespace Helpers
         public static async IAsyncEnumerable<string> Prompt(string id, string query, bool? rag, List<List<string>>? history)
         {
             var messageList = new List<ChatMessage>();
-            if (history != null)
+            if (history != null && history.Count != 0)
                 _histories.AddOrUpdate(id, _ => history, (_, _) => history);
 
             if (_histories.TryGetValue(id, out var historyList))

@@ -98,18 +98,20 @@ namespace Controllers
 
         [Authorize]
         [HttpPost("prompt")]
-        public async Task<IActionResult> Prompt([FromBody] PromptRequest request)
+        public async Task Prompt([FromBody] PromptRequest request)
         {
             Response.Headers.Append("Content-Type", "text/event-stream");
             Response.Headers.Append("Cache-Control", "no-cache");
             Response.Headers.Append("Connection", "keep-alive");
+            await Response.StartAsync();
 
             try
             {
                 var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
                 if (string.IsNullOrEmpty(userEmail))
                 {
-                    return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+                    Response.StatusCode = (int)ErrorType.Unknown;
+                    return;
                 }
 
                 var user = await _context.Users
@@ -119,7 +121,8 @@ namespace Controllers
 
                 if (user == null)
                 {
-                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                    Response.StatusCode= (int)ErrorType.UserNotFound;
+                    return;
                 }
 
                 var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
@@ -139,7 +142,8 @@ namespace Controllers
                     }
                     catch
                     {
-                        return StatusCode((int)ErrorType.CouldNotFoundChatbotServer, ErrorType.CouldNotFoundChatbotServer.ToString());
+                        Response.StatusCode = (int)ErrorType.CouldNotFoundChatbotServer;
+                        return;
                     }
                 }
 
@@ -157,7 +161,8 @@ namespace Controllers
                 }
                 else
                 {
-                    return StatusCode((int)ErrorType.UnsupportedChatbotType, ErrorType.UnsupportedChatbotType.ToString());
+                    Response.StatusCode = (int)ErrorType.UnsupportedChatbotType;
+                    return;
                 }
 
                 await Response.WriteAsync($"{id},");
@@ -197,12 +202,15 @@ namespace Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return new EmptyResult();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting chatbot response");
-                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+                Response.StatusCode = (int)ErrorType.Unknown;
+            }
+            finally
+            {
+                await Response.CompleteAsync();
             }
         }
 

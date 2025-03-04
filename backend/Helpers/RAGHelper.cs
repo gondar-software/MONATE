@@ -55,14 +55,22 @@ namespace Helpers
             }
         }
 
-        public static async Task<Document[]> GetRagDocs(EmbeddingClient embeddingClient, string query, int topK = 5)
+        public static async Task<Document[]> GetRagDocs(EmbeddingClient embeddingClient, string query, int topK = 3)
         {
             var listRequest = _customSearchAPIService.Cse.List();
             listRequest.Q = query;
             listRequest.Cx = Environment.GetEnvironmentVariable("GOOGLE_CSE_ID");
+            listRequest.Num = Math.Min(10, topK * 2);
+
+            Console.WriteLine("Success 1");
 
             var search = await listRequest.ExecuteAsync();
+
+            Console.WriteLine("Success 2");
+
             var items = search.Items.ToArray();
+
+            Console.WriteLine("Success 3");
 
             var documents = await Task.WhenAll(items.Select(async (item) =>
             {
@@ -76,6 +84,8 @@ namespace Helpers
                 };
             }));
 
+            Console.WriteLine("Success 4");
+
             var queryEmbedding = await embeddingClient.GenerateEmbeddingAsync(query);
             var queryVector = queryEmbedding.Value.ToFloats().ToArray();
 
@@ -84,10 +94,14 @@ namespace Helpers
                 doc.Similarity = CosineSimilarity(queryVector, doc.Embedding);
             }
 
+            Console.WriteLine("Success 5");
+
             var topDocs = documents.OrderByDescending(doc => doc.Similarity).Take(topK).ToArray();
 
             var scrapeTasks = topDocs.Select(doc => ScrapeText(doc.Link));
             var scrapedTexts = await Task.WhenAll(scrapeTasks);
+
+            Console.WriteLine("Success 6");
 
             for (int i = 0; i < topDocs.Length; i++)
             {

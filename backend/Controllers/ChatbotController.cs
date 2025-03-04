@@ -120,7 +120,7 @@ namespace Controllers
 
                 if (user == null)
                 {
-                    Response.StatusCode= (int)ErrorType.UserNotFound;
+                    Response.StatusCode = (int)ErrorType.UserNotFound;
                     return;
                 }
 
@@ -163,7 +163,6 @@ namespace Controllers
                     return;
                 }
 
-                Response.StatusCode = 200;
                 await Response.StartAsync();
                 await Response.WriteAsync($"{id},");
                 await Response.Body.FlushAsync();
@@ -195,7 +194,7 @@ namespace Controllers
                     {
                         User = user,
                         ChatId = id,
-                        Title = request.Query.Substring(0, Math.Min(30, request.Query.Length)),
+                        Title = request.Query[0..Math.Min(30, request.Query.Length)],
                         ChatbotType = request.ChatbotType,
                         HistoryFilePath = path
                     });

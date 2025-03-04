@@ -176,6 +176,8 @@ export const Chatbot = () => {
                 }
                 else
                     responseText += decoder.decode(value, { stream: true });
+
+                console.log(responseText);
         
                 setCurrentHistory((prev) => {
                     if (prev.length === 0) return prev;

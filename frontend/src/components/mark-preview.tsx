@@ -57,7 +57,8 @@ export const MarkdownPreviewer = (props: any) => {
         <div className={`h-full px-6 py-2 border rounded-lg w-full flex flex-col gap-2 
             ${props.user ? 'bg-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-500 text-gray-900 dark:text-white' :
                 'bg-white shadow-sm dark:bg-gray-800 dark:border-gray-500 text-gray-900 dark:text-white'}`}>
-            <ReactMarkdown
+            {props.user && props.text}
+            {!props.user && <ReactMarkdown
                 rehypePlugins={[rehypeKatex]}
                 remarkPlugins={[remarkMath, remarkGfm]}
                 components={{
@@ -83,7 +84,7 @@ export const MarkdownPreviewer = (props: any) => {
                 }}
             >
                 {replaceHolder(props.text)}
-            </ReactMarkdown>
+            </ReactMarkdown>}
         </div>
     );
 };

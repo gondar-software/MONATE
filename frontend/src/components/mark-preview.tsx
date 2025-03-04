@@ -55,7 +55,7 @@ export const MarkdownPreviewer = (props: any) => {
 
     return (
         <div className={`h-full px-6 py-2 border rounded-lg w-full flex flex-col gap-2 
-            ${props.user ? 'bg-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-500 text-gray-900 dark:text-white' :
+            ${props.user ? 'bg-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-500 text-gray-900 dark:text-white text-wrap break-words break-all' :
                 'bg-white shadow-sm dark:bg-gray-800 dark:border-gray-500 text-gray-900 dark:text-white'}`}>
             {props.user && props.text}
             {!props.user && <ReactMarkdown

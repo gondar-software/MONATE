@@ -103,7 +103,6 @@ namespace Controllers
             Response.Headers.Append("Content-Type", "text/event-stream");
             Response.Headers.Append("Cache-Control", "no-cache");
             Response.Headers.Append("Connection", "keep-alive");
-            await Response.StartAsync();
 
             try
             {
@@ -149,6 +148,7 @@ namespace Controllers
 
                 var path = $"Chatbot/{id}.txt";
                 Response.StatusCode = 200;
+                await Response.StartAsync();
 
                 IAsyncEnumerable<string> messages;
                 if (request.ChatbotType == ChatbotType.OpenAI)

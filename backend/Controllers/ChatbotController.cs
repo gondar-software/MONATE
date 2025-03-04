@@ -139,8 +139,8 @@ namespace Controllers
                 ChatbotTemp.ClearMessages(id);
                 Thread thread = new Thread(async () =>
                 {
-                    try
-                    {
+                    //try
+                    //{
                         IAsyncEnumerable<string> messages;
                         if (request.ChatbotType == ChatbotType.OpenAI)
                         {
@@ -208,17 +208,17 @@ namespace Controllers
                         hisTemp.Add([request.Query, generatedText]);
                         Directory.CreateDirectory(Path.GetDirectoryName(path) ?? "Chatbot");
                         System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(hisTemp));
-                    }
-                    catch (Exception ex) {
-                    {
-                        Console.WriteLine(ex.Message);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Console.WriteLine(ex.Message);
 
-                        ChatbotTemp.SetMessage(id, new ChatbotMessage
-                        {
-                            Type = ChatbotMessageType.Error,
-                            Message = "Unknown error occurred"
-                        });
-                    }
+                    //    ChatbotTemp.SetMessage(id, new ChatbotMessage
+                    //    {
+                    //        Type = ChatbotMessageType.Error,
+                    //        Message = "Unknown error occurred"
+                    //    });
+                    //}
                 });
                 thread.Start();
 

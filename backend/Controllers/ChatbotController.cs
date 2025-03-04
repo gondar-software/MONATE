@@ -193,20 +193,16 @@ namespace Controllers
                             }
 
                             Console.WriteLine(ragDocs.Length);
-
-                            foreach (var document in ragDocs)
+                            ChatbotTemp.SetMessage(id, new ChatbotMessage
                             {
-                                ChatbotTemp.SetMessage(id, new ChatbotMessage
+                                Type = ChatbotMessageType.RAGDoc,
+                                Message = JsonConvert.SerializeObject(ragDocs.Select(doc => new
                                 {
-                                    Type = ChatbotMessageType.RAGDoc,
-                                    Message = JsonConvert.SerializeObject(new
-                                    {
-                                        Link = document.Link,
-                                        Title = document.Title,
-                                        Snippet = document.Snippet,
-                                    })
-                                });
-                            }
+                                    Link = doc.Link,
+                                    Title = doc.Title,
+                                    Snippet = doc.Snippet,
+                                }))
+                            });
                         }
 
                         ChatbotTemp.SetMessage(id, new ChatbotMessage

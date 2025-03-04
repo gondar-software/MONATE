@@ -110,11 +110,13 @@ export const Chatbot = () => {
         };
 
         const disconnect = () => {
-            if (ws.readyState == WebSocket.OPEN) ws.close();
+            if (ws.readyState === WebSocket.OPEN) 
+                ws.close();
         };
 
         const sendMessage = (message: string) => {
-            ws.send(message);
+            if (ws.readyState === WebSocket.OPEN)
+                ws.send(message);
         }
     }
 

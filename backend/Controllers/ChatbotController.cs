@@ -100,10 +100,9 @@ namespace Controllers
         [HttpPost("prompt")]
         public async Task<IActionResult> Prompt([FromBody] PromptRequest request)
         {
-            var response = Response;
-            response.Headers.Append("Content-Type", "text/event-stream");
-            response.Headers.Append("Cache-Control", "no-cache");
-            response.Headers.Append("Connection", "keep-alive");
+            Response.Headers.Append("Content-Type", "text/event-stream");
+            Response.Headers.Append("Cache-Control", "no-cache");
+            Response.Headers.Append("Connection", "keep-alive");
 
             try
             {
@@ -145,12 +144,7 @@ namespace Controllers
                 }
 
                 var path = $"Chatbot/{id}.txt";
-                var writer = response.BodyWriter;
-
-                await using var streamWriter = new StreamWriter(response.Body);
-                response.StatusCode = 200;
-
-                await streamWriter.FlushAsync();
+                Response.StatusCode = 200;
 
                 IAsyncEnumerable<string> messages;
                 if (request.ChatbotType == ChatbotType.OpenAI)
@@ -166,17 +160,15 @@ namespace Controllers
                     return StatusCode((int)ErrorType.UnsupportedChatbotType, ErrorType.UnsupportedChatbotType.ToString());
                 }
 
-                await streamWriter.WriteAsync($"{id},");
-                await streamWriter.FlushAsync();
+                await Response.WriteAsync($"{id},");
+                await Response.Body.FlushAsync();
 
                 var generatedText = "";
                 await foreach (var message in messages)
                 {
                     generatedText += message;
-                    await streamWriter.WriteAsync(message);
-                    await streamWriter.FlushAsync();
-
-                    Console.Write(message);
+                    await Response.WriteAsync(message);
+                    await Response.Body.FlushAsync();
                 }
 
                 hisTemp.Add([request.Query, generatedText]);

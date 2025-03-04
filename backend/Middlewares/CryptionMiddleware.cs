@@ -51,6 +51,7 @@ namespace Middlewares
         {
             if (context.Request.Path.Value?.IndexOf("api/chatbot/prompt") > -1)
             {
+                Console.WriteLine("Success");
                 return _next(context);
             }
             else

@@ -166,6 +166,9 @@ namespace Controllers
                     return StatusCode((int)ErrorType.UnsupportedChatbotType, ErrorType.UnsupportedChatbotType.ToString());
                 }
 
+                await streamWriter.WriteAsync($"{id},");
+                await streamWriter.FlushAsync();
+
                 var generatedText = "";
                 await foreach (var message in messages)
                 {
@@ -193,7 +196,7 @@ namespace Controllers
                     {
                         User = user,
                         ChatId = id,
-                        Title = request.Query,
+                        Title = request.Query.Substring(0, Math.Min(30, request.Query.Length)),
                         ChatbotType = request.ChatbotType,
                         HistoryFilePath = path
                     });

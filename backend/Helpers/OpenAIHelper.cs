@@ -9,7 +9,7 @@ namespace Helpers
 {
     public static class OpenAIHelper
     {
-        private static readonly ConcurrentDictionary<string, List<string[]>> _histories = new();
+        private static readonly ConcurrentDictionary<string, List<List<string>>> _histories = new();
         private static readonly ConcurrentDictionary<string, Document[]> _documents = new();
         private static readonly OpenAIClient _client;
         private static readonly EmbeddingClient _embeddingClient;
@@ -22,7 +22,7 @@ namespace Helpers
             _chatClient = _client.GetChatClient("gpt-4o");
         }
 
-        public static async IAsyncEnumerable<string> Prompt(string id, string query, bool? rag, List<string[]>? history)
+        public static async IAsyncEnumerable<string> Prompt(string id, string query, bool? rag, List<List<string>>? history)
         {
             var messageList = new List<ChatMessage>();
             if (history != null)
@@ -60,8 +60,8 @@ namespace Helpers
             }
 
             _histories.AddOrUpdate(id,
-                _ => new List<string[]> { new[] { query, assistantMessage.ToString() } },
-                (_, historyList) => { historyList.Add(new[] { query, assistantMessage.ToString() }); return historyList; });
+                _ => new List<List<string>> ([[query, assistantMessage.ToString()]]),
+                (_, historyList) => { historyList.Add([query, assistantMessage.ToString()]); return historyList; });
         }
 
         public static Document[] GetRagDocuments(string id)

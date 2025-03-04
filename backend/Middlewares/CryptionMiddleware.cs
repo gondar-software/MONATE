@@ -14,7 +14,7 @@ namespace Middlewares
             _cryptionHelper = cryptionHelper;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        async Task ImplementEncryption(HttpContext context)
         {
             if (context.Request.ContentType?.Contains("application/json") == true && context.Request.ContentLength > 0)
             {
@@ -45,10 +45,17 @@ namespace Middlewares
                 context.Response.ContentLength = encryptedBytes.Length;
                 await context.Response.Body.WriteAsync(encryptedBytes, 0, encryptedBytes.Length);
             }
+        }
+
+        public Task InvokeAsync(HttpContext context)
+        {
+            if (context.Request.Path.Value?.IndexOf("api/chatbot/prompt") > -1)
+            {
+                return _next(context);
+            }
             else
             {
-                context.Response.Body.Seek(0, SeekOrigin.Begin);
-                await responseBody.CopyToAsync(originalBodyStream);
+                return ImplementEncryption(context);
             }
         }
     }

@@ -1,46 +1,30 @@
-import { useAlert } from "@app/providers";
 import { useEffect, useState } from "react";
 
-export const ImageUploader = (props: any) => {
-    const [selectedImage, setSelectedImage] = useState(props.initUrl);
-    const { addAlert } = useAlert();
+export const VideoUploader = (props: any) => {
+    const [selectedVideo, setSelectedVideo] = useState(props.initUrl);
 
     useEffect(() => {
-        setSelectedImage(props.initUrl);
+        setSelectedVideo(props.initUrl);
     }, [props.initUrl]);
 
-    const maxWidth = props.maxWidth || 800;
-    const maxHeight = props.maxHeight || 400;
-
-    const handleImageUpload = (file: File) => {
+    const handleVideoUpload = (file: File) => {
         if (props.disabled)
             return;
-        const img = new Image();
-        img.onload = () => {
-            if (img.width > maxWidth || img.height > maxHeight) {
-                addAlert({
-                    mode: "warning",
-                    title: "Image too large",
-                    message: `Please upload an image smaller than ${maxWidth}x${maxHeight} pixels.`,
-                });
-                setSelectedImage("");
-            } else {
-                setSelectedImage(URL.createObjectURL(file));
-                props.onImageUpload(file);
-            }
-        };
-        img.src = URL.createObjectURL(file);
+        if (!file.type.startsWith('video/'))
+            return;
+        props.onVideoUpload(file);
+        setSelectedVideo(URL.createObjectURL(file));
     };
 
     const handleFileChange = (event: any) => {
         const file = event.target.files[0];
-        if (file) handleImageUpload(file);
+        if (file) handleVideoUpload(file);
     };
 
     const handleDrop = (event: any) => {
         event.preventDefault();
         const file = event.dataTransfer.files[0];
-        if (file) handleImageUpload(file);
+        if (file) handleVideoUpload(file);
     };
 
     const handleDragOver = (event: any) => {
@@ -58,7 +42,7 @@ export const ImageUploader = (props: any) => {
                     htmlFor={`dropzone-file-${props.id}`}
                     className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 relative"
                 >
-                    {!selectedImage && (
+                    {!selectedVideo && (
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
                                 className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
@@ -79,21 +63,25 @@ export const ImageUploader = (props: any) => {
                                 <span className="font-semibold">Click to upload</span> or drag and drop
                             </p>
                             <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                                PNG, JPG (MAX. {maxWidth}x{maxHeight}px)
+                                MP4, AVI, MOV, WMV, MPG
                             </p>
                         </div>
                     )}
-                    {selectedImage && (
-                        <img
-                            src={selectedImage}
-                            alt="Uploaded preview"
+                    {selectedVideo && (
+                        <video
+                            src={selectedVideo}
                             className="w-full h-full rounded-lg"
+                            controlsList="nodownload nofullscreen noremote"
+                            autoPlay
+                            loop={true}
+                            muted
+                            playsInline
                         />
                     )}
                     <input
                         id={`dropzone-file-${props.id}`}
                         type="file"
-                        accept=".jpg,.jpeg,.png"
+                        accept=".mp4,.avi,.mov,.wmv,.mpg"
                         className="hidden"
                         disabled={props.disabled}
                         onChange={handleFileChange}
@@ -104,4 +92,4 @@ export const ImageUploader = (props: any) => {
     );
 };
 
-export default ImageUploader;
+export default VideoUploader;

@@ -19,3 +19,4 @@ export * from '@app/components/headers';
 export * from '@app/components/selectors';
 export * from '@app/components/date-pickers';
 export * from '@app/components/files';
+export * from '@app/components/video-uploader';

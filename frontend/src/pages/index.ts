@@ -7,3 +7,4 @@ export * from '@app/pages/re-pwd';
 export * from '@app/pages/information';
 export * from '@app/pages/upload-portfolio';
 export * from '@app/pages/chatbot';
+export * from '@app/pages/comfyui';

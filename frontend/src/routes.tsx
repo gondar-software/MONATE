@@ -4,6 +4,7 @@ import {
 
 import { MonateIcon } from '@app/components';
 import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot } from '@app/pages';
+import ComfyUI from './pages/comfyui';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -106,7 +107,7 @@ export const routes = [
                 name: 'comfyui',
                 label: 'ComfyUI API',
                 path: '/comfyui',
-                element: <div />,
+                element: <ComfyUI />,
             },
         ]
     },

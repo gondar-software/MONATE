@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using System.Text.Json.Nodes;
-using static Helpers.RAGHelper;
+using static Helpers.Chatbot.RAGHelper;
 
-namespace Helpers
+namespace Helpers.Chatbot
 {
     public static class QwenHelper
     {

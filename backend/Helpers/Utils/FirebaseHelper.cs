@@ -4,7 +4,7 @@ using Google.Cloud.Storage.V1;
 using Org.BouncyCastle.Bcpg;
 using Sodium.Exceptions;
 
-namespace Helpers
+namespace Helpers.Utils
 {
     public static class FirebaseHelper
     {
@@ -38,8 +38,8 @@ namespace Helpers
             using (var memoryStream = new MemoryStream())
             {
                 await _client.DownloadObjectAsync(
-                    Environment.GetEnvironmentVariable("FIREBASE_BACKET_NAME"), 
-                    path, 
+                    Environment.GetEnvironmentVariable("FIREBASE_BACKET_NAME"),
+                    path,
                     memoryStream
                 );
                 memoryStream.Seek(0, SeekOrigin.Begin);

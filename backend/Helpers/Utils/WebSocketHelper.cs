@@ -1,5 +1,5 @@
-﻿namespace Helpers
-{ 
+﻿namespace Helpers.Utils
+{
     using System.Net.WebSockets;
     using System.Text;
     using Temp;

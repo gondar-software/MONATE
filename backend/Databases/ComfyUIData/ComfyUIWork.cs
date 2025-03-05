@@ -10,7 +10,7 @@ namespace Databases.ComfyUIData
         public ComfyUIModelTypes Type { get; set; }
 
         public User? User { get; set; } 
-        public ICollection<ComfyUIInputParam>? Inputs { get; set; }
-        public ComfyUIOutputParam? Output { get; set; }
+        public ICollection<ComfyUIInputData>? Inputs { get; set; }
+        public ComfyUIOutputData? Output { get; set; }
     }
 }

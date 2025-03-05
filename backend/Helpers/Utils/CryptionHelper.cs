@@ -1,7 +1,7 @@
 using System.Text;
 using Sodium;
-    
-namespace Helpers
+
+namespace Helpers.Utils
 {
     public class CryptionHelper
     {
@@ -11,14 +11,14 @@ namespace Helpers
         {
             var password = Environment.GetEnvironmentVariable("PASSWORD");
             if (string.IsNullOrEmpty(password))
-                this.key = SodiumCore.GetRandomBytes(32);
+                key = SodiumCore.GetRandomBytes(32);
             else
-                this.key = Convert.FromHexString(password);
+                key = Convert.FromHexString(password);
         }
 
         public CryptionHelper(string passwordHex)
         {
-            this.key = Convert.FromHexString(passwordHex);
+            key = Convert.FromHexString(passwordHex);
         }
 
         public string Encrypt(string plaintext)

@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Enums;
 
-namespace Helpers
+namespace Helpers.Utils
 {
     public static class VerifyEmailHelper
     {
@@ -48,7 +48,7 @@ namespace Helpers
             VerifyLastTrialDict.TryGetValue(email, out DateTime lastTrialTime);
             VerifyTrialCountDict.TryGetValue(email, out int trialCount);
 
-            if ((DateTime.UtcNow - lastTrialTime) > TimeSpan.FromHours(24))
+            if (DateTime.UtcNow - lastTrialTime > TimeSpan.FromHours(24))
             {
                 trialCount = 0;
             }

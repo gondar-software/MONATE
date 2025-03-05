@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Helpers
+namespace Helpers.Utils
 {
     public static class DotEnvHelper
     {
@@ -15,7 +15,7 @@ namespace Helpers
                 Environment.SetEnvironmentVariable(key, value);
             }
         }
-        
+
         private static IEnumerable<(string Key, string Value)> Parse(string[] lines)
         {
             var multiLineBuffer = new StringBuilder();
@@ -65,7 +65,7 @@ namespace Helpers
         {
             value = value.Trim();
 
-            if ((value.StartsWith("\"") && value.EndsWith("\"")) || (value.StartsWith("'") && value.EndsWith("'")))
+            if (value.StartsWith("\"") && value.EndsWith("\"") || value.StartsWith("'") && value.EndsWith("'"))
             {
                 value = value[1..^1];
             }

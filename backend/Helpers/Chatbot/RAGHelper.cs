@@ -3,7 +3,7 @@ using Google.Apis.Services;
 using HtmlAgilityPack;
 using OpenAI.Embeddings;
 
-namespace Helpers
+namespace Helpers.Chatbot
 {
     public static class RAGHelper
     {

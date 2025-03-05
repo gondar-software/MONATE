@@ -6,10 +6,10 @@ using Databases;
 using Newtonsoft.Json;
 using Packets.Chatbot;
 using Databases.ChatbotData;
-using Helpers;
 using Temp;
 using Models;
-using static Helpers.RAGHelper;
+using Helpers.Chatbot;
+using static Helpers.Chatbot.RAGHelper;
 
 namespace Controllers
 {

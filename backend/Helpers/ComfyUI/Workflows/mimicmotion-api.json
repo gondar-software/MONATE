@@ -1,0 +1,201 @@
+{
+  "1": {
+    "inputs": {
+      "image": "",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "2": {
+    "inputs": {
+      "video": "",
+      "force_rate": 0,
+      "custom_width": 0,
+      "custom_height": 0,
+      "frame_load_cap": 24,
+      "skip_first_frames": 0,
+      "select_every_nth": 2,
+      "format": "AnimateDiff"
+    },
+    "class_type": "VHS_LoadVideo",
+    "_meta": {
+      "title": "Load Video (Upload) 🎥🅥🅗🅢"
+    }
+  },
+  "3": {
+    "inputs": {
+      "width": [
+        "18",
+        1
+      ],
+      "height": [
+        "18",
+        2
+      ],
+      "upscale_method": "lanczos",
+      "keep_proportion": true,
+      "divisible_by": 64,
+      "crop": "disabled",
+      "image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "ImageResizeKJ",
+    "_meta": {
+      "title": "Resize Image"
+    }
+  },
+  "4": {
+    "inputs": {
+      "width": [
+        "18",
+        1
+      ],
+      "height": [
+        "18",
+        2
+      ],
+      "upscale_method": "lanczos",
+      "keep_proportion": false,
+      "divisible_by": 64,
+      "crop": "disabled",
+      "image": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "ImageResizeKJ",
+    "_meta": {
+      "title": "Resize Image"
+    }
+  },
+  "5": {
+    "inputs": {
+      "include_body": true,
+      "include_hand": true,
+      "include_face": true,
+      "ref_image": [
+        "3",
+        0
+      ],
+      "pose_images": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "MimicMotionGetPoses",
+    "_meta": {
+      "title": "MimicMotion GetPoses"
+    }
+  },
+  "9": {
+    "inputs": {
+      "steps": 25,
+      "cfg_min": 2,
+      "cfg_max": 2,
+      "seed": 258825914941994,
+      "fps": 15,
+      "noise_aug_strength": 0,
+      "context_size": 16,
+      "context_overlap": 6,
+      "keep_model_loaded": true,
+      "pose_strength": 1,
+      "pose_start_percent": 0,
+      "pose_end_percent": 1,
+      "image_embed_strength": 1,
+      "mimic_pipeline": [
+        "11",
+        0
+      ],
+      "ref_image": [
+        "3",
+        0
+      ],
+      "pose_images": [
+        "5",
+        0
+      ],
+      "optional_scheduler": [
+        "10",
+        0
+      ]
+    },
+    "class_type": "MimicMotionSampler",
+    "_meta": {
+      "title": "MimicMotion Sampler"
+    }
+  },
+  "10": {
+    "inputs": {
+      "scheduler": "EulerDiscreteScheduler",
+      "sigma_min": 0.002,
+      "sigma_max": 700,
+      "align_your_steps": false
+    },
+    "class_type": "DiffusersScheduler",
+    "_meta": {
+      "title": "Diffusers Scheduler"
+    }
+  },
+  "11": {
+    "inputs": {
+      "model": "MimicMotionMergedUnet_1-0-fp16.safetensors",
+      "precision": "fp16"
+    },
+    "class_type": "DownloadAndLoadMimicMotionModel",
+    "_meta": {
+      "title": "(Down)Load MimicMotionModel"
+    }
+  },
+  "12": {
+    "inputs": {
+      "decode_chunk_size": 4,
+      "mimic_pipeline": [
+        "11",
+        0
+      ],
+      "samples": [
+        "9",
+        0
+      ]
+    },
+    "class_type": "MimicMotionDecode",
+    "_meta": {
+      "title": "MimicMotion Decode"
+    }
+  },
+  "14": {
+    "inputs": {
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "AnimateDiff",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "12",
+        0
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine 🎥🅥🅗🅢"
+    }
+  },
+  "18": {
+    "inputs": {
+      "image": [
+        "1",
+        0
+      ]
+    },
+    "class_type": "GetImageSizeAndCount",
+    "_meta": {
+      "title": "Get Image Size & Count"
+    }
+  }
+}

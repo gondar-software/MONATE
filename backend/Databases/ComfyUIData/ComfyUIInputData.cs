@@ -2,7 +2,7 @@
 
 namespace Databases.ComfyUIData
 {
-    public class ComfyUIInputParam
+    public class ComfyUIInputData
     {
         public int Id { get; set; }
         public ComfyUIDataTypes Type { get; set; }

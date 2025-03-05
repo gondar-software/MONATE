@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
-using OpenAI;
+﻿using OpenAI;
 using OpenAI.Chat;
 using OpenAI.Embeddings;
 using System.Collections.Concurrent;
 using System.Text;
-using static Helpers.RAGHelper;
+using static Helpers.Chatbot.RAGHelper;
 
-namespace Helpers
+namespace Helpers.Chatbot
 {
     public static class OpenAIHelper
     {
@@ -61,7 +60,7 @@ namespace Helpers
             }
 
             _histories.AddOrUpdate(id,
-                _ => new List<List<string>> ([[query, assistantMessage.ToString()]]),
+                _ => new List<List<string>>([[query, assistantMessage.ToString()]]),
                 (_, historyList) => { historyList.Add([query, assistantMessage.ToString()]); return historyList; });
         }
 
@@ -74,7 +73,7 @@ namespace Helpers
             else
             {
                 return [];
-            }    
+            }
         }
 
         public static void DeleteHistory(string id)

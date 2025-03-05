@@ -29,8 +29,8 @@ namespace Databases
         #endregion
 
         #region ComfyUITables
-        public DbSet<ComfyUIInputParam> ComfyUIInputParams { get; set; } = null!;
-        public DbSet<ComfyUIOutputParam> ComfyUIOutputParams { get; set; } = null!;
+        public DbSet<ComfyUIInputData> ComfyUIInputDatas { get; set; } = null!;
+        public DbSet<ComfyUIOutputData> ComfyUIOutputDatas { get; set; } = null!;
         public DbSet<ComfyUIWork> ComfyUIWorks { get; set; } = null!;
         #endregion
 
@@ -81,15 +81,15 @@ namespace Databases
 
         private void ConfigureComfyUITables(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ComfyUIInputParam>()
+            modelBuilder.Entity<ComfyUIInputData>()
                 .HasOne(c => c.Work)
                 .WithMany(c => c.Inputs)
                 .HasForeignKey(c => c.WorkId)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<ComfyUIOutputParam>()
+            modelBuilder.Entity<ComfyUIOutputData>()
                 .HasOne(c => c.Work)
                 .WithOne(c => c.Output)
-                .HasForeignKey<ComfyUIOutputParam>(c => c.WorkId)
+                .HasForeignKey<ComfyUIOutputData>(c => c.WorkId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ComfyUIWork>()
                 .HasOne(c => c.User)

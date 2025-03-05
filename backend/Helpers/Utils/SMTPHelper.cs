@@ -3,7 +3,7 @@ using MailKit;
 using MimeKit;
 using Temp;
 
-namespace Helpers
+namespace Helpers.Utils
 {
     public class SMTPHelper
     {

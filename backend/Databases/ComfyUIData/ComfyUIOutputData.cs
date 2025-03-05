@@ -2,7 +2,7 @@
 
 namespace Databases.ComfyUIData
 {
-    public class ComfyUIOutputParam
+    public class ComfyUIOutputData
     {
         public int Id { get; set; }
         public ComfyUIDataTypes Type { get; set; }

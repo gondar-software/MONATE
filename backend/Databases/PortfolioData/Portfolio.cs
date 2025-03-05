@@ -1,7 +1,6 @@
-using Databases.EndpointData;
 using Enums;
 
-namespace Databases.TeamData
+namespace Databases.PortfolioData
 {
     public class Portfolio
     {

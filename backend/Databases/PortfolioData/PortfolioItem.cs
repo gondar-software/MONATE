@@ -1,6 +1,6 @@
 using Enums;
 
-namespace Databases.TeamData
+namespace Databases.PortfolioData
 {
     public class PortfolioItem
     {

@@ -108,20 +108,6 @@ export const routes = [
                 path: '/comfyui',
                 element: <div />,
             },
-            {
-                icon: <div />,
-                name: 'cv',
-                label: 'Computer Vision',
-                path: '/cv',
-                element: <div />,
-            },
-            {
-                icon: <div />,
-                name: 'about-me',
-                label: 'About Me',
-                path: '/about-me',
-                element: <div />,
-            },
         ]
     },
     {

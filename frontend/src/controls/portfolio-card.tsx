@@ -2,7 +2,7 @@ import { Badge, FormHeader3, FormLinkButton1, LoadingSpin, SlideViewer } from "@
 import { fileTypes, portfolioTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
-import { useJsonCryptionMiddleware, useJsonOnlyRequestCryptionMiddleware } from "@app/middlewares";
+import { useJsonCryptionMiddleware, useJsonNoTokenOnlyRequestCryptionMiddleware } from "@app/middlewares";
 import { useAlert } from "@app/providers";
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react"
@@ -17,7 +17,7 @@ const portfolioBadgeModes = {
 
 export const PortfolioCard = (props: any) => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { jsonOnlyRequestClient } = useJsonOnlyRequestCryptionMiddleware();
+    const { jsonNoTokenOnlyRequestClient } = useJsonNoTokenOnlyRequestCryptionMiddleware();
     const { addAlert } = useAlert();
     const [loading, setLoading] = useState(true);
     const [slides, setSlides] = useState<any[]>([]);
@@ -53,7 +53,7 @@ export const PortfolioCard = (props: any) => {
 
         const slidesData = await Promise.all(
             items?.map(async(item: any) => {
-                const response = await jsonOnlyRequestClient.get(`/download/${fileTypeMap[item.type]}?filePath=${item.path}`,
+                const response = await jsonNoTokenOnlyRequestClient.get(`/download/${fileTypeMap[item.type]}?filePath=${item.path}`,
                     {
                         responseType: 'blob',
                     }

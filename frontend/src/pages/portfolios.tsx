@@ -2,32 +2,28 @@ import { FormHeader2, Pagenation } from "@app/components";
 import { PortfolioCard } from "@app/controls";
 import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
-import { useRedirectionHelper } from "@app/helpers";
-import { useJsonCryptionMiddleware } from "@app/middlewares";
+import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useEffect, useState } from "react";
 
 export const Portfolios = () => {
-    const { jsonClient } = useJsonCryptionMiddleware();
+    const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
-    const redirect = useRedirectionHelper();
     const [portfolioIds, setPortfolioIds] = useState<any[]>([]);
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
     const fetchPortfolios = async (page = 1) => {
         showLoading();
-        await jsonClient.get(`/portfolio?page=${page}`)
+        await jsonNoTokenClient.get(`/portfolio?page=${page}`)
             .then(res => {
                 setPortfolioIds(res.data.portfolioIds);
                 setMaxPage(res.data.maxPage);
             }).catch(err => {
                 handleNetworkError(err, addAlert);
-                if (err.response.status === 401)
-                    redirect('/auth/login');
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);

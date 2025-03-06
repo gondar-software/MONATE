@@ -39,10 +39,7 @@ export const LoadingProvider = (props: any) => {
                 await jsonNoTokenOnlyRequestClient.get(
                     `/download/image?filePath=${res.data.avatar}`,
                     {
-                        responseType: 'blob',
-                        headers: {
-                            Authorization: `Bearer ${tokenData}`
-                        }
+                        responseType: 'blob'
                     }
                 ).then(avatar => {
                     const url = URL.createObjectURL(avatar.data);

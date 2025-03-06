@@ -17,9 +17,9 @@ export const Preface = () => {
     const words = [
         'Websites',
         'Mobile Apps',
-        'Generation Tools',
+        'GenAI Tools',
         'Chatbots',
-        'AI Models',
+        'Automations',
     ];
     const [currentWord, setCurrentWord] = useState(0);
 

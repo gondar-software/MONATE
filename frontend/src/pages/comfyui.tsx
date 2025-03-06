@@ -32,6 +32,8 @@ export const ComfyUI = () => {
                 handleNetworkError(err, addAlert)
                 if (err.response.status === 401)
                     redirect('/auth/login');
+                else if (err.response.status === 504 || err.response.status === 505)
+                    redirect('/');
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
@@ -102,6 +104,8 @@ export const ComfyUI = () => {
             handleNetworkError(err, addAlert)
             if (err.response.status === 401)
                 redirect('/auth/login');
+            else if (err.response.status === 504 || err.response.status === 505)
+                redirect('/');
         }).finally(() => {
             setProcessing(false);
         });
@@ -168,7 +172,12 @@ export const ComfyUI = () => {
             id
         ).then((_) => {
             setWorks(works.filter((work, _) => work.id !== id));
-        }).catch((_) => {
+        }).catch((err) => {
+            handleNetworkError(err, addAlert)
+            if (err.response.status === 401)
+                redirect('/auth/login');
+            else if (err.response.status === 504 || err.response.status === 505)
+                redirect('/');
         }).finally(() => {
         });
     };

@@ -35,6 +35,8 @@ export const Chatbot = () => {
                 handleNetworkError(err, addAlert)
                 if (err.response.status === 401)
                     redirect('/auth/login');
+                else if (err.response.status === 504 || err.response.status === 505)
+                    redirect('/');
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
@@ -133,6 +135,8 @@ export const Chatbot = () => {
                 handleNetworkError(err, addAlert);
                 if (err.response.status === 401)
                     redirect('/auth/login');
+                else if (err.response.status === 504 || err.response.status === 505)
+                    redirect('/');
             }).finally(() => {
                 setChatId(his.chatId);
                 setChatHistories((prev) => (
@@ -175,6 +179,8 @@ export const Chatbot = () => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)
                 redirect('/auth/login');
+            else if (err.response.status === 504 || err.response.status === 505)
+                redirect('/');
         }).finally(() => {
             setLoadingHistory(false);
         });
@@ -229,6 +235,8 @@ export const Chatbot = () => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)
                 redirect('/auth/login');
+            else if (err.response.status === 504 || err.response.status === 505)
+                redirect('/');
         });
     }
     

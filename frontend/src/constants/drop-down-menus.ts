@@ -4,19 +4,11 @@ export const dropDownMenus = {
             label: 'Information',
             path: '/user/info'
         },
-        {
-            label: 'Profile',
-            path: '/user/profile'
-        },
     ],
     "team": [
         {
             label: 'Information',
             path: '/user/info'
-        },
-        {
-            label: 'Profile',
-            path: '/user/profile'
         },
         {
             label: 'Upload Portfolio',
@@ -29,12 +21,24 @@ export const dropDownMenus = {
             path: '/user/info'
         },
         {
-            label: 'Profile',
-            path: '/user/profile'
-        },
-        {
             label: 'Upload Portfolio',
             path: '/team/upload-portfolio'
+        },
+        {
+            label: 'Bookers',
+            path: '/admin/bookers'
+        },
+        {
+            label: 'Followers',
+            path: '/admin/followers'
+        },
+        {
+            label: 'Settings',
+            path: '/admin/settings'
+        },
+        {
+            label: 'Manage Users',
+            path: '/admin/users'
         },
     ],
 };

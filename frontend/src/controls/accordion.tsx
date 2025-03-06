@@ -8,8 +8,14 @@ export const Accordion = (props: any) => {
     };
 
     useEffect(() => {
-        setOpenIndex(props.items.length - 1);
-    }, [props.items.length])
+        if (!props.index)
+            setOpenIndex(props.items.length - 1);
+    }, [props.items.length]);
+
+    useEffect(() => {
+        if (props.index !== undefined)
+            setOpenIndex(props.index);
+    }, [props.index]);
 
     return (
         <div {...props}>

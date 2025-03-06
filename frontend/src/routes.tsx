@@ -3,7 +3,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { MonateIcon } from '@app/components';
-import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot } from '@app/pages';
+import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot, BookMe, Bookers } from '@app/pages';
 import ComfyUI from './pages/comfyui';
 
 const icon = {
@@ -71,6 +71,34 @@ export const routes = [
     {
         layout: '/admin',
         pages: [
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'bookers',
+                label: 'Bookers',
+                path: '/bookers',
+                element: <Bookers />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'followers',
+                label: 'Followers',
+                path: '/followers',
+                element: <Bookers />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'settings',
+                label: 'Settings',
+                path: '/settings',
+                element: <Bookers />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'manage-users',
+                label: 'Manage Users',
+                path: '/users',
+                element: <Bookers />,
+            },
         ],
     },
     {
@@ -119,7 +147,7 @@ export const routes = [
                 name: 'book-me',
                 label: 'Book me',
                 path: '/book-me',
-                element: <div />,
+                element: <BookMe />,
             },
         ]
     },

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 export const Portfolios = () => {
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
-    const { showAuthInfo } = useHeader();
+    const { hideAuthInfo } = useHeader();
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const [portfolioIds, setPortfolioIds] = useState<any[]>([]);
@@ -27,7 +27,7 @@ export const Portfolios = () => {
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
-                showAuthInfo();
+                hideAuthInfo();
                 hideLoading();
             });
     };

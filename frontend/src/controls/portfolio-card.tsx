@@ -65,7 +65,6 @@ export const PortfolioCard = (props: any) => {
                 });
 
                 const url = URL.createObjectURL(response?.data);
-                console.log(url);
                 return {
                     url: url,
                     type: fileTypeMap[item.type],

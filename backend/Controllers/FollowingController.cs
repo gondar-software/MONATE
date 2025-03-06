@@ -136,6 +136,7 @@ namespace Controllers
                 await _context.Bookers
                     .AddAsync(new Booker
                     {
+                        Name = data.Name,
                         Email = data.Email,
                         Message = data.Message,
                         Checked = false,

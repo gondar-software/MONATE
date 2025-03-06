@@ -36,16 +36,23 @@ export const ComfyUIWorkCard = (props: any) => {
             try
             {
                 const inputType = comfyuiDataMap[input.type as keyof typeof comfyuiDataMap];
-                const res = await jsonNoTokenOnlyRequestClient.get(
-                    `/download/${inputType}?filePath=${input.value}`,
-                    {
-                        responseType: 'blob'
+                if (inputType === 'image' || inputType === 'video') {
+                    const res = await jsonNoTokenOnlyRequestClient.get(
+                        `/download/${inputType}?filePath=${input.value}`,
+                        {
+                            responseType: 'blob'
+                        }
+                    );
+                    return {
+                        name: input.name,
+                        type: inputType,
+                        value: URL.createObjectURL(res.data),
                     }
-                );
-                return {
+                }
+                else return {
                     name: input.name,
                     type: inputType,
-                    value: URL.createObjectURL(res.data),
+                    value: input.value,
                 }
             }
             catch
@@ -83,12 +90,12 @@ export const ComfyUIWorkCard = (props: any) => {
                 <div className="w-full flex md:flex-row flex-col">
                     <div className="md:w-3/4 w-full px-1">
                         <div className="text-gray-900 dark:text-white text-xl mb-4">Output:</div>
-                        {output.type === 'image' && <img className="w-full rounded-md" src={output.value} />}
-                        {output.type === 'video' && <video className="w-full rounded-md" controls src={output.value} />}
+                        {output?.type === 'image' && <img className="w-full rounded-md" src={output.value} />}
+                        {output?.type === 'video' && <video className="w-full rounded-md" controls src={output.value} />}
                     </div>
-                    <div className="md:w-1/4 md:mt-0 mt-8 w-full px-1 flex flex-col h-full overflow-y-auto">
+                    <div className="md:w-1/4 md:mt-0 mt-8 w-full px-1 flex flex-col overflow-y-auto">
                         <div className="text-gray-900 dark:text-white text-xl mb-4">Inputs:</div>
-                        {inputs.map((input, index) => (
+                        {inputs?.map((input, index) => (
                             <div
                                 key={index}
                             >
@@ -101,6 +108,11 @@ export const ComfyUIWorkCard = (props: any) => {
                                     <div className="flex flex-col mb-3">
                                         <div className="text-gray-900 dark:text-white">{input.name}</div>
                                         <video className="rounded-md w-full mt-2" controls src={input.value} />
+                                    </div>}
+                                {input.type === 'text' && 
+                                    <div className="flex flex-col mb-3">
+                                        <div className="text-gray-900 dark:text-white">{input.name}</div>
+                                        <pre className="rounded-md p-2 text-wrap break-all whitespace-pre-wrap">{input.value}</pre>
                                     </div>}
                             </div>
                         ))}

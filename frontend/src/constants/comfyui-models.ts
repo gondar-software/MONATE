@@ -51,8 +51,35 @@ export const comfyuiModels = [
         inputs: [
             {
                 type: "text",
-                name: "Prompt",
-                key: "prompt",
+                name: "Positive Prompt",
+                key: "positive_prompt",
+            },
+            {
+                type: "text",
+                name: "Negative Prompt",
+                key: "negative_prompt",
+            },
+        ],
+        output: "image"
+    },
+    {
+        model: "vton",
+        name: "Virtual Try-on",
+        inputs: [
+            {
+                type: "text",
+                name: "Object",
+                key: "object",
+            },
+            {
+                type: "image",
+                name: "Source Image",
+                key: "source_image",
+            },
+            {
+                type: "image",
+                name: "Target Image",
+                key: "target_image",
             }
         ],
         output: "image"

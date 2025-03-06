@@ -24,6 +24,7 @@ export const ComfyUI = () => {
     
     const fetchWorks = async () => {
         showLoading();
+        setWorks([]);
         await jsonClient.get(`/comfyui?type=${comfyuiModelTypes[model as keyof typeof comfyuiModelTypes]}`)
             .then(res => {
                 setWorks(res.data);
@@ -199,7 +200,7 @@ export const ComfyUI = () => {
                         </button>
                     </div>
                     <Accordion
-                        className={`w-full px-2 mb-2 h-full overflow-y-auto ${!(window.innerWidth >= 1120 || !showNavBar) && 'hidden'}`}
+                        className={`w-full max-w-3xl px-2 mb-2 h-full overflow-y-auto ${!(window.innerWidth >= 1120 || !showNavBar) && 'hidden'}`}
                         items={works.map((work: any) => {
                             return {
                                 header: 

@@ -19,7 +19,7 @@ export const Accordion = (props: any) => {
                         key={index}
                         header={item.header}
                         body={item.body}
-                        id={index}
+                        id={crypto.randomUUID()}
                         isOpen={openIndex === index}
                         toggle={() => toggleItem(index)}
                     />

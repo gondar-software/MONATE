@@ -1,7 +1,7 @@
 import { FormSelect1, FormSubmitButton1, ImageUploader, VideoUploader } from "@app/components";
 import { comfyuiModels } from "@app/constants";
 import { useAlert } from "@app/providers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ComfyUINavbarCard = (props: any) => {
     const [inputData, setInputData] = useState({});
@@ -19,6 +19,10 @@ export const ComfyUINavbarCard = (props: any) => {
 
         return true;
     };
+
+    useEffect(() => {
+        setInputData({});
+    }, [props.model]);
 
     const handleSubmit = (e: any) => {
         e.preventDefault();

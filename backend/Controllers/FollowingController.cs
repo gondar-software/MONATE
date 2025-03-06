@@ -34,7 +34,7 @@ namespace Controllers
                 if (all)
                     return Ok(new
                     {
-                        Rate = followers.Count == 0 ? 0 : (float)followers.Sum(f => f.Rate) / followers.Count,
+                        Rate = followers.Count == 0 ? 0 : Math.Round((float)followers.Sum(f => f.Rate) / followers.Count, 2),
                         Count = followers.Count,
                         Followers = followers,
                     });

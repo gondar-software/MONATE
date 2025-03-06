@@ -16,10 +16,10 @@ namespace Controllers
     public class ComfyUIController : ControllerBase
     {
         private readonly DatabaseContext _context;
-        private readonly ILogger<ChatbotController> _logger;
+        private readonly ILogger<ComfyUIController> _logger;
         private readonly HttpClient _httpClient;
 
-        public ComfyUIController(DatabaseContext context, ILogger<ChatbotController> logger, IHttpClientFactory httpClientFactory)
+        public ComfyUIController(DatabaseContext context, ILogger<ComfyUIController> logger, IHttpClientFactory httpClientFactory)
         {
             _context = context;
             _logger = logger;

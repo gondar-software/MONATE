@@ -24,5 +24,7 @@ namespace Enums
         CouldNotFoundChatbotServer = 520,
         UnsupportedChatbotType = 521,
         ComfyUIWorkNotFound = 522,
+        BookerAlreadyExists = 523,
+        FollowerAlreadyExists = 524,
     }
 }

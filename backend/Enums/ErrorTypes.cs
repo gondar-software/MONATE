@@ -26,5 +26,7 @@ namespace Enums
         ComfyUIWorkNotFound = 522,
         BookerAlreadyExists = 523,
         FollowerAlreadyExists = 524,
+        BookerNotFound = 525,
+        FollowerNotFound = 526,
     }
 }

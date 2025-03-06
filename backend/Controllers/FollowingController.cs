@@ -60,9 +60,11 @@ namespace Controllers
             try
             {
                 var follower = await _context.Followers.FirstOrDefaultAsync(b => b.Id == data.Id);
-                if (follower != null)
-                    follower.TopRanked = data.TopRanked;
-
+                
+                if (follower == null)
+                    return StatusCode((int)ErrorType.FollowerNotFound, ErrorType.FollowerNotFound.ToString());
+                    
+                follower.TopRanked = data.TopRanked;
                 await _context.SaveChangesAsync();
 
                 return Ok();
@@ -98,14 +100,16 @@ namespace Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("check")]
-        public async Task<IActionResult> CheckBooker([FromBody] int id)
+        public async Task<IActionResult> CheckBooker([FromBody] BookerCheckingData data)
         {
             try
             {
-                var booker = await _context.Bookers.FirstOrDefaultAsync(b => b.Id == id);
-                if (booker != null)
-                    booker.Checked = true;
+                var booker = await _context.Bookers.FirstOrDefaultAsync(b => b.Id == data.Id);
+                
+                if (booker == null)
+                    return StatusCode((int)ErrorType.BookerNotFound, ErrorType.BookerNotFound.ToString());
 
+                booker.Checked = data.Checked;
                 await _context.SaveChangesAsync();
 
                 return Ok();
@@ -134,6 +138,7 @@ namespace Controllers
                     {
                         Email = data.Email,
                         Message = data.Message,
+                        Checked = false,
                     });
                 await _context.SaveChangesAsync();
 

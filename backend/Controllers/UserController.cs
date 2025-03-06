@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.User;
 using Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Controllers
 {
@@ -251,6 +252,65 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting user information");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .AsNoTracking()
+                    .Include(u => u.Information)
+                    .Where(u => u.Information != null)
+                    .ToListAsync();
+
+                return Ok(users.Select((user) =>
+                    new {
+                        Id = user.Id,
+                        EmailAddr = user.EmailAddr,
+                        Permition = user.Permition,
+                        Information = new
+                        {
+                            FirstName = user.Information?.FirstName,
+                            LastName = user.Information?.LastName,
+                            AvatarPath = user.Information?.AvatarPath,
+                            State = user.Information?.State,
+                            Country = user.Information?.Country,
+                            PhoneNumber = user.Information?.PhoneNumber
+                        }
+                    }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting users");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("permit")]
+        public async Task<IActionResult> Permit([FromBody] UserPermitionData data)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Id != data.Id);
+
+                if (user == null)
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+
+                user.Permition = data.Permition;
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error setting permition");
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }

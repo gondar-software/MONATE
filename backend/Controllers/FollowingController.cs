@@ -22,9 +22,8 @@ namespace Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] bool all = true)
         {
             try
             {
@@ -32,22 +31,52 @@ namespace Controllers
                     .AsNoTracking()
                     .ToListAsync();
 
-                return Ok(new
-                {
-                    Rate = followers.Sum(f => f.Rate) / followers.Count,
-                    Count = followers.Count,
-                    Followers = followers,
-                });
+                if (all)
+                    return Ok(new
+                    {
+                        Rate = followers.Count == 0 ? 0 : (float)followers.Sum(f => f.Rate) / followers.Count,
+                        Count = followers.Count,
+                        Followers = followers,
+                    });
+                else
+                    return Ok(new
+                    {
+                        Rate = followers.Count == 0 ? 0 : (float)followers.Sum(f => f.Rate) / followers.Count,
+                        Count = followers.Count,
+                        Followers = followers.Where(f => f.TopRanked),
+                    });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
+                _logger.LogError(ex, "Error getting followers");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("rank")]
+        public async Task<IActionResult> RankFollower([FromBody] FollowerRankingData data)
+        {
+            try
+            {
+                var follower = await _context.Followers.FirstOrDefaultAsync(b => b.Id == data.Id);
+                if (follower != null)
+                    follower.TopRanked = data.TopRanked;
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error top ranking follower");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("bookers")]
-        public async Task<IActionResult> GetBookers()
+        public async Task<IActionResult> GetBookers([FromQuery] bool all = true)
         {
             try
             {
@@ -55,15 +84,19 @@ namespace Controllers
                     .AsNoTracking()
                     .ToListAsync();
 
-                return Ok(bookers);
+                if (all)
+                    return Ok(bookers);
+                else
+                    return Ok(bookers.Where(b => !b.Checked));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
+                _logger.LogError(ex, "Error getting bookers");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("check")]
         public async Task<IActionResult> CheckBooker([FromBody] int id)
         {
@@ -79,8 +112,8 @@ namespace Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
+                _logger.LogError(ex, "Error checking booker");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
@@ -108,8 +141,8 @@ namespace Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                return StatusCode((int)ErrorType.ImageDownloadError, ErrorType.ImageDownloadError.ToString());
+                _logger.LogError(ex, "Error booking");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
 
@@ -132,14 +165,16 @@ namespace Controllers
                         Email = data.Email,
                         Name = data.Name,
                         Feedback = data.Feedback,
+                        AvatarPath = data.AvatarPath,
                     });
                 await _context.SaveChangesAsync();
 
                 return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode((int)ErrorType.VideoDownloadError, ErrorType.VideoDownloadError.ToString());
+                _logger.LogError(ex, "Error following");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
     }

@@ -6,5 +6,7 @@
         public string Email { get; set; } = "";
         public string Name { get; set; } = "";
         public string? Feedback { get; set; }
+        public string? AvatarPath { get; set; }
+        public bool TopRanked { get; set; }
     }
 }

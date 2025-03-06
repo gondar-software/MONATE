@@ -6,5 +6,6 @@
         LivePortrait = 1,
         Flux = 2,
         SDXL = 3,
+        VTON = 4,
     }
 }

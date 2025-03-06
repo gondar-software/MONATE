@@ -5,13 +5,13 @@ using Packets.ComfyUI;
 
 namespace Helpers.ComfyUI
 {
-    public class SDXLHelper
+    public class VTONHelper
     {
         private static readonly Dictionary<string, ComfyUIData[]> _inputDicts = new Dictionary<string, ComfyUIData[]>();
 
         public static async Task<string> Prompt(string id, params ComfyUIData[] inputs)
         {
-            var workflow = JObject.Parse(File.ReadAllText("Helpers/ComfyUI/Workflows/sdxl-api.json"));
+            var workflow = JObject.Parse(File.ReadAllText("Helpers/ComfyUI/Workflows/vton-api.json"));
 
             foreach (var input in inputs)
             {
@@ -20,15 +20,24 @@ namespace Helpers.ComfyUI
 #pragma warning disable
                     case ComfyUIDataTypes.Text:
                         {
-                            if (input.Name.ToLower().Contains("positive"))
+                            ((JObject)((JObject)workflow["17"])["inputs"])["string"] = input.Value;
+                            break;
+                        }
+                    case ComfyUIDataTypes.Image:
+                        {
+                            if (input.Name.ToLower().Contains("source"))
                             {
-                                ((JObject)((JObject)workflow["30"])["inputs"])["text_g"] = input.Value;
-                                ((JObject)((JObject)workflow["30"])["inputs"])["text_l"] = input.Value;
+                                var file = await FirebaseHelper.DownloadFile(input.Value);
+                                var path = input.Value.Substring(input.Value.IndexOf("/") + 1);
+                                ((JObject)((JObject)workflow["3"])["inputs"])["image"] = path;
+                                await ApiHelper.UploadImage(file, path);
                             }
-                            else if (input.Name.ToLower().Contains("negative"))
+                            else if (input.Name.ToLower().Contains("target"))
                             {
-                                ((JObject)((JObject)workflow["33"])["inputs"])["text_g"] = input.Value;
-                                ((JObject)((JObject)workflow["33"])["inputs"])["text_l"] = input.Value;
+                                var file = await FirebaseHelper.DownloadFile(input.Value);
+                                var path = input.Value.Substring(input.Value.IndexOf("/") + 1);
+                                ((JObject)((JObject)workflow["4"])["inputs"])["image"] = path;
+                                await ApiHelper.UploadImage(file, path);
                             }
                             break;
                         }
@@ -52,7 +61,7 @@ namespace Helpers.ComfyUI
                 var outputName = await FirebaseHelper.SaveFileAndGetPath(outputFile, FileType.Image) ?? "";
                 var outputData = new ComfyUIOutput
                 {
-                    Type = ComfyUIModelTypes.SDXL,
+                    Type = ComfyUIModelTypes.VTON,
                     Inputs = inputs.ToList(),
                     Output = new ComfyUIData
                     {

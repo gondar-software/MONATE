@@ -49,6 +49,10 @@ namespace Controllers
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var works = user.ComfyUIWorks?
                     .Where(c => c.Type == type)
@@ -99,6 +103,10 @@ namespace Controllers
                 {
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
                 }
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var work = user.ComfyUIWorks?
                     .FirstOrDefault(c => c.Id == id);
@@ -134,6 +142,10 @@ namespace Controllers
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var id = $"{Guid.NewGuid()}";
                 ComfyUITemp.ClearMessages(id);
@@ -150,10 +162,16 @@ namespace Controllers
                         promptId = await MimicmotionHelper.Prompt(id, query.Inputs?.ToArray() ?? []);
                         break;
                     case ComfyUIModelTypes.LivePortrait:
+                        promptId = await LivePortraitHelper.Prompt(id, query.Inputs?.ToArray() ?? []);
                         break;
                     case ComfyUIModelTypes.Flux:
+                        promptId = await FluxHelper.Prompt(id, query.Inputs?.ToArray() ?? []);
                         break;
                     case ComfyUIModelTypes.SDXL:
+                        promptId = await SDXLHelper.Prompt(id, query.Inputs?.ToArray() ?? []);
+                        break;
+                    case ComfyUIModelTypes.VTON:
+                        promptId = await VTONHelper.Prompt(id, query.Inputs?.ToArray() ?? []);
                         break;
                     default:
                         break;
@@ -183,8 +201,16 @@ namespace Controllers
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
-                var output = await MimicmotionHelper.GetOutput(clientId, promptId);
+                var output = await MimicmotionHelper.GetOutput(clientId, promptId) ??
+                    await LivePortraitHelper.GetOutput(clientId, promptId) ??
+                    await FluxHelper.GetOutput(clientId, promptId) ??
+                    await SDXLHelper.GetOutput(clientId, promptId) ??
+                    await VTONHelper.GetOutput(clientId, promptId);
 
                 var work = new ComfyUIWork
                 {

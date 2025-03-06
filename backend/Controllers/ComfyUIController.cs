@@ -36,10 +36,16 @@ namespace Controllers
                 if (string.IsNullOrEmpty(userEmail))
                     return StatusCode((int)ErrorType.Unauthorized, ErrorType.Unauthorized.ToString());
 
+#pragma warning disable
                 var user = await _context.Users
                     .AsNoTracking()
-                    .Include(u => u.ChatbotHistories)
+                    .Include(u => u.ComfyUIWorks)
+                        .ThenInclude(c => c.Inputs)
+                    .Include(u => u.ComfyUIWorks)
+                        .ThenInclude(c => c.Output)
+                    .Include(u => u.ComfyUIWorks)
                     .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
+#pragma warning restore
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
@@ -48,8 +54,10 @@ namespace Controllers
                     .Where(c => c.Type == type)
                     .Select(c => new 
                     {
+                        Id = c.Id,
                         Inputs = c.Inputs?.Select(i => new
                         {
+                            Name = i.Name,
                             Type = i.Type,
                             Value = i.Value,
                         }),
@@ -66,6 +74,46 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting comfyui works");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize]
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteWork([FromBody] int id)
+        {
+            try
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type.EndsWith("emailaddress"))?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+                }
+
+                var user = await _context.Users
+                    .AsNoTracking()
+                    .Include(u => u.ComfyUIWorks)
+                    .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
+
+                if (user == null)
+                {
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                }
+
+                var work = user.ComfyUIWorks?
+                    .FirstOrDefault(c => c.Id == id);
+
+                if (work == null)
+                    return StatusCode((int)ErrorType.ComfyUIWorkNotFound, ErrorType.ComfyUIWorkNotFound.ToString());
+
+                _context.ComfyUIWorks?.Remove(work);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting comfyui work");
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
@@ -131,7 +179,6 @@ namespace Controllers
                     return StatusCode((int)ErrorType.Unauthorized, ErrorType.Unauthorized.ToString());
 
                 var user = await _context.Users
-                    .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.EmailAddr == userEmail);
 
                 if (user == null)
@@ -145,6 +192,7 @@ namespace Controllers
                     Type = output?.Type ?? ComfyUIModelTypes.Mimicmotion,
                     Inputs = output?.Inputs?.Select(input => new ComfyUIInputData
                     {
+                        Name = input.Name,
                         Type = input.Type,
                         Value = input.Value,
                     }).ToArray(),
@@ -154,9 +202,23 @@ namespace Controllers
                         Value = output?.Output?.Value ?? "",
                     }
                 };
-                _context.ComfyUIWorks.Add(work);
+                await _context.ComfyUIWorks.AddAsync(work);
+                await _context.SaveChangesAsync();
 
-                return Ok(output);
+                return Ok(new {
+                    Id = work.Id,
+                    Inputs = work.Inputs?.Select(i => new
+                    {
+                        Name = i.Name,
+                        Type = i.Type,
+                        Value = i.Value,
+                    }),
+                    Output = new
+                    {
+                        Type = work.Output?.Type,
+                        Value = work.Output?.Value,
+                    }
+                });
             }
             catch (Exception ex)
             {

@@ -21,7 +21,7 @@ namespace Helpers.ComfyUI
                     case ComfyUIDataTypes.Image:
                         {
                             var file = await FirebaseHelper.DownloadFile(input.Value);
-                            var path = input.Value.Substring(input.Value.IndexOf("/"));
+                            var path = input.Value.Substring(input.Value.IndexOf("/") + 1);
                             ((JObject)((JObject)workflow["1"])["inputs"])["image"] = path;
                             await ApiHelper.UploadImage(file, path);
                             break;
@@ -29,7 +29,7 @@ namespace Helpers.ComfyUI
                     case ComfyUIDataTypes.Video:
                         {
                             var file = await FirebaseHelper.DownloadFile(input.Value);
-                            var path = input.Value.Substring(input.Value.IndexOf("/"));
+                            var path = input.Value.Substring(input.Value.IndexOf("/") + 1);
                             ((JObject)((JObject)workflow["2"])["inputs"])["video"] = path;
                             await ApiHelper.UploadImage(file, path);
                             break;

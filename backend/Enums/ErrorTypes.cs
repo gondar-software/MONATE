@@ -23,5 +23,6 @@ namespace Enums
         TargetDocNotFound = 519,
         CouldNotFoundChatbotServer = 520,
         UnsupportedChatbotType = 521,
+        ComfyUIWorkNotFound = 522,
     }
 }

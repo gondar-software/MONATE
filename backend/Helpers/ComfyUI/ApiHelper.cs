@@ -47,9 +47,7 @@
                 {
                     var fileContent = new ByteArrayContent(imageFile);
 
-                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                     form.Add(fileContent, "image", name);
-
                     form.Add(new StringContent(imageType), "type");
                     form.Add(new StringContent(overwrite.ToString().ToLower()), "overwrite");
 
@@ -88,10 +86,10 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var stream = await response.Content.ReadAsStreamAsync();
+                var buffer = await response.Content.ReadAsByteArrayAsync();
                 var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/octet-stream";
 
-                return new FormFile(stream, 0, stream.Length, "file", filename)
+                return new FormFile(new MemoryStream(buffer), 0, buffer.Length, "file", filename)
                 {
                     Headers = new HeaderDictionary(),
                     ContentType = contentType
@@ -196,7 +194,7 @@
                                 ComfyUITemp.SetMessage(clientId, new ComfyUIMessage
                                 {
                                     Type = ComfyUIMessageType.Progress,
-                                    Message = $"{100f * (finishedNodes.Count + ((float?)currentStep ?? 0) / (maxStep ?? 1)) / nodeIds.Count}%"
+                                    Message = $"{Math.Round(100f * (finishedNodes.Count + ((float?)currentStep ?? 0) / (maxStep ?? 1)) / nodeIds.Count, 2)}%"
                                 });
                             }
                             else if (messageType == "execution_cached")
@@ -214,7 +212,7 @@
                                 ComfyUITemp.SetMessage(clientId, new ComfyUIMessage
                                 {
                                     Type = ComfyUIMessageType.Progress,
-                                    Message = $"{100f * finishedNodes.Count / nodeIds.Count}%"
+                                    Message = $"{Math.Round(100f * finishedNodes.Count / nodeIds.Count, 2)}%"
                                 });
                             }
                             else if (messageType == "executing")
@@ -228,7 +226,7 @@
                                     ComfyUITemp.SetMessage(clientId, new ComfyUIMessage
                                     {
                                         Type = ComfyUIMessageType.Progress,
-                                        Message = $"{100f * finishedNodes.Count / nodeIds.Count}%"
+                                        Message = $"{Math.Round(100f * finishedNodes.Count / nodeIds.Count, 2)}%"
                                     });
                                 }
 

@@ -2,8 +2,8 @@
 {
     public enum ComfyUIMessageType : int
     {
-        Progress = 1,
-        End = 3,
-        Error = 4,
+        Progress = 0,
+        End = 1,
+        Error = 2,
     }
 }

@@ -1,7 +1,5 @@
-using Databases.CommunicationData;
-using Databases.EcommerceData;
-using Databases.EndpointData;
 using Databases.ChatbotData;
+using Databases.ComfyUIData;
 using Enums;
 
 namespace Databases.UserData
@@ -15,23 +13,8 @@ namespace Databases.UserData
         public PermitionType Permition { get; set; }
 
         public Information? Information { get; set; }
-        public Profile? Profile { get; set; }
-        public PaymentProfile? PaymentProfile { get; set; }
         public ChatbotCache? ChatbotCache { get; set; }
-        public ICollection<API>? APIs { get; set; }
-        public ICollection<EthAddress>? EthAddresses { get; set; }
-        public ICollection<Transaction>? Transactions { get; set; }
-        public ICollection<Channel>? Channels { get; set; }
-        public ICollection<Chat>? SentChats { get; set; }
-        public ICollection<Chat>? ReceivedChats { get; set; }
-        public ICollection<Mail>? SentMails { get; set; }
-        public ICollection<Mail>? ReceivedMails { get; set; }
-        public ICollection<Relation>? OwningRelations { get; set; }
-        public ICollection<Relation>? OwnedRelations { get; set; }
-        public ICollection<Feedback>? Feedbacks { get; set; }
-        public ICollection<Commit>? Commits { get; set; }
-        public ICollection<KnowUser>? KnownUsers { get; set; }
-        public ICollection<KnowUser>? KnewUsers { get; set; }
         public ICollection<ChatbotHistory>? ChatbotHistories { get; set; }
+        public ICollection<ComfyUIWork>? ComfyUIWorks { get; set; }
     }
 }

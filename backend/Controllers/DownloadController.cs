@@ -1,6 +1,6 @@
 using Databases;
 using Enums;
-using Helpers;
+using Helpers.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,6 @@ namespace Controllers
             _logger = logger;
         }
 
-        [Authorize]
         [HttpGet("image")]
         public async Task<IActionResult> DownloadImage([FromQuery] string filePath)
         {
@@ -38,7 +37,6 @@ namespace Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("video")]
         public async Task<IActionResult> DownloadVideo([FromQuery] string filePath)
         {

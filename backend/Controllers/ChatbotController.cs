@@ -6,10 +6,10 @@ using Databases;
 using Newtonsoft.Json;
 using Packets.Chatbot;
 using Databases.ChatbotData;
-using Helpers;
 using Temp;
 using Models;
-using static Helpers.RAGHelper;
+using Helpers.Chatbot;
+using static Helpers.Chatbot.RAGHelper;
 
 namespace Controllers
 {
@@ -45,6 +45,10 @@ namespace Controllers
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var histories = user.ChatbotHistories?
                     .Where(c => c.ChatbotType == type)
@@ -77,6 +81,10 @@ namespace Controllers
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var history = user.ChatbotHistories?
                     .FirstOrDefault(c => c.ChatId == id);
@@ -120,6 +128,10 @@ namespace Controllers
                 {
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
                 }
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var history = user.ChatbotHistories?.FirstOrDefault(c => c.ChatId == request.Id);
                 List<List<string>> his = history?.HistoryFilePath == null || user.ChatbotCache?.LastId == request.Id
@@ -279,6 +291,10 @@ namespace Controllers
                 {
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
                 }
+                if (user.Permition == PermitionType.Pending)
+                    return StatusCode((int)ErrorType.UserPending, ErrorType.UserPending.ToString());
+                if (user.Permition == PermitionType.Suspended)
+                    return StatusCode((int)ErrorType.UserSuspended, ErrorType.UserSuspended.ToString());
 
                 var history = user.ChatbotHistories?
                     .FirstOrDefault(c => c.ChatId == id);

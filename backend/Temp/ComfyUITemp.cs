@@ -38,7 +38,7 @@ namespace Temp
                     msg.Add(new ComfyUIMessage
                     {
                         Type = ComfyUIMessageType.Error,
-                        Data = "Can't find session id."
+                        Message = "Can't find session id."
                     });
                 }
             }

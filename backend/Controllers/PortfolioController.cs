@@ -1,6 +1,6 @@
 using System.Text;
 using Databases;
-using Databases.TeamData;
+using Databases.PortfolioData;
 using Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,6 @@ namespace Controllers
             _logger = logger;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetIds([FromQuery] int page = 1, [FromQuery] string? query = null)
         {
@@ -88,7 +87,6 @@ namespace Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPortfolio(int id)
         {

@@ -21,3 +21,4 @@ export * from '@app/components/date-pickers';
 export * from '@app/components/files';
 export * from '@app/components/video-uploader';
 export * from '@app/components/star-rating';
+export * from '@app/components/star-rater';

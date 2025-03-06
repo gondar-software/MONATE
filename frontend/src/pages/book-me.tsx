@@ -4,7 +4,7 @@ import { useHeader, useLoading } from "@app/providers";
 import { useEffect, useState } from "react";
 import { useAlert } from "../providers/alert-provider";
 import { handleNetworkError } from "../handlers/error-handler";
-import { Accordion } from "@app/controls";
+import { Accordion, BookCard, FollowCard } from "@app/controls";
 import { StarRating } from "@app/components";
 
 export const BookMe = () => {
@@ -16,6 +16,8 @@ export const BookMe = () => {
 
     const [followingData, setFollowingData] = useState<any>({});
     const [followingMode, setFollowingMode] = useState('');
+    const [booking, setBooking] = useState(false);
+    const [following, setFollowing] = useState(false);
 
     const fetchFollower = async() => {
         jsonNoTokenClient.get('/following')
@@ -28,7 +30,17 @@ export const BookMe = () => {
                 hideAuthInfo();
                 hideLoading();
             });
-    }
+    };
+
+    const handleBook = async(bookData: any) => {
+        if (bookData)
+            setBooking(true);
+    };
+
+    const handleFollow = async(followData: any) => {
+        if (followData)
+            setFollowing(true);
+    };
 
     useEffect(() => {
         fetchFollower();
@@ -144,11 +156,27 @@ export const BookMe = () => {
                     </div>
                 </div>
             </div>
-            {followingMode === 'follow' && <div className="absolute w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
-                <div className="w-full h-full bg-gray-900 opacity-30"></div>
+            {followingMode === 'follow' && <div className="fixed w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
+                <div className="relative w-full h-full">
+                    <div className="absolute w-full h-full bg-gray-900 opacity-30" />
+                    <div className="absolute w-full h-full flex justify-center items-center overflow-auto">
+                        <FollowCard
+                            following={following}
+                            onSubmit={handleFollow}
+                        />
+                    </div>
+                </div>
             </div>}
-            {followingMode === 'book' && <div className="absolute w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
-                <div className="w-full h-full bg-gray-900 opacity-30"></div>
+            {followingMode === 'book' && <div className="fixed w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
+                <div className="relative w-full h-full">
+                    <div className="absolute w-full h-full bg-gray-900 opacity-30" />
+                    <div className="absolute w-full h-full flex justify-center items-center overflow-auto">
+                        <BookCard
+                            booking={booking}
+                            onSubmit={handleBook}
+                        />
+                    </div>
+                </div>
             </div>}
         </div>
     )

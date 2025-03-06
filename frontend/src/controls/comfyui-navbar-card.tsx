@@ -73,7 +73,7 @@ export const ComfyUINavbarCard = (props: any) => {
                                         })
                                     }}
                                     placeholder={`Type your ${input.name} here...`}
-                                    className="w-full p-2 text-sm h-auto overflow-y-hidden bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                    className="w-full p-2 text-sm h-auto bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                     rows={3}
                                 />
                             </>

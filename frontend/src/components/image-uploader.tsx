@@ -79,7 +79,7 @@ export const ImageUploader = (props: any) => {
                                 <span className="font-semibold">Click to upload</span> or drag and drop
                             </p>
                             <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                                PNG, JPG (MAX. {maxWidth}x{maxHeight}px)
+                                PNG, JPG <br/>(MAX: {maxWidth}x{maxHeight}px)
                             </p>
                         </div>
                     )}

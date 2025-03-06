@@ -41,7 +41,7 @@ namespace Controllers
                 else
                     return Ok(new
                     {
-                        Rate = followers.Count == 0 ? 0 : (float)followers.Sum(f => f.Rate) / followers.Count,
+                        Rate = followers.Count == 0 ? 0 : Math.Round((float)followers.Sum(f => f.Rate) / followers.Count, 2),
                         Count = followers.Count,
                         Followers = followers.Where(f => f.TopRanked),
                     });

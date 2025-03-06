@@ -62,6 +62,7 @@ export const ComfyUINavbarCard = (props: any) => {
                                         setInputData({
                                             ...inputData,
                                             [input.key]: {
+                                                name: input.name,
                                                 type: input.type,
                                                 value: e.target.value,
                                             }
@@ -82,10 +83,13 @@ export const ComfyUINavbarCard = (props: any) => {
                                     id={index}
                                     className="w-full"
                                     disabled={props.processing}
+                                    maxWidth={4000}
+                                    maxHeight={4000}
                                     onImageUpload={(file: File) => {
                                         setInputData({
                                             ...inputData,
                                             [input.key]: {
+                                                name: input.name,
                                                 type: input.type,
                                                 value: file,
                                             }
@@ -107,6 +111,7 @@ export const ComfyUINavbarCard = (props: any) => {
                                         setInputData({
                                             ...inputData,
                                             [input.key]: {
+                                                name: input.name,
                                                 type: input.type,
                                                 value: file,
                                             }

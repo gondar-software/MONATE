@@ -8,3 +8,5 @@ export * from '@app/controls/badge-picker';
 export * from '@app/controls/code-verify';
 export * from '@app/controls/chatbot-navbar-card';
 export * from '@app/controls/comfyui-navbar-card';
+export * from '@app/controls/comfyui-work-card';
+export * from '@app/controls/accordion';

@@ -1,7 +1,8 @@
 import { useAlert } from "@app/providers";
+import { ImageUploaderProps } from "@app/types";
 import { useEffect, useState } from "react";
 
-export const ImageUploader = (props: any) => {
+export const ImageUploader = (props: ImageUploaderProps) => {
     const [selectedImage, setSelectedImage] = useState(props.initUrl);
     const { addAlert } = useAlert();
 

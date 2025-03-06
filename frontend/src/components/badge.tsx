@@ -1,12 +1,6 @@
-interface BadgeFormat
-{
-    mode: string,
-    name: string,
-    hiddenRemoveButton?: boolean,
-    onClose?:(e: any) => void,
-}
+import { BadgeProps } from "@app/types";
 
-export const Badge = (props: BadgeFormat) => {
+export const Badge = (props: BadgeProps) => {
     return (
         <span className={`text-xs h-full font-medium me-2 px-2.5 py-0.5 rounded border flex items-center justify-center text-center 
             ${props.mode === 'blue' && 'bg-blue-100 text-blue-800 dark:text-blue-400 border-blue-400 dark:bg-blue-900'} 
@@ -29,7 +23,7 @@ export const Badge = (props: BadgeFormat) => {
                 ${props.mode === 'purple' && 'text-purple-400 hover:bg-purple-200 hover:text-purple-900 dark:hover:bg-purple-800 dark:hover:text-purple-300'} 
                 ${props.mode === 'pink' && 'text-pink-400 hover:bg-pink-200 hover:text-pink-900 dark:hover:bg-pink-800 dark:hover:text-pink-300'} 
                 `} data-dismiss-target="#badge-dismiss-default" aria-label="Remove"
-                onClick={props.onClose}>
+                onClick={props.onCloseButtonClick}>
                 <svg className="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                 </svg>

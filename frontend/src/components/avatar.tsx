@@ -1,8 +1,9 @@
 import { useSaveToken, useSaveUserInfo } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
+import { AvatarMenuItem, AvatarProps } from "@app/types";
 import { useEffect, useRef, useState } from "react";
 
-export const Avatar = (props: any) => {
+export const Avatar = (props: AvatarProps) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const saveUserInfo = useSaveUserInfo();
     const saveToken = useSaveToken();
@@ -27,10 +28,10 @@ export const Avatar = (props: any) => {
     }, []);
 
     return (
-        <div {...props} ref={menuRef}>
+        <div className={props.className} ref={menuRef}>
             <div className="relative inline-block">
                 <div className="relative flex items-center gap-2 cursor-pointer" onClick={toggleMenu}>
-                    {props.info.avatar ? (
+                    {props.info?.avatar ? (
                         <img className="w-10 h-10 rounded-full" src={props.info.avatar} alt="Avatar" />
                     ) : (
                         <div className="relative w-10 h-10 overflow-hidden flex bg-gray-100 rounded-full dark:bg-gray-600">
@@ -58,7 +59,7 @@ export const Avatar = (props: any) => {
                         />
                     )}
 
-                    {props.info && (
+                    {props.info?.name && (
                         <div className="font-medium dark:text-white">
                             <div>{props.info.name}</div>
                             <div className="text-sm text-gray-500 dark:text-gray-400">{props.info.location}</div>
@@ -66,7 +67,7 @@ export const Avatar = (props: any) => {
                     )}
                 </div>
 
-                {props.info.menu && (
+                {props.info?.menu && (
                     <div
                         className={`absolute right-0 z-10 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600
                             transition-all duration-300 ease-in-out origin-top-right ${
@@ -80,13 +81,13 @@ export const Avatar = (props: any) => {
                         )}
 
                         <ul className="py-2 w-full text-sm text-gray-700 dark:text-gray-200">
-                            {props.info.menu.map((item: any, index: number) => (
+                            {props.info.menu.map((item: AvatarMenuItem, index: number) => (
                                 <li key={index} className="w-full">
                                     <button
                                         type='button'
                                         onClick={() => {
                                             setIsMenuOpen(false);
-                                            redirect(item.path);
+                                            redirect(item.url);
                                         }}
                                         className="block w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                     >

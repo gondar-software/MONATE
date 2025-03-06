@@ -1,6 +1,9 @@
-export const FormFileUploader1 = (props: any) => {
-    const handleFileChange = (event: any) => {
-        const uploadedFile = event.target.files[0];
+import { FormFileItem1Props, FormFileUploader1Props } from "@app/types";
+import React from "react";
+
+export const FormFileUploader1 = (props: FormFileUploader1Props) => {
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const uploadedFile = event.target.files![0];
         if (uploadedFile) {
             const type = uploadedFile.type;
             let fileType = '';
@@ -34,7 +37,7 @@ export const FormFileUploader1 = (props: any) => {
     );
 }
 
-export const FormFileItem1 = (props: any) => {
+export const FormFileItem1 = (props: FormFileItem1Props) => {
     return (
         <div className="flex">
             <div className="relative w-full">

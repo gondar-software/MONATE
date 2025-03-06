@@ -1,4 +1,6 @@
-export const FormTextField1 = (props: any) => {
+import { FormTextField1Props, FormTextField2Props, FormTextField3Props } from "@app/types"
+
+export const FormTextField1 = (props: FormTextField1Props) => {
     return (
         <div>
             {props.label && <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -18,7 +20,7 @@ export const FormTextField1 = (props: any) => {
     )
 }
 
-export const FormTextField2 = (props: any) => {
+export const FormTextField2 = (props: FormTextField2Props) => {
     return (
         <div>
             {props.label && <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -38,7 +40,7 @@ export const FormTextField2 = (props: any) => {
     )
 }
 
-export const FormTextField3 = (props: any) => {
+export const FormTextField3 = (props: FormTextField3Props) => {
     return (
         <div>
             {props.label && <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

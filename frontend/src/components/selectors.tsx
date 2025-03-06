@@ -1,4 +1,6 @@
-export const FormSelect1 = (props: any) => {
+import { FormSelect1Item, FormSelect1Props } from "@app/types"
+
+export const FormSelect1 = (props: FormSelect1Props) => {
     return (
         <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -15,7 +17,7 @@ export const FormSelect1 = (props: any) => {
                 <option value="" disabled>
                     {props.placeholder}
                 </option>
-                {props.options.map((option: any) => (
+                {props.options.map((option: FormSelect1Item) => (
                     <option key={option.value} value={option.value}>
                         {option.label}
                     </option>

@@ -1,10 +1,11 @@
+import { StarRaterProps } from '@app/types';
 import { useState } from 'react';
 
-export const StarRater = ({ setRating, rating }: { setRating: (rating: number) => void, rating: number }) => {
+export const StarRater = (props: StarRaterProps) => {
     const [hoverRating, setHoverRating] = useState<number | null>(null);
 
     const handleClick = (index: number) => {
-        setRating(index + 1);
+        props.setRating(index + 1);
     };
 
     const handleMouseEnter = (index: number) => {
@@ -21,7 +22,7 @@ export const StarRater = ({ setRating, rating }: { setRating: (rating: number) =
                 <svg
                     key={index}
                     className={`w-8 h-8 cursor-pointer transition-transform duration-200 ${
-                        (hoverRating || rating) > index ? "text-yellow-500 scale-110" : "text-gray-300"
+                        (hoverRating || props.rating) > index ? "text-yellow-500 scale-110" : "text-gray-300"
                     }`}
                     viewBox="0 0 24 24"
                     fill="currentColor"

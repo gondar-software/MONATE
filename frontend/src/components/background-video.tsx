@@ -1,6 +1,7 @@
+import { BackgroundVideoProps } from "@app/types";
 import { useEffect, useRef, useState } from "react";
 
-export const BackgroundVideo = (props: any) => {
+export const BackgroundVideo = (props: BackgroundVideoProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 

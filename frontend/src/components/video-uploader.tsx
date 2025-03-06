@@ -1,6 +1,7 @@
+import { VideoUploaderProps } from "@app/types";
 import { useEffect, useState } from "react";
 
-export const VideoUploader = (props: any) => {
+export const VideoUploader = (props: VideoUploaderProps) => {
     const [selectedVideo, setSelectedVideo] = useState(props.initUrl);
 
     useEffect(() => {

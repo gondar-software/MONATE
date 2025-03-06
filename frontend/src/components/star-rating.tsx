@@ -1,6 +1,8 @@
-export const StarRating = ({ rating }: { rating: number }) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+import { StarRatingProps } from "@app/types";
+
+export const StarRating = (props: StarRatingProps) => {
+    const fullStars = Math.floor(props.rating);
+    const hasHalfStar = props.rating % 1 !== 0;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
     return (

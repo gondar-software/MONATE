@@ -1,6 +1,7 @@
+import { PagenationProps } from "@app/types";
 import { useEffect, useState } from "react";
 
-export const Pagenation = (props: any) => {
+export const Pagenation = (props: PagenationProps) => {
     const [currentPage, setCurrentPage] = useState(props.initPage ?? 1);
     const [showingPages, setShowingPages] = useState<number[]>([]);
 

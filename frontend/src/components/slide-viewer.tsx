@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { SlideData, SlideViewerProps } from "@app/types";
 
-export function SlideViewer(props: any) {
+export function SlideViewer(props: SlideViewerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [paused, setPaused] = useState(true);
   
@@ -54,7 +55,7 @@ export function SlideViewer(props: any) {
       </motion.div>
       
       {props.slidingButton && <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {props.slides.map((_: any, index: number) => (
+        {props.slides.map((_: SlideData, index: number) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

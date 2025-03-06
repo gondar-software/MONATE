@@ -6,7 +6,6 @@ export * from '@app/components/mode-switch';
 export * from '@app/components/alert';
 export * from '@app/components/avatar';
 export * from '@app/components/badge';
-export * from '@app/components/banner';
 export * from '@app/components/image-uploader';
 export * from '@app/components/slide-viewer';
 export * from '@app/components/pagenation';

@@ -1,3 +1,4 @@
+import { AlertProps } from "@app/types";
 import { 
     InformationCircleIcon, 
     XCircleIcon, 
@@ -6,9 +7,9 @@ import {
     EllipsisHorizontalCircleIcon 
 } from "@heroicons/react/24/solid";
 
-export const Alert = (props: any) => {
+export const Alert = (props: AlertProps) => {
     return (
-        <div {...props}>
+        <div className={props.className}>
             <div className={`p-4 mb-1 text-sm rounded-lg items-center flex dark:bg-gray-800 
                 ${props.mode === 'info' && 'dark:text-blue-400 text-blue-800 bg-blue-50'} 
                 ${props.mode === 'danger' && 'dark:text-red-400 text-red-800 bg-red-50'} 

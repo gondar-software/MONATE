@@ -1,16 +1,17 @@
 import { useSaveVideoBackgroundMode } from '@app/global';
 import { useRedirectionHelper } from '@app/helpers';
+import { FormLinkButton1Props, FormLinkButton2Props, FormSubmitButton1Props, TransparentButton1Props, TransparentButton2Props } from '@app/types';
 
-export const TransparentButton1 = (props: any) => {
+export const TransparentButton1 = (props: TransparentButton1Props) => {
     const redirect = useRedirectionHelper();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
     return (
-        <div {...props}>
+        <div className={props.className}>
             <button type='button' className='w-full h-full items-center transition-all duration-300 cursor-pointer flex justify-center text-gray-500 dark:text-gray-500 border-transparent dark:border-transparent hover:text-gray-900 dark:hover:text-gray-100'
                 onClick={(() => {
                     saveVideoBackgroundMode(1);
-                    redirect(`${props.path}`);
+                    redirect(`${props.url}`);
                 })}>
                 {props.label}
             </button>
@@ -18,14 +19,14 @@ export const TransparentButton1 = (props: any) => {
     );
 };
 
-export const TransparentButton2 = (props: any) => {
+export const TransparentButton2 = (props: TransparentButton2Props) => {
     return (
         <button type='button' className='cursor-pointer transition-all duration-300 text-xl text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-600'
             onClick={props.onClick}>{props.children}</button>
     )
 }
 
-export const FormSubmitButton1 = (props: any) => {
+export const FormSubmitButton1 = (props: FormSubmitButton1Props) => {
     return (
         <button
             type="submit"
@@ -41,7 +42,7 @@ export const FormSubmitButton1 = (props: any) => {
     )
 }
 
-export const FormLinkButton1 = (props: any) => {
+export const FormLinkButton1 = (props: FormLinkButton1Props) => {
     return (
         <a 
             href={props.url}
@@ -58,7 +59,7 @@ export const FormLinkButton1 = (props: any) => {
     )
 }
 
-export const FormLinkButton2 = (props: any) => {
+export const FormLinkButton2 = (props: FormLinkButton2Props) => {
     return (
         <a 
             href={props.url}

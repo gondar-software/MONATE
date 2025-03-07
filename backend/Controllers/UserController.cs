@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Packets.User;
 using Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Controllers
 {

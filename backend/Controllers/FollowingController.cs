@@ -1,7 +1,6 @@
 ﻿using Databases;
 using Databases.FollowerData;
 using Enums;
-using Helpers.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +22,7 @@ namespace Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] bool all = true)
+        public async Task<IActionResult> Get([FromQuery] bool all = false)
         {
             try
             {
@@ -126,7 +125,9 @@ namespace Controllers
         {
             try
             {
-                var booker = _context.Bookers
+                Console.WriteLine($"{data.Email}{data.Name}");
+
+                var booker = await _context.Bookers
                     .AsNoTracking()
                     .FirstOrDefaultAsync(b => b.Email == data.Email);
 
@@ -157,11 +158,11 @@ namespace Controllers
         {
             try
             {
-                var booker = _context.Bookers
+                var follower = await _context.Followers
                     .AsNoTracking()
                     .FirstOrDefaultAsync(b => b.Email == data.Email);
 
-                if (booker != null)
+                if (follower != null)
                     return StatusCode((int)ErrorType.FollowerAlreadyExists, ErrorType.FollowerAlreadyExists.ToString());
 
                 await _context.Followers
@@ -180,6 +181,50 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error following");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [HttpPost("del-booker")]
+        public async Task<IActionResult> DeleteBooker([FromBody] int id)
+        {
+            try
+            {
+                var booker = await _context.Bookers.FirstOrDefaultAsync(b => b.Id == id);
+
+                if (booker == null)
+                    return StatusCode((int)ErrorType.BookerNotFound, ErrorType.BookerNotFound.ToString());
+
+                _context.Bookers.Remove(booker);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting booker");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [HttpPost("del-follower")]
+        public async Task<IActionResult> DeleteFollower([FromBody] int id)
+        {
+            try
+            {
+                var follower = await _context.Followers.FirstOrDefaultAsync(b => b.Id == id);
+
+                if (follower == null)
+                    return StatusCode((int)ErrorType.FollowerNotFound, ErrorType.FollowerNotFound.ToString());
+
+                _context.Followers.Remove(follower);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting follower");
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }

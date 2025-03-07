@@ -17,7 +17,7 @@ export const HeaderProvider = (props: HeaderProviderProps) => {
     return (
         <HeaderContext.Provider value={{showAuthInfo, hideAuthInfo}}>
             {props.children}
-            <div className='fixed top-0 w-full h-14 flex items-center justify-between px-8 bg-opacity-40 dark:bg-opacity-40 backdrop-blur-md bg-gray-100 dark:bg-gray-900 transition-all duration-300'>
+            <div className='fixed top-0 right-0 w-full h-14 flex items-center justify-between px-8 bg-opacity-40 dark:bg-opacity-40 backdrop-blur-md bg-gray-100 dark:bg-gray-900 transition-all duration-300'>
                 <MonateMark />
                 <div className='flex gap-8 items-center'>
                     {authInfo && <AuthInfo className='justify-between' />}

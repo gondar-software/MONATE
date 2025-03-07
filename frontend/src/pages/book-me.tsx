@@ -210,7 +210,7 @@ export const BookMe = () => {
             {followingMode === 'book' && <div className="fixed w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
                 <div className="relative w-full h-full">
                     <div className="absolute w-full h-full bg-gray-900 opacity-30" onClick={() => setFollowingMode(undefined)} />
-                    <div className="absolute w-full h-full flex justify-center items-center overflow-auto">
+                    <div className="absolute w-full h-full flex justify-center items-center">
                         <BookCard
                             onCancel={() => setFollowingMode(undefined)}
                             booking={booking}

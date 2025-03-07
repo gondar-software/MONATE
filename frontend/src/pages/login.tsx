@@ -43,8 +43,10 @@ export const Login = () => {
     };
 
     return (
-        <div className='flex w-full min-h-screen justify-center items-center'>
-            <AuthCard submitting={submitting} mode='login' onSubmit={handleSubmit} />
+        <div className='fixed py-14 flex w-full h-full'>
+            <div className="w-full h-full flex justify-center items-center">
+                <AuthCard submitting={submitting} mode='login' onSubmit={handleSubmit} />
+            </div>
         </div>
     );
 };

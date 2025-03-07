@@ -81,8 +81,10 @@ export const Information = () => {
     }
 
     return (
-        <div className='flex w-full min-h-screen justify-center items-center'>
-            <InformationCard onSubmit={handleSubmit} saving={saving} />
+        <div className='fixed py-14 flex w-full h-full'>
+            <div className="w-full h-full flex justify-center items-start overflow-auto">
+                <InformationCard onSubmit={handleSubmit} saving={saving} />
+            </div>
         </div>
     );
 };

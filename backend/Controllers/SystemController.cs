@@ -7,14 +7,16 @@ namespace Controllers
 {
     public class SystemSettings
     {
-        public string OPENAI_API_KEY { get; set; } = "";
-        public string GOOGLE_API_KEY { set; get; } = "";
-        public string GOOGLE_CSE_ID { set; get; } = "";
-        public string QWEN_URL { set; get; } = "";
-        public string COMFYUI_SERVER_URL { set; get; } = "";
-        public string COMFYUI_WS_URL { get; set; } = "";
+        public string OpenAIApiKey { get; set; } = "";
+        public string GoogleApiKey { set; get; } = "";
+        public string GoogleCseId { set; get; } = "";
+        public string QwenUrl { set; get; } = "";
+        public string ComfyUIServerUrl { set; get; } = "";
+        public string ComfyUIWSUrl { get; set; } = "";
     }
 
+    [ApiController]
+    [Route("api/[controller]")]
     public class SystemController : ControllerBase
     {
         private readonly DatabaseContext _context;
@@ -34,12 +36,12 @@ namespace Controllers
             {
                 return Ok(new SystemSettings
                 {
-                    OPENAI_API_KEY = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? "",
-                    GOOGLE_API_KEY = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? "",
-                    GOOGLE_CSE_ID = Environment.GetEnvironmentVariable("GOOGLE_CSE_ID") ?? "",
-                    QWEN_URL = Environment.GetEnvironmentVariable("QWEN_URL") ?? "",
-                    COMFYUI_SERVER_URL = Environment.GetEnvironmentVariable("COMFYUI_SERVER_URL") ?? "",
-                    COMFYUI_WS_URL = Environment.GetEnvironmentVariable("COMFYUI_WS_URL") ?? "",
+                    OpenAIApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? "",
+                    GoogleApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? "",
+                    GoogleCseId = Environment.GetEnvironmentVariable("GOOGLE_CSE_ID") ?? "",
+                    QwenUrl = Environment.GetEnvironmentVariable("QWEN_URL") ?? "",
+                    ComfyUIServerUrl = Environment.GetEnvironmentVariable("COMFYUI_SERVER_URL") ?? "",
+                    ComfyUIWSUrl = Environment.GetEnvironmentVariable("COMFYUI_WS_URL") ?? "",
                 });
             }
             catch (Exception ex)
@@ -51,16 +53,16 @@ namespace Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Set([FromBody] SystemSettings settings)
+        public IActionResult Post([FromBody] SystemSettings settings)
         {
             try
             {
-                Environment.SetEnvironmentVariable("OPENAI_API_KEY", settings.OPENAI_API_KEY);
-                Environment.SetEnvironmentVariable("GOOGLE_API_KEY", settings.GOOGLE_API_KEY);
-                Environment.SetEnvironmentVariable("GOOGLE_CSE_ID", settings.GOOGLE_CSE_ID);
-                Environment.SetEnvironmentVariable("QWEN_URL", settings.QWEN_URL);
-                Environment.SetEnvironmentVariable("COMFYUI_SERVER_URL", settings.COMFYUI_SERVER_URL);
-                Environment.SetEnvironmentVariable("COMFYUI_WS_URL", settings.COMFYUI_WS_URL);
+                Environment.SetEnvironmentVariable("OPENAI_API_KEY", settings.OpenAIApiKey);
+                Environment.SetEnvironmentVariable("GOOGLE_API_KEY", settings.GoogleApiKey);
+                Environment.SetEnvironmentVariable("GOOGLE_CSE_ID", settings.GoogleCseId);
+                Environment.SetEnvironmentVariable("QWEN_URL", settings.QwenUrl);
+                Environment.SetEnvironmentVariable("COMFYUI_SERVER_URL", settings.ComfyUIServerUrl);
+                Environment.SetEnvironmentVariable("COMFYUI_WS_URL", settings.ComfyUIWSUrl);
 
                 return Ok();
             }

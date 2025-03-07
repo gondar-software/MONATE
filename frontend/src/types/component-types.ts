@@ -1,7 +1,8 @@
 import React from "react";
+import { AlertType, AvatarStatusType, BadgeType, FileType, SlideType, UIType } from "@app/types";
 
 export interface AlertProps {
-    mode: 'info' | 'danger' | 'success' | 'warning' | 'ignore';
+    type: AlertType;
     title: string;
     message: string;
     className?: string;
@@ -19,7 +20,7 @@ export interface AvatarProps {
         email?: string;
         menu?: AvatarMenuItem[];
     };
-    status?: 'active' | 'sleeping' | 'out';
+    status?: AvatarStatusType;
     className?: string;
 }
 
@@ -35,7 +36,7 @@ export interface BackgroundVideoProps {
 }
 
 export interface BadgeProps {
-    mode: string,
+    type: BadgeType,
     name: string,
     hiddenRemoveButton?: boolean,
     onCloseButtonClick?: React.MouseEventHandler<HTMLButtonElement>,
@@ -49,24 +50,24 @@ export interface TransparentButton1Props {
 
 export interface TransparentButton2Props {
     className?: string;
-    children?: React.ReactNode | React.ReactNode[] | string;
+    children?: UIType;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export interface FormSubmitButton1Props {
     submitting?: boolean;
-    children?: React.ReactNode | React.ReactNode[] | string;
+    children?: UIType;
 }
 
 export interface FormLinkButton1Props {
     url: string;
-    icon?: React.ReactNode | React.ReactNode[] | string;
-    children?: React.ReactNode | React.ReactNode[] | string;
+    icon?: UIType;
+    children?: UIType;
 }
 
 export interface FormLinkButton2Props {
     url: string;
-    children?: React.ReactNode | React.ReactNode[] | string;
+    children?: UIType;
 }
 
 export interface FormDatePicker1Props {
@@ -81,7 +82,7 @@ export interface FormDatePicker1Props {
 
 export interface FormFileUploader1Props {
     label: string;
-    setFileData: (fileData: File | null, type: string) => void;
+    setFileData: (type: FileType, fileData?: File | undefined) => void;
 }
 
 export interface FormFileItem1Props {
@@ -90,15 +91,15 @@ export interface FormFileItem1Props {
 }
 
 export interface FormHeader1Props {
-    children?: React.ReactNode | React.ReactNode[] | string;
+    children?: UIType;
 }
 
 export interface FormHeader2Props {
-    children?: React.ReactNode | React.ReactNode[] | string;
+    children?: UIType;
 }
 
 export interface FormHeader3Props {
-    children?: React.ReactNode | React.ReactNode[] | string;
+    children?: UIType;
 }
 
 export interface ImageUploaderProps {
@@ -147,12 +148,12 @@ export interface RagDoc {
 }
 
 export interface FormSelect1Props {
-    label: string;
-    id: string;
-    value: string;
-    name: string;
+    label?: string;
+    id?: string;
+    value?: string;
+    name?: string;
     onChange?: React.ChangeEventHandler<HTMLSelectElement>;
-    placeholder: string;
+    placeholder?: string;
     options: FormSelect1Item[];
 }
 
@@ -162,14 +163,13 @@ export interface FormSelect1Item {
 }
 
 export interface SlideViewerProps {
-    images: string[];
     className?: string;
     slides: SlideData[];
     slidingButton?: boolean;
 }
 
 export interface SlideData {
-    type: 'image' | 'video';
+    type: SlideType;
     url: string;
 }
 
@@ -195,23 +195,23 @@ export interface LoadingSpinProps {
 }
 
 export interface FormTextField1Props {
-    label: string;
-    type: string;
-    id: string;
-    name: string;
-    placeholder: string;
-    value: string;
+    label?: string;
+    type?: string;
+    id?: string;
+    name?: string;
+    placeholder?: string;
+    value?: string;
     required?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 export interface FormTextField2Props {
-    label: string;
-    type: string;
-    id: string;
-    name: string;
-    placeholder: string;
-    value: string;
+    label?: string;
+    type?: string;
+    id?: string;
+    name?: string;
+    placeholder?: string;
+    value?: string;
     required?: boolean;
     onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }

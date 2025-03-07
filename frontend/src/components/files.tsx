@@ -1,4 +1,4 @@
-import { FormFileItem1Props, FormFileUploader1Props } from "@app/types";
+import { FileType, FormFileItem1Props, FormFileUploader1Props } from "@app/types";
 import React from "react";
 
 export const FormFileUploader1 = (props: FormFileUploader1Props) => {
@@ -6,7 +6,7 @@ export const FormFileUploader1 = (props: FormFileUploader1Props) => {
         const uploadedFile = event.target.files![0];
         if (uploadedFile) {
             const type = uploadedFile.type;
-            let fileType = '';
+            let fileType: FileType = 'image';
             if (type.startsWith("image/")) {
                 fileType = "image";
             } else if (type.startsWith("video/")) {
@@ -15,7 +15,7 @@ export const FormFileUploader1 = (props: FormFileUploader1Props) => {
                 fileType = "unknown";
             }
 
-            props.setFileData(uploadedFile, fileType);
+            props.setFileData(fileType, uploadedFile);
         }
     };
     return (

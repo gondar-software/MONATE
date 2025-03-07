@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const BackgroundVideo = (props: BackgroundVideoProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(() => {
         const video = videoRef.current;

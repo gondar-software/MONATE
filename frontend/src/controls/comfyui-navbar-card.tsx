@@ -1,10 +1,11 @@
 import { FormSelect1, FormSubmitButton1, ImageUploader, VideoUploader } from "@app/components";
 import { comfyuiModels } from "@app/constants";
 import { useAlert } from "@app/providers";
+import { ComfyUINavbarCardProps } from "@app/types";
 import { useEffect, useState } from "react";
 
-export const ComfyUINavbarCard = (props: any) => {
-    const [inputData, setInputData] = useState({});
+export const ComfyUINavbarCard = (props: ComfyUINavbarCardProps) => {
+    const [inputData, setInputData] = useState<any>({});
     const { addAlert } = useAlert();
 
     const validateInputs = () => {
@@ -24,7 +25,7 @@ export const ComfyUINavbarCard = (props: any) => {
         setInputData({});
     }, [props.model]);
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateInputs()) {
             props.onSubmit(inputData);
@@ -42,7 +43,8 @@ export const ComfyUINavbarCard = (props: any) => {
         <form onSubmit={handleSubmit} className="flex flex-col w-80 h-full bg-white border border-gray-200 rounded-lg shadow p-8 dark:bg-gray-800 dark:border-gray-700">
             <FormSelect1
                 value={props.model}
-                onChange={(e: any) => props.setModel(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                    props.setModel(e.target.value as typeof props.model)}
                 options={
                     comfyuiModels.map((model) => ({
                         value: model.model,
@@ -84,7 +86,7 @@ export const ComfyUINavbarCard = (props: any) => {
                                     {input.name}
                                 </div>
                                 <ImageUploader
-                                    id={index}
+                                    id={String(index)}
                                     className="w-full"
                                     disabled={props.processing}
                                     maxWidth={4000}
@@ -108,7 +110,7 @@ export const ComfyUINavbarCard = (props: any) => {
                                     {input.name}
                                 </div>
                                 <VideoUploader
-                                    id={index}
+                                    id={String(index)}
                                     className="w-full"
                                     disabled={props.processing}
                                     onVideoUpload={(file: File) => {

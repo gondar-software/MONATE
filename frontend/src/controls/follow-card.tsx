@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { FormHeader1, FormSubmitButton1, FormTextField1, FormTextField3, ImageUploader, StarRater } from '@app/components';
+import { FollowCardProps } from '@app/types';
 
-export const FollowCard = (props: any) => {
-    const [rate, setRate] = useState(5);
-    const [email, setEmail] = useState('');
-    const [name, setName] = useState('');
-    const [feedback, setFeedback] = useState('');
-    const [avatar, setAvatar] = useState<any>(null);
+export const FollowCard = (props: FollowCardProps) => {
+    const [rate, setRate] = useState<number>(5);
+    const [email, setEmail] = useState<string>('');
+    const [name, setName] = useState<string>('');
+    const [feedback, setFeedback] = useState<string>('');
+    const [avatar, setAvatar] = useState<File | undefined>(undefined);
 
     const handleAvatarUpload = (file: File) => {
         setAvatar(file);
     };
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.onSubmit({
             rate,
@@ -50,7 +51,7 @@ export const FollowCard = (props: any) => {
                     name="name"
                     id="name"
                     value={name}
-                    onChange={(e: any) => setName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                     placeholder="John Doe"
                     required
                 />
@@ -60,7 +61,7 @@ export const FollowCard = (props: any) => {
                     name="email"
                     id="email"
                     value={email}
-                    onChange={(e: any) => setEmail(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                     placeholder="monate@example.com"
                     required
                 />
@@ -70,7 +71,7 @@ export const FollowCard = (props: any) => {
                     name="feedback"
                     id="feedback"
                     value={feedback}
-                    onChange={(e: any) => setFeedback(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback(e.target.value)}
                     placeholder="Input feedback here..."
                 />
                 <FormSubmitButton1

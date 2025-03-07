@@ -6,6 +6,7 @@ import { useAlert } from "../providers/alert-provider";
 import { handleNetworkError } from "../handlers/error-handler";
 import { Accordion, BookCard, FollowCard } from "@app/controls";
 import { StarRating } from "@app/components";
+import { BookerData, FollowerData, FollowingData, FollowingMode } from "@app/types";
 
 export const BookMe = () => {
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
@@ -14,10 +15,10 @@ export const BookMe = () => {
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
 
-    const [followingData, setFollowingData] = useState<any>({});
-    const [followingMode, setFollowingMode] = useState('');
-    const [booking, setBooking] = useState(false);
-    const [following, setFollowing] = useState(false);
+    const [followingData, setFollowingData] = useState<FollowingData | undefined>();
+    const [followingMode, setFollowingMode] = useState<FollowingMode>();
+    const [booking, setBooking] = useState<boolean>(false);
+    const [following, setFollowing] = useState<boolean>(false);
 
     const fetchFollower = async() => {
         jsonNoTokenClient.get('/following')
@@ -32,12 +33,12 @@ export const BookMe = () => {
             });
     };
 
-    const handleBook = async(bookData: any) => {
+    const handleBook = async(bookData: BookerData) => {
         if (bookData)
             setBooking(true);
     };
 
-    const handleFollow = async(followData: any) => {
+    const handleFollow = async(followData: FollowerData) => {
         if (followData)
             setFollowing(true);
     };
@@ -58,7 +59,7 @@ export const BookMe = () => {
                                 header: 'Top Followers',
                                 body: <Accordion
                                     index={0}
-                                    items={followingData?.followers?.map((follower: any) => {
+                                    items={followingData?.followers?.map((follower: FollowerData) => {
                                         return {
                                             header: follower.name,
                                             body: follower.feedback,

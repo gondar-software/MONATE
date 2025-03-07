@@ -6,6 +6,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
+import { UploadPortfolioData, UploadPortfolioSlideData } from "@app/types";
 import { useEffect, useState } from "react";
 
 export const UploadPortfolio = () => {
@@ -18,7 +19,7 @@ export const UploadPortfolio = () => {
     const redirect = useRedirectionHelper();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
-    const [uploading, setUploading] = useState(false);
+    const [uploading, setUploading] = useState<boolean>(false);
 
     useEffect(() => {
         if (userInfo && (userInfo.type === 'admin' || userInfo.type === 'team'))
@@ -33,14 +34,14 @@ export const UploadPortfolio = () => {
         }
     }, [userInfo]);
 
-    const handleSubmit = async(formData: any) => {
+    const handleSubmit = async(formData: UploadPortfolioData) => {
         setUploading(true);
     
         await Promise.all(
-            formData.slides.map(async (slide: any, index: number) => {
+            formData.slides.map(async (slide: UploadPortfolioSlideData, index: number) => {
                 console.log(slide);
                 const formDt = new FormData();
-                formDt.append(slide.fileType, slide.file);
+                formDt.append(slide.fileType, slide.file!);
 
                 await formClient.post(
                     `/upload/${slide.fileType}`,
@@ -55,7 +56,7 @@ export const UploadPortfolio = () => {
             })
         );
 
-        const items = formData.slides.map((slide: any) => ({
+        const items = formData.slides.map((slide: UploadPortfolioSlideData) => ({
             type: fileTypes[slide.fileType as keyof typeof fileTypes],
             path: slide.filePath,
         }));

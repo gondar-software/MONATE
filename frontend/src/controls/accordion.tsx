@@ -1,6 +1,7 @@
+import { AccordionItemData, AccordionItemProps, AccordionProps } from "@app/types";
 import { useState, useEffect, useRef } from "react";
 
-export const Accordion = (props: any) => {
+export const Accordion = (props: AccordionProps) => {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     const toggleItem = (index: number) => {
@@ -18,9 +19,9 @@ export const Accordion = (props: any) => {
     }, [props.index]);
 
     return (
-        <div {...props}>
+        <div className={props.className}>
             <div data-accordion="collapse" className="rounded-lg w-full">
-                {props.items.map((item: any, index: number) => (
+                {props.items.map((item: AccordionItemData, index: number) => (
                     <AccordionItem
                         key={index}
                         header={item.header}
@@ -35,7 +36,7 @@ export const Accordion = (props: any) => {
     );
 };
 
-export const AccordionItem = (props: any) => {
+export const AccordionItem = (props: AccordionItemProps) => {
     const [height, setHeight] = useState("0px");
     const contentRef = useRef<HTMLDivElement>(null);
 

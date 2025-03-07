@@ -5,14 +5,15 @@ import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert } from "@app/providers";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
+import { BadgeData, FileType, PortfolioType, UploadPortfolioCardProps, UploadPortfolioSlideData } from "@app/types";
 
-export const UploadPortfolioCard = (props: any) => {
-    const [title, setTitle] = useState('');
-    const [portfolioType, setPortfolioType] = useState('');
-    const [url, setUrl] = useState('');
-    const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [slides, setSlides] = useState<any[]>([]);
+export const UploadPortfolioCard = (props: UploadPortfolioCardProps) => {
+    const [title, setTitle] = useState<string>('');
+    const [portfolioType, setPortfolioType] = useState<PortfolioType>('Web');
+    const [url, setUrl] = useState<string>('');
+    const [selectedCategories, setSelectedCategories] = useState<BadgeData[]>([]);
+    const [categories, setCategories] = useState<BadgeData[]>([]);
+    const [slides, setSlides] = useState<UploadPortfolioSlideData[]>([]);
     const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
     const redirect = useRedirectionHelper();
@@ -28,7 +29,7 @@ export const UploadPortfolioCard = (props: any) => {
             });
     }, []);
 
-    const handleSetFileData = (file: any, fileType: any) => {
+    const handleSetFileData = (fileType: FileType, file?: File) => {
         if (fileType === 'image' ||  fileType === 'video') {
             setSlides([...slides, { file: file, fileType: fileType }]);
         }
@@ -46,7 +47,7 @@ export const UploadPortfolioCard = (props: any) => {
         setSlides(slides.filter((_, i) => i !== index));
     }
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.onSubmit({
             title: title,

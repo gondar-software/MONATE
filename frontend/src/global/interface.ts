@@ -14,6 +14,7 @@ import {
     setVideoBackgroundMode,
     setUserInfo,
 } from '@app/global';
+import { ReduxStorage, UnityBackgroundType, UserInfoStorageData } from '@app/types';
 
 export const useSaveLightMode = () => {
     const dispatch = useDispatch();
@@ -29,15 +30,15 @@ export const useSaveOasisLoaded = () => {
 };
 export const useSaveGardenProgress = () => {
     const dispatch = useDispatch();
-    return (gardenProgress: any) => dispatch(setGardenProgress(gardenProgress));
+    return (gardenProgress: number) => dispatch(setGardenProgress(gardenProgress));
 };
 export const useSaveOasisProgress = () => {
     const dispatch = useDispatch();
-    return (oasisProgress: any) => dispatch(setOasisProgress(oasisProgress));
+    return (oasisProgress: number) => dispatch(setOasisProgress(oasisProgress));
 };
 export const useSaveUnityBackgroundMode = () => {
     const dispatch = useDispatch();
-    return (unityBackgroundMode: string) => dispatch(setUnityBackgroundMode(unityBackgroundMode));
+    return (unityBackgroundMode: UnityBackgroundType) => dispatch(setUnityBackgroundMode(unityBackgroundMode));
 };
 export const useSaveToken = () => {
     const dispatch = useDispatch();
@@ -57,43 +58,43 @@ export const useSaveVideoBackgroundMode = () => {
 };
 export const useSaveUserInfo = () => {
     const dispatch = useDispatch();
-    return (userInfo: any) => dispatch(setUserInfo(userInfo));
+    return (userInfo?: UserInfoStorageData) => dispatch(setUserInfo(userInfo));
 };
 
 export const useLightMode = () => {
-    return useSelector((state: any) => state.lightMode);
+    return useSelector((state: ReduxStorage) => state.lightMode);
 };
 export const useGardenLoaded = () => {
-    return useSelector((state: any) => state.gardenLoaded);
+    return useSelector((state: ReduxStorage) => state.gardenLoaded);
 };
 export const useOasisLoaded = () => {
-    return useSelector((state: any) => state.oasisLoaded);
+    return useSelector((state: ReduxStorage) => state.oasisLoaded);
 };
 export const useGardenProgress = () => {
-    return useSelector((state: any) => state.gardenProgress);
+    return useSelector((state: ReduxStorage) => state.gardenProgress);
 };
 export const useOasisProgress = () => {
-    return useSelector((state: any) => state.oasisProgress);
+    return useSelector((state: ReduxStorage) => state.oasisProgress);
 };
 export const useUnityBackgroundMode = () => {
-    return useSelector((state: any) => state.unityBackgroundMode);
+    return useSelector((state: ReduxStorage) => state.unityBackgroundMode);
 };
 export const useToken = () => {
-    return useSelector((state: any) => state.token);
+    return useSelector((state: ReduxStorage) => state.token);
 };
 export const useUserInfo = () => {
-    return useSelector((state: any) => state.userInfo);
+    return useSelector((state: ReduxStorage) => state.userInfo);
 };
 export const useVideo1Loaded = () => {
-    return useSelector((state: any) => state.video1Loaded);
+    return useSelector((state: ReduxStorage) => state.video1Loaded);
 };
 
 export const useVideo2Loaded = () => {
-    return useSelector((state: any) => state.video2Loaded);
+    return useSelector((state: ReduxStorage) => state.video2Loaded);
 };
 
 export const useVideoBackgroundMode = () => {
-    return useSelector((state: any) => state.videoBackgroundMode);
+    return useSelector((state: ReduxStorage) => state.videoBackgroundMode);
 };
 
 

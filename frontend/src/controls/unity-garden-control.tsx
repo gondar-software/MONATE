@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Unity, useUnityContext } from 'react-unity-webgl';
 import { useSaveGardenLoaded, useSaveGardenProgress } from '@app/global';
+import { UnityControlProps } from '@app/types';
 
-export const UnityGardenControl = (props: any) => {
+export const UnityGardenControl = (props: UnityControlProps) => {
     const saveGardenLoaded = useSaveGardenLoaded();
     const saveGardenProgress = useSaveGardenProgress();
 
@@ -26,7 +27,7 @@ export const UnityGardenControl = (props: any) => {
     }, [loadingProgression]);
 
     return (
-        <div {...props}>
+        <div className={props.className}>
             <Unity
                 unityProvider={unityProvider}
                 className={`w-full h-full ${isLoaded ? 'visible' : 'hidden'}`}

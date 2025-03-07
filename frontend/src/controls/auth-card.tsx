@@ -1,17 +1,18 @@
 import { FormHeader1, FormSubmitButton1, FormTextField2 } from '@app/components';
 import { useRedirectionHelper } from '@app/helpers';
+import { AuthCardProps } from '@app/types';
 import { useState } from 'react';
 
-export const AuthCard = (props: any) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rePassword, setRePassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const [error, setError] = useState('');
+export const AuthCard = (props: AuthCardProps) => {
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [rePassword, setRePassword] = useState<string>('');
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
 
     const redirect = useRedirectionHelper();
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (props.mode === 'signUp' && password !== rePassword) {
@@ -48,7 +49,7 @@ export const AuthCard = (props: any) => {
                     name="email" 
                     id="email" 
                     value={email} 
-                    onChange={(e: any) => setEmail(e.target.value)} 
+                    onChange={(e) => setEmail(e.target.value)} 
                     required
                 />
                 <FormTextField2 
@@ -57,7 +58,7 @@ export const AuthCard = (props: any) => {
                     name="password" 
                     id="password" 
                     value={password} 
-                    onChange={(e: any) => setPassword(e.target.value)} 
+                    onChange={(e) => setPassword(e.target.value)} 
                     required 
                 />
                 {props.mode !== 'login' && (
@@ -67,7 +68,7 @@ export const AuthCard = (props: any) => {
                         name="re-password" 
                         id="re-password" 
                         value={rePassword} 
-                        onChange={(e: any) => setRePassword(e.target.value)} 
+                        onChange={(e) => setRePassword(e.target.value)} 
                         required 
                     />
                 )}
@@ -109,5 +110,4 @@ export const AuthCard = (props: any) => {
         </div>
     );
 };
-
 export default AuthCard;

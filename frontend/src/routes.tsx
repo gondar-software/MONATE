@@ -1,10 +1,5 @@
-import {
-    HomeIcon,
-} from '@heroicons/react/24/solid';
-
 import { MonateIcon } from '@app/components';
-import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot, BookMe, Bookers } from '@app/pages';
-import ComfyUI from './pages/comfyui';
+import { Home, Portfolios, Login, ComfyUI, SignUp, RePassword, Information, UploadPortfolio, Chatbot, BookMe, Bookers } from '@app/pages';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -16,16 +11,9 @@ export const routes = [
         pages: [
             {
                 icon: <MonateIcon {...icon} />,
-                name: 'preface',
-                label: 'Preface',
-                path: '',
-                element: <Preface />,
-            },
-            {
-                icon: <HomeIcon {...icon} />,
                 name: 'home',
                 label: 'Home',
-                path: 'home',
+                path: '',
                 element: <Home />,
             },
         ],

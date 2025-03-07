@@ -1,9 +1,10 @@
 import { createContext } from "react";
 import { CopyrightIcon } from "@app/components";
+import { FooterProviderProps } from "@app/types";
 
 const FooterContext = createContext<any | undefined>(undefined);
 
-export const FooterProvider = (props: any) => {
+export const FooterProvider = (props: FooterProviderProps) => {
     return (
         <FooterContext.Provider value={{}}>
             {props.children}

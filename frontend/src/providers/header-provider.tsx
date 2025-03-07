@@ -1,10 +1,11 @@
 import { createContext, useContext, useState } from "react";
 import { MonateMark, AuthInfo, ModeSwitch } from "@app/components";
+import { HeaderProviderProps } from "@app/types";
 
 const HeaderContext = createContext<any | undefined>(undefined);
 
-export const HeaderProvider = (props: any) => {
-    const [authInfo, setAuthInfo] = useState(true);
+export const HeaderProvider = (props: HeaderProviderProps) => {
+    const [authInfo, setAuthInfo] = useState<boolean>(true);
 
     const showAuthInfo = () => {
         setAuthInfo(true);

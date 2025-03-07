@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Unity, useUnityContext } from 'react-unity-webgl';
 import { useSaveOasisLoaded, useSaveOasisProgress } from '@app/global';
+import { UnityControlProps } from '@app/types';
 
-export const UnityOasisControl = (props: any) => {
+export const UnityOasisControl = (props: UnityControlProps) => {
     const saveOasisLoaded = useSaveOasisLoaded();
     const saveOasisProgress = useSaveOasisProgress();
 
@@ -26,7 +27,7 @@ export const UnityOasisControl = (props: any) => {
     }, [loadingProgression]);
 
     return (
-        <div {...props}>
+        <div className={props.className}>
             <Unity
                 unityProvider={unityProvider}
                 className={`w-full h-full ${isLoaded ? 'visible' : 'hidden'}`}

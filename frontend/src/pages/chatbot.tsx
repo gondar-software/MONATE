@@ -6,6 +6,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
+import { ChatbotHistoryData, ChatbotMessages, ChatbotModelType } from "@app/types";
 import { ArrowUpCircleIcon, Bars3Icon, GlobeAltIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
@@ -16,15 +17,15 @@ export const Chatbot = () => {
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
-    const [model, setModel] = useState('open-ai');
-    const [chatHistories, setChatHistories] = useState<any[]>([]);
-    const [prompt, setPrompt] = useState('');
-    const [processing, setProcessing] = useState(false);
-    const [loadingHistory, setLoadingHistory] = useState(false);
-    const [currentHistory, setCurrentHistory] = useState<any[]>([]);
-    const [rag, setRag] = useState(false);
-    const [chatId, setChatId] = useState('');
-    const [showNavBar, setShowNavBar] = useState(() => window.innerWidth >= 1120);
+    const [model, setModel] = useState<ChatbotModelType>('open-ai');
+    const [chatHistories, setChatHistories] = useState<ChatbotHistoryData[]>([]);
+    const [prompt, setPrompt] = useState<string>('');
+    const [processing, setProcessing] = useState<boolean>(false);
+    const [loadingHistory, setLoadingHistory] = useState<boolean>(false);
+    const [currentHistory, setCurrentHistory] = useState<ChatbotMessages>([]);
+    const [rag, setRag] = useState<boolean>(false);
+    const [chatId, setChatId] = useState<string>('');
+    const [showNavBar, setShowNavBar] = useState<boolean>(() => window.innerWidth >= 1120);
     
     const fetchHistories = async () => {
         showLoading();
@@ -186,7 +187,7 @@ export const Chatbot = () => {
         });
     }
 
-    const handlePromptChange = (e: any) => {
+    const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const textarea = e.target;
         setPrompt(textarea.value);
 
@@ -240,7 +241,7 @@ export const Chatbot = () => {
         });
     }
     
-    const handlePromptKeyDown = (e: any) => {
+    const handlePromptKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             handlePrompt();

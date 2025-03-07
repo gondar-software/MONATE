@@ -12,9 +12,9 @@ export const Portfolios = () => {
     const { hideAuthInfo } = useHeader();
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
-    const [portfolioIds, setPortfolioIds] = useState<any[]>([]);
-    const [maxPage, setMaxPage] = useState(1);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [portfolioIds, setPortfolioIds] = useState<number[]>([]);
+    const [maxPage, setMaxPage] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
     const fetchPortfolios = async (page = 1) => {
         showLoading();

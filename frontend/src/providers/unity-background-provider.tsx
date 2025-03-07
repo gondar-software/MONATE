@@ -8,19 +8,20 @@ import {
     useGardenProgress,
 } from '@app/global';
 import { LoadingMonate } from '@app/components';
+import { UnityBackgroundProviderProps } from '@app/types';
 
 const UnityBackgroundContext = createContext<any | undefined>(undefined);
 
-export const UnityBackgroundProvider = (props: any) => {
+export const UnityBackgroundProvider = (props: UnityBackgroundProviderProps) => {
     const unityBackgroundMode = useUnityBackgroundMode();
     const oasisLoaded = useOasisLoaded();
     const oasisProgress = useOasisProgress();
     const gardenLoaded = useGardenLoaded();
     const gardenProgress = useGardenProgress();
 
-    const [hasInteracted, setHasInteracted] = useState(false);
+    const [hasInteracted, setHasInteracted] = useState<boolean>(false);
 
-    const handleMouseMove = (_: any) => {
+    const handleMouseMove = (_: React.MouseEvent<HTMLDivElement>) => {
         if (!hasInteracted) {
             setHasInteracted(true);
         }

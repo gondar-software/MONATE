@@ -4,7 +4,7 @@ import { AvatarMenuItem, AvatarProps } from "@app/types";
 import { useEffect, useRef, useState } from "react";
 
 export const Avatar = (props: AvatarProps) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const saveUserInfo = useSaveUserInfo();
     const saveToken = useSaveToken();
     const redirect = useRedirectionHelper();
@@ -102,7 +102,7 @@ export const Avatar = (props: AvatarProps) => {
                                 type='button'
                                 onClick={() => {
                                     setIsMenuOpen(false);
-                                    saveUserInfo(null);
+                                    saveUserInfo();
                                     saveToken('');
                                     redirect('/');
                                 }}

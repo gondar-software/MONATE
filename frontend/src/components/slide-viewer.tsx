@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { SlideData, SlideViewerProps } from "@app/types";
 
 export function SlideViewer(props: SlideViewerProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [paused, setPaused] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [paused, setPaused] = useState<boolean>(true);
   
   useEffect(() => {
     if (!paused) {

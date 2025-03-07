@@ -4,10 +4,11 @@ import { useJsonNoTokenCryptionMiddleware, useJsonNoTokenOnlyRequestCryptionMidd
 import { useSaveUserInfo, useToken, useVideo1Loaded, useVideo2Loaded } from '@app/global';
 import { userTypes } from '@app/constants';
 import { useNavigate } from 'react-router-dom';
+import { LoadingProviderProps } from '@app/types';
 
 const LoadingContext = createContext<any | undefined>(undefined);
 
-export const LoadingProvider = (props: any) => {
+export const LoadingProvider = (props: LoadingProviderProps) => {
     const saveUserInfo = useSaveUserInfo();
     const navigate = useNavigate();
     const token = useToken();
@@ -66,7 +67,7 @@ export const LoadingProvider = (props: any) => {
                 navigate('/user/info');
             else
             {
-                saveUserInfo(null);
+                saveUserInfo(undefined);
             }
         });
     }

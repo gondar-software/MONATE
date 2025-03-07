@@ -5,6 +5,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
+import { AuthCardData } from "@app/types";
 
 export const Login = () => {
     const saveToken = useSaveToken();
@@ -14,7 +15,7 @@ export const Login = () => {
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
     const { hideLoading, initLoading } = useLoading();
-    const [submitting, setSubmitting] = useState(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
@@ -22,7 +23,7 @@ export const Login = () => {
         hideLoading();
     }, []);
 
-    const handleSubmit = (formData: any) => {
+    const handleSubmit = (formData: AuthCardData) => {
         setSubmitting(true);
         jsonNoTokenClient.post(
             '/user/login',

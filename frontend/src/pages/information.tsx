@@ -6,6 +6,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useSaveVideoBackgroundMode } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
+import { UserInfoData } from "@app/types";
 
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
@@ -13,7 +14,7 @@ export const Information = () => {
     const { addAlert } = useAlert();
     const { hideLoading, initLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
-    const [saving, setSaving] = useState(false);
+    const [saving, setSaving] = useState<boolean>(false);
     const redirect = useRedirectionHelper();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
@@ -23,7 +24,7 @@ export const Information = () => {
         hideLoading();
     }, []);
 
-    const handleSubmit = (formData: any) => {
+    const handleSubmit = (formData: UserInfoData) => {
         setSaving(true);
         if (formData.avatar && formData.avatar !== 'original')
         {
@@ -48,7 +49,7 @@ export const Information = () => {
         }
     }
 
-    const saveInfo = (formData: any, res: any = null) => {
+    const saveInfo = (formData: UserInfoData, res: any = null) => {
         jsonClient.post('/user/info',
             {
                 firstName: formData.firstName,

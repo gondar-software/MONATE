@@ -4,6 +4,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
+import { AuthCardData } from "@app/types";
 import { useEffect, useState } from "react";
 
 export const RePassword = () => {
@@ -13,9 +14,9 @@ export const RePassword = () => {
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
     const { hideLoading } = useLoading();
-    const [isOpen, setIsOpen] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
-    const [formData, setFormData] = useState<any>();
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [formData, setFormData] = useState<AuthCardData>();
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
@@ -23,7 +24,7 @@ export const RePassword = () => {
         hideLoading();
     }, []);
 
-    const handleSubmit = (formData: any) => {
+    const handleSubmit = (formData: AuthCardData) => {
         setSubmitting(true);
         jsonNoTokenClient.post(
             '/user/re-pwd',
@@ -45,8 +46,8 @@ export const RePassword = () => {
         jsonNoTokenClient.post(
             '/user/re-pwd',
             {
-                emailAddr: formData.email,
-                password: formData.password,
+                emailAddr: formData!.email,
+                password: formData!.password,
             }
         ).then(_ => {
             showVerifyCode();
@@ -59,8 +60,8 @@ export const RePassword = () => {
         jsonNoTokenClient.post(
             '/user/verify',
             {
-                emailAddr: formData.email,
-                password: formData.password,
+                emailAddr: formData!.email,
+                password: formData!.password,
                 code: code,
             }
         ).then(_ => {

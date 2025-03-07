@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { FormHeader1, FormSubmitButton1, FormTextField1, FormTextField3 } from '@app/components';
+import { BookCardProps } from '@app/types';
 
-export const BookCard = (props: any) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
+export const BookCard = (props: BookCardProps) => {
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.onSubmit({
             name,
@@ -27,7 +28,7 @@ export const BookCard = (props: any) => {
                     name="name"
                     id="name"
                     value={name}
-                    onChange={(e: any) => setName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                     placeholder="John Doe"
                     required
                 />
@@ -37,7 +38,7 @@ export const BookCard = (props: any) => {
                     name="email"
                     id="email"
                     value={email}
-                    onChange={(e: any) => setEmail(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                     placeholder="monate@example.com"
                     required
                 />
@@ -47,7 +48,7 @@ export const BookCard = (props: any) => {
                     name="message"
                     id="message"
                     value={message}
-                    onChange={(e: any) => setMessage(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
                     placeholder="Input message here..."
                     required
                 />

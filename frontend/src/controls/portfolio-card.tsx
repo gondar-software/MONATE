@@ -7,6 +7,7 @@ import { useAlert } from "@app/providers";
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react"
 import { BadgePicker } from "@app/controls";
+import { BadgeData, BadgeType, PortfolioCardProps, PortfolioData, PortfolioType, SlideData } from "@app/types";
 
 const portfolioBadgeModes = {
     0: 'blue',
@@ -15,17 +16,17 @@ const portfolioBadgeModes = {
     3: 'yellow',
 };
 
-export const PortfolioCard = (props: any) => {
+export const PortfolioCard = (props: PortfolioCardProps) => {
     const { jsonClient } = useJsonCryptionMiddleware();
     const { jsonNoTokenOnlyRequestClient } = useJsonNoTokenOnlyRequestCryptionMiddleware();
     const { addAlert } = useAlert();
-    const [loading, setLoading] = useState(true);
-    const [slides, setSlides] = useState<any[]>([]);
-    const [portfolioType, setPortfolioType] = useState('');
-    const [portfolioColorMode, setPortfolioColorMode] = useState('');
-    const [portfolioName, setPortfolioName] = useState('');
-    const [portfolioUrl, setPortfolioUrl] = useState('');
-    const [categories, setCategories] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [slides, setSlides] = useState<SlideData[]>([]);
+    const [portfolioType, setPortfolioType] = useState<PortfolioType>('Web');
+    const [portfolioColorMode, setPortfolioColorMode] = useState<BadgeType>('blue');
+    const [portfolioName, setPortfolioName] = useState<string>('');
+    const [portfolioUrl, setPortfolioUrl] = useState<string>('');
+    const [categories, setCategories] = useState<BadgeData[]>([]);
     const redirect = useRedirectionHelper();
 
     useEffect(() => {
@@ -52,7 +53,7 @@ export const PortfolioCard = (props: any) => {
         const items = response?.data.items;
 
         const slidesData = await Promise.all(
-            items?.map(async(item: any) => {
+            items?.map(async(item: PortfolioData) => {
                 const response = await jsonNoTokenOnlyRequestClient.get(`/download/${fileTypeMap[item.type]}?filePath=${item.path}`,
                     {
                         responseType: 'blob',
@@ -72,8 +73,8 @@ export const PortfolioCard = (props: any) => {
             })
         );
 
-        setPortfolioType((portfolioTypeMap[response?.data.type] as string).toUpperCase());
-        setPortfolioColorMode(portfolioBadgeModes[response?.data.type as keyof typeof portfolioBadgeModes]);
+        setPortfolioType((portfolioTypeMap[response?.data.type]) as PortfolioType);
+        setPortfolioColorMode(portfolioBadgeModes[response?.data.type as keyof typeof portfolioBadgeModes] as BadgeType);
         setPortfolioName(response?.data.name);
         setPortfolioUrl(response?.data.url);
         setCategories(response?.data.categories);
@@ -92,7 +93,7 @@ export const PortfolioCard = (props: any) => {
                     <div className="space-y-2">
                         <div className="flex">
                             <Badge 
-                                mode={portfolioColorMode} 
+                                type={portfolioColorMode} 
                                 name={portfolioType}
                                 hiddenRemoveButton
                             />

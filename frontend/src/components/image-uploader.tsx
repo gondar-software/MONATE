@@ -3,7 +3,7 @@ import { ImageUploaderProps } from "@app/types";
 import { useEffect, useState } from "react";
 
 export const ImageUploader = (props: ImageUploaderProps) => {
-    const [selectedImage, setSelectedImage] = useState(props.initUrl);
+    const [selectedImage, setSelectedImage] = useState<string | undefined>(props.initUrl);
     const { addAlert } = useAlert();
 
     useEffect(() => {

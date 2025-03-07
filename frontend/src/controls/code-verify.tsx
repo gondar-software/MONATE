@@ -1,7 +1,8 @@
+import { CodeVerifyProps } from "@app/types";
 import React, { useRef, useState } from "react";
 
-export const CodeVerify = (props: any) => {
-  const length = props.length | 6;
+export const CodeVerify = (props: CodeVerifyProps) => {
+  const length = props.length ?? 6;
   const [code, setCode] = useState<string[]>(Array(length).fill(""));
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 

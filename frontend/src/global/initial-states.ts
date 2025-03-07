@@ -1,4 +1,6 @@
-export const initialStates = {
+import { ReduxStorage } from "@app/types";
+
+export const initialStates: ReduxStorage = {
     lightMode: true,
     gardenLoaded: false,
     oasisLoaded: false,
@@ -6,7 +8,7 @@ export const initialStates = {
     oasisProgress: 0,
     unityBackgroundMode: 'oasis',
     token: '',
-    userInfo: null,
+    userInfo: undefined,
     video1Loaded: false,
     video2Loaded: false,
     videoBackgroundMode: 1,

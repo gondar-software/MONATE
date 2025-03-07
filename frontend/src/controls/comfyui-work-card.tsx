@@ -1,25 +1,26 @@
 import { LoadingSpin } from "@app/components";
 import { comfyuiDataTypes } from "@app/constants";
 import { useJsonNoTokenOnlyRequestCryptionMiddleware } from "@app/middlewares";
+import { ComfyUIInputData, ComfyUIOutputData, ComfyUIWorkCardProps, ComfyUIWorkData } from "@app/types";
 import { useEffect, useState } from "react";
 
-export const ComfyUIWorkCard = (props: any) => {
-    const [loading, setLoading] = useState(true);
-    const [progress, setProgress] = useState(true);
-    const [output, setOutput] = useState<any>({});
-    const [inputs, setInputs] = useState<any[]>([]);
+export const ComfyUIWorkCard = (props: ComfyUIWorkCardProps) => {
+    const [loading, setLoading] = useState<boolean>(true);
+    const [progress, setProgress] = useState<boolean>(true);
+    const [output, setOutput] = useState<ComfyUIOutputData>({});
+    const [inputs, setInputs] = useState<ComfyUIInputData[]>([]);
 
     const { jsonNoTokenOnlyRequestClient } = useJsonNoTokenOnlyRequestCryptionMiddleware();
 
-    const fetchWork = async(work: any) => {
+    const fetchWork = async(work: ComfyUIWorkData) => {
         const comfyuiDataMap = Object.entries(comfyuiDataTypes).reduce((acc: any, [key, value]) => {
             acc[value] = key;
             return acc;
         }, {});
 
-        const type = comfyuiDataMap[work.output.type as keyof typeof comfyuiDataMap];
+        const type = comfyuiDataMap[work.output!.type as keyof typeof comfyuiDataMap];
         await jsonNoTokenOnlyRequestClient.get(
-            `/download/${type}?filePath=${work.output.value}`,
+            `/download/${type}?filePath=${work.output!.value}`,
             {
                 responseType: 'blob'
             }
@@ -32,7 +33,7 @@ export const ComfyUIWorkCard = (props: any) => {
         }).catch(_ => {}).finally(() => {
         });
 
-        setInputs(await Promise.all(work.inputs.map(async(input: any) => {
+        setInputs(await Promise.all(work.inputs!.map(async(input: ComfyUIInputData) => {
             try
             {
                 const inputType = comfyuiDataMap[input.type as keyof typeof comfyuiDataMap];

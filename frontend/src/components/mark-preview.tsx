@@ -9,7 +9,7 @@ import { useLightMode } from "@app/global";
 import { MarkdownPreviewerProps } from "@app/types";
 
 export const MarkdownPreviewer = (props: MarkdownPreviewerProps) => {
-    const [text, setText] = useState("");
+    const [text, setText] = useState<string>("");
     const lightMode = useLightMode();
 
     const replaceHolder = (text: string) => {

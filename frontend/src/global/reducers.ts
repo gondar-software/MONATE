@@ -1,4 +1,5 @@
 import { initialStates } from '@app/global';
+import { UnityBackgroundType, UserInfoStorageData } from '@app/types';
 
 export const SET_LIGHT_MODE = 'SET_LIGHT_MODE';
 export const SET_GARDEN_LOADED = 'SET_GARDEN_LOADED';
@@ -97,15 +98,15 @@ export const setOasisLoaded = (unityLoaded: boolean) => ({
     type: SET_OASIS_LOADED,
     payload: unityLoaded,
 });
-export const setGardenProgress = (gardenProgress: any) => ({
+export const setGardenProgress = (gardenProgress: number) => ({
     type: SET_GARDEN_PROGRESS,
     payload: gardenProgress,
 });
-export const setOasisProgress = (oasisProgress: any) => ({
+export const setOasisProgress = (oasisProgress: number) => ({
     type: SET_OASIS_PROGRESS,
     payload: oasisProgress,
 });
-export const setUnityBackgroundMode = (unityBackgroundMode: any) => ({
+export const setUnityBackgroundMode = (unityBackgroundMode: UnityBackgroundType) => ({
     type: SET_UNITY_BACKGROUND_MODE,
     payload: unityBackgroundMode,
 });
@@ -113,7 +114,7 @@ export const setToken = (token: string) => ({
     type: SET_TOKEN,
     payload: token,
 });
-export const setUserInfo = (userInfo: any) => ({
+export const setUserInfo = (userInfo?: UserInfoStorageData) => ({
     type: SET_USER_INFO,
     payload: userInfo,
 });

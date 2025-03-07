@@ -19,7 +19,7 @@ export const ImageUploader = (props: ImageUploaderProps) => {
         const img = new Image();
         img.onload = () => {
             if (img.width > maxWidth || img.height > maxHeight) {
-                addAlert({
+                addAlert?.({
                     type: "warning",
                     title: "Image too large",
                     message: `Please upload an image smaller than ${maxWidth}x${maxHeight} pixels.`,

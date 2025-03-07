@@ -33,8 +33,8 @@ export const App = () => {
   }, [lightMode]);
 
   return (
-    <AlertProvider>
-      <Router>
+    <Router>
+      <AlertProvider>
         <LoadingProvider>
           <VideoBackgroundProvider>
             <HeaderProvider>
@@ -50,8 +50,8 @@ export const App = () => {
             </HeaderProvider>
           </VideoBackgroundProvider>
         </LoadingProvider>
-      </Router>
-    </AlertProvider>
+      </AlertProvider>
+    </Router>
   );
 };
 

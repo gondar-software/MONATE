@@ -201,3 +201,19 @@ export interface BookerCardProps {
     checked: boolean,
     onDelete?: (id: number) => Promise<void>,
 }
+
+export interface SettingsData {
+    openAIApiKey: string;
+    googleApiKey: string;
+    googleCseId: string;
+    qwenUrl: string;
+    comfyUIServerUrl: string;
+    comfyUIWSUrl: string;
+}
+
+export interface SettingsCardProps {
+    data?: SettingsData;
+    updating?: boolean;
+    onUpdate?: (data: SettingsData) => Promise<void>;
+    onCancel?: () => void;
+}

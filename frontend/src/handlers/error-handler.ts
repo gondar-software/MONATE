@@ -8,12 +8,8 @@ export const handleNetworkError = (err: any, addAlert: ((alert: AlertData) => vo
             title: "Error",
             message: errorTypes[err.response.status as keyof typeof errorTypes],
         });
-    else if (err.response.status >= 401)
-        addAlert?.({
-            type: "danger",
-            title: "Error",
-            message: "Your token is expired, please login again",
-        });
+    else if (err.response.status >= 401) {
+    }
     else
         addAlert?.({
             type: 'danger',

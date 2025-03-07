@@ -25,8 +25,8 @@ export const Home = () => {
 
     useEffect(() => {
         saveVideoBackgroundMode(0);
-        showAuthInfo();
-        hideLoading();
+        showAuthInfo?.();
+        hideLoading?.();
     }, []);
 
     useEffect(() => {

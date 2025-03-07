@@ -14,3 +14,4 @@ export * from '@app/controls/book-card';
 export * from '@app/controls/follow-card';
 export * from '@app/controls/booker-card';
 export * from '@app/controls/follower-card';
+export * from '@app/controls/settings-card';

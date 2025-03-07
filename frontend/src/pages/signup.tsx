@@ -22,8 +22,8 @@ export const SignUp = () => {
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
     const handleSubmit = (data: AuthCardData) => {
@@ -68,7 +68,7 @@ export const SignUp = () => {
             }
         ).then(async(res) => {
             saveToken(res.data.token);
-            await initLoading(res.data.token);
+            await initLoading?.(res.data.token);
             hideVerifyCode();
             redirect('/user/info');
         }).catch(err => {

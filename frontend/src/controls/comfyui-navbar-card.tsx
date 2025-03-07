@@ -31,8 +31,8 @@ export const ComfyUINavbarCard = (props: ComfyUINavbarCardProps) => {
             props.onSubmit(inputData);
         }
         else {
-            addAlert({
-                mode: 'danger',
+            addAlert?.({
+                type: 'danger',
                 title: 'Error',
                 message: 'Please fill all the inputs',
             })

@@ -13,6 +13,7 @@ export const BookCard = (props: BookCardProps) => {
             name,
             email,
             message,
+            checked: false,
         });
     };
 

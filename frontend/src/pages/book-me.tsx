@@ -22,7 +22,7 @@ export const BookMe = () => {
     const [following, setFollowing] = useState<boolean>(false);
 
     const fetchFollower = async() => {
-        showLoading();
+        showLoading?.();
         setFollowingData(undefined);
         await jsonNoTokenClient.get('/following')
             .then((res) => {
@@ -32,7 +32,7 @@ export const BookMe = () => {
             }).finally(() => {
                 saveVideoBackgroundMode(1);
                 hideAuthInfo?.();
-                hideLoading();
+                hideLoading?.();
             });
     };
 

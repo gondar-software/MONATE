@@ -20,8 +20,8 @@ export const Information = () => {
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
     const handleSubmit = (formData: UserInfoData) => {
@@ -71,7 +71,7 @@ export const Information = () => {
             }
         ).then(async(_) => {
             setSaving(false);
-            await initLoading();
+            await initLoading?.();
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert)

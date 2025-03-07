@@ -17,7 +17,7 @@ export const Portfolios = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
     const fetchPortfolios = async (page = 1) => {
-        showLoading();
+        showLoading?.();
         await jsonNoTokenClient.get(`/portfolio?page=${page}`)
             .then(res => {
                 setPortfolioIds(res.data.portfolioIds);
@@ -27,8 +27,8 @@ export const Portfolios = () => {
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
-                hideAuthInfo();
-                hideLoading();
+                hideAuthInfo?.();
+                hideLoading?.();
             });
     };
 

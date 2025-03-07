@@ -31,7 +31,7 @@ export const AlertProvider = (props: AlertProviderProps) => {
   return (
     <AlertContext.Provider value={{ addAlert }}>
       {props.children}
-      <div className="fixed top-20 w-screen flex flex-col items-center">
+      <div className="fixed top-20 right-8 w-screen flex flex-col items-end">
         {alerts.map((alert) => (
           <div
             key={alert.id}

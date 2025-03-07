@@ -9,7 +9,7 @@ import { LoadingProviderProps } from '@app/types';
 const LoadingContext = createContext<{
     showLoading?: () => void;
     hideLoading?: () => void;
-    initLoading?: () => void;
+    initLoading?: (tokenData?: string) => Promise<void>;
 }>({});
 
 export const LoadingProvider = (props: LoadingProviderProps) => {

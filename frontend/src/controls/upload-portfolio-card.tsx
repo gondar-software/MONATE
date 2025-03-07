@@ -37,8 +37,8 @@ export const UploadPortfolioCard = (props: UploadPortfolioCardProps) => {
         }
         else
         {
-            addAlert({
-                mode: 'danger',
+            addAlert?.({
+                type: 'danger',
                 title: 'Error',
                 message: 'File type is not correct.',
             });

@@ -20,8 +20,8 @@ export const RePassword = () => {
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
     const handleSubmit = (formData: AuthCardData) => {

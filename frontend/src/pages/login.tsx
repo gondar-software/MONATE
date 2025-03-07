@@ -19,8 +19,8 @@ export const Login = () => {
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
     const handleSubmit = (formData: AuthCardData) => {
@@ -33,7 +33,7 @@ export const Login = () => {
             }
         ).then(async(res) => {
             saveToken(res.data.token);
-            await initLoading(res.data.token);
+            await initLoading?.(res.data.token);
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert);

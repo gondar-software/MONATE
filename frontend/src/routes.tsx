@@ -1,5 +1,5 @@
 import { MonateIcon } from '@app/components';
-import { Home, Portfolios, Login, ComfyUI, SignUp, RePassword, Information, UploadPortfolio, Chatbot, BookMe, Bookers } from '@app/pages';
+import { Home, Portfolios, Login, ComfyUI, SignUp, RePassword, Information, UploadPortfolio, Chatbot, BookMe, Bookers, Followers } from '@app/pages';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -71,7 +71,7 @@ export const routes = [
                 name: 'followers',
                 label: 'Followers',
                 path: '/followers',
-                element: <Bookers />,
+                element: <Followers />,
             },
             {
                 icon: <MonateIcon {...icon} />,

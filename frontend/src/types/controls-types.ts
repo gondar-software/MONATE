@@ -58,6 +58,7 @@ export interface BookerData {
     name: string;
     email: string;
     message: string;
+    checked: boolean;
 }
 
 export interface ChatbotNavbarCardProps {
@@ -119,6 +120,7 @@ export interface FollowerData {
     feedback?: string;
     avatar?: File;
     avatarPath?: string;
+    topRanked?: boolean;
 }
 
 export interface FollowCardProps {
@@ -185,8 +187,17 @@ export interface FollowerCardProps {
     user?: UserType,
     id?: number,
     avatarPath?: string,
-    name: string,
     rate: number,
     feedback?: string,
     email: string,
+    topRanked?: boolean,
+    onDelete?: (id: number) => Promise<void>,
+}
+
+export interface BookerCardProps {
+    id: number,
+    email: string,
+    message: string,
+    checked: boolean,
+    onDelete?: (id: number) => Promise<void>,
 }

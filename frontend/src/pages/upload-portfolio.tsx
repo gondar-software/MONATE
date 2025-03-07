@@ -52,6 +52,8 @@ export const UploadPortfolio = () => {
                     handleNetworkError(err, addAlert)
                     if (err.response.status === 401)
                         redirect('/auth/login');
+                    else if (err.response.status === 504 || err.response.status === 505)
+                        redirect('/');
                 });
             })
         );
@@ -73,6 +75,8 @@ export const UploadPortfolio = () => {
                 handleNetworkError(err, addAlert)
                 if (err.response.status === 401)
                     redirect('/auth/login');
+                else if (err.response.status === 504 || err.response.status === 505)
+                    redirect('/');
             })
             .finally(() => {
                 setUploading(false);

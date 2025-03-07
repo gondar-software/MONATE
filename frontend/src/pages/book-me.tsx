@@ -11,7 +11,7 @@ import { BookerData, FollowerData, FollowingData, FollowingMode } from "@app/typ
 export const BookMe = () => {
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const { hideAuthInfo } = useHeader();
-    const { hideLoading } = useLoading();
+    const { hideLoading, showLoading } = useLoading();
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
@@ -22,6 +22,7 @@ export const BookMe = () => {
     const [following, setFollowing] = useState<boolean>(false);
 
     const fetchFollower = async() => {
+        showLoading();
         setFollowingData(undefined);
         await jsonNoTokenClient.get('/following')
             .then((res) => {
@@ -81,9 +82,8 @@ export const BookMe = () => {
     return (
         <div className="fixed w-full h-full py-16 flex flex-col justify-center items-center">
             <div className="relative max-w-3xl flex md:px-2 flex-col items-center min-h-full w-full">
-                <div className="h-full mt-40 w-full shadow overflow-auto rounded-b-xl bg-white dark:bg-gray-800 dark:border dark:border-t-0 dark:border-gray-400">
+                <div className="h-full mt-36 p-4 pt-8 w-full shadow overflow-auto rounded-b-xl bg-white dark:bg-gray-800 dark:border dark:border-t-0 dark:border-gray-400">
                     <Accordion 
-                        className="p-2 w-full h-full"
                         index={0}
                         items={[
                             {
@@ -97,7 +97,6 @@ export const BookMe = () => {
                                                     email={follower.email}
                                                     id={follower.id}
                                                     avatarPath={follower.avatarPath}
-                                                    name={follower.name}
                                                     rate={follower.rate}
                                                     feedback={follower.feedback}
                                                 />
@@ -172,12 +171,12 @@ export const BookMe = () => {
                         ]}
                     />
                 </div>
-                <div className="absolute w-full h-40 shadow-lg justify-between flex items-center rounded-lg bg-white dark:bg-gray-800 dark:border dark:border-b-0 dark:border-gray-400">
+                <div className="absolute w-full h-40 gap-2 shadow-lg sm:justify-between justify-center flex sm:flex-row flex-col items-start sm:items-center rounded-lg bg-white dark:bg-gray-800 dark:border dark:border-b-0 dark:border-gray-400">
                     <div className="ml-8 text-lg items-center text-gray-900 dark:text-white">
                         Reviews: &nbsp;{followingData?.rate}<span className="text-sm">{` (${followingData?.count} followers)`}</span>
                         <StarRating rating={followingData?.rate ?? 0} />
                     </div>
-                    <div className="flex sm:flex-row flex-col gap-3 mr-8">
+                    <div className="flex gap-3 mr-8 ml-8 sm:ml-0">
                         <button
                             type='button'
                             onClick={(() => setFollowingMode('book'))}

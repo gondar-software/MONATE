@@ -2,14 +2,16 @@ import { AccordionItemData, AccordionItemProps, AccordionProps } from "@app/type
 import { useState, useEffect, useRef } from "react";
 
 export const Accordion = (props: AccordionProps) => {
-    const [openIndex, setOpenIndex] = useState<number | null>(0);
+    const [openIndex, setOpenIndex] = useState<number | undefined>(0);
 
     const toggleItem = (index: number) => {
-        setOpenIndex(openIndex === index ? null : index);
+        setOpenIndex(openIndex === index ? undefined : index);
     };
 
     useEffect(() => {
-        if (!props.index)
+        if (props.index !== undefined)
+            setOpenIndex(props.index);
+        else
             setOpenIndex(props.items.length - 1);
     }, [props.items.length]);
 

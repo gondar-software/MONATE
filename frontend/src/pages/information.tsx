@@ -39,6 +39,8 @@ export const Information = () => {
                 handleNetworkError(err, addAlert)
                 if (err.response.status === 401)
                     redirect('/auth/login');
+                else if (err.response.status === 504 || err.response.status === 505)
+                    redirect('/');
             }).finally(() => {
                 setSaving(false);
             });
@@ -75,6 +77,8 @@ export const Information = () => {
             handleNetworkError(err, addAlert)
             if (err.response.status === 401)
                 redirect('/auth/login');
+            else if (err.response.status === 504 || err.response.status === 505)
+                redirect('/');
         }).finally(() => {
             setSaving(false);
         });

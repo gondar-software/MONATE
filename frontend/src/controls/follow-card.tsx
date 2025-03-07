@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FormHeader1, FormSubmitButton1, FormTextField1, FormTextField3, ImageUploader, StarRater } from '@app/components';
+import { FormCancelButton1, FormHeader1, FormSubmitButton1, FormTextField1, FormTextField3, ImageUploader, StarRater } from '@app/components';
 import { FollowCardProps } from '@app/types';
 
 export const FollowCard = (props: FollowCardProps) => {
@@ -25,10 +25,10 @@ export const FollowCard = (props: FollowCardProps) => {
     };
 
     return (
-        <div className="w-full max-w-sm p-4 mt-32 mb-32 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-sm p-4 my-14 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <FormHeader1>
-                    Your information
+                    Follow
                 </FormHeader1>
                 <div className='flex flex-col items-center'>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center">
@@ -74,11 +74,18 @@ export const FollowCard = (props: FollowCardProps) => {
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFeedback(e.target.value)}
                     placeholder="Input feedback here..."
                 />
-                <FormSubmitButton1
-                    submitting={props.following}
-                >
-                    Follow
-                </FormSubmitButton1>
+                <div className='w-full flex flex-row gap-2'>
+                    <FormSubmitButton1
+                        submitting={props.following}
+                    >
+                        Follow
+                    </FormSubmitButton1>
+                    <FormCancelButton1
+                        onCancel={props.onCancel}
+                    >
+                        Cancel
+                    </FormCancelButton1>
+                </div>
             </form>
         </div>
     )

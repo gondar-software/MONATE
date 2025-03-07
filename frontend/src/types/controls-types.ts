@@ -1,4 +1,4 @@
-import { AuthModeType, ChatbotModelType, ComfyUIDataType, FileType, GenAIModelType, GenderType, PortfolioType, SlideType, UIType } from "@app/types";
+import { AuthModeType, ChatbotModelType, ComfyUIDataType, FileType, GenAIModelType, GenderType, PortfolioType, SlideType, UIType, UserType } from "@app/types";
 
 export interface AccordionProps {
     index?: number;   
@@ -49,10 +49,12 @@ export interface BadgePickerProps {
 
 export interface BookCardProps {
     onSubmit: (bookData: BookerData) => void;
+    onCancel: () => void;
     booking?: boolean;
 }
 
 export interface BookerData {
+    id?: number;
     name: string;
     email: string;
     message: string;
@@ -110,15 +112,18 @@ export interface ComfyUIWorkCardProps {
 }
 
 export interface FollowerData {
+    id?: number;
     rate: number;
     email: string;
     name: string;
     feedback?: string;
     avatar?: File;
+    avatarPath?: string;
 }
 
 export interface FollowCardProps {
     onSubmit: (data: FollowerData) => void;
+    onCancel: () => void;
     following?: boolean;
 }
 
@@ -174,4 +179,14 @@ export interface UploadPortfolioData {
     url: string;
     categories: BadgeData[];
     slides: UploadPortfolioSlideData[];
+}
+
+export interface FollowerCardProps {
+    user?: UserType,
+    id?: number,
+    avatarPath?: string,
+    name: string,
+    rate: number,
+    feedback?: string,
+    email: string,
 }

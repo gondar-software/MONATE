@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FormHeader1, FormSubmitButton1, FormTextField1, FormTextField3 } from '@app/components';
+import { FormCancelButton1, FormHeader1, FormSubmitButton1, FormTextField1, FormTextField3 } from '@app/components';
 import { BookCardProps } from '@app/types';
 
 export const BookCard = (props: BookCardProps) => {
@@ -17,7 +17,7 @@ export const BookCard = (props: BookCardProps) => {
     };
 
     return (
-        <div className="w-full max-w-sm p-4 mt-32 mb-32 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <FormHeader1>
                     Book me
@@ -52,11 +52,18 @@ export const BookCard = (props: BookCardProps) => {
                     placeholder="Input message here..."
                     required
                 />
-                <FormSubmitButton1
-                    submitting={props.booking}
-                >
-                    Book me
-                </FormSubmitButton1>
+                <div className='w-full flex flex-row gap-2'>
+                    <FormSubmitButton1
+                        submitting={props.booking}
+                    >
+                        Book me
+                    </FormSubmitButton1>
+                    <FormCancelButton1
+                        onCancel={props.onCancel}
+                    >
+                        Cancel
+                    </FormCancelButton1>
+                </div>
             </form>
         </div>
     )

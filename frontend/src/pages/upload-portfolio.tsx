@@ -4,7 +4,7 @@ import { UploadPortfolioCard } from "@app/controls";
 import { useSaveVideoBackgroundMode, useUserInfo } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
+import { useFormNoTokenCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { UploadPortfolioData, UploadPortfolioSlideData } from "@app/types";
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 export const UploadPortfolio = () => {
     const { hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
-    const { formClient } = useFormCryptionMiddleware();
+    const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { jsonClient } = useJsonCryptionMiddleware();
     const { addAlert } = useAlert();
     const userInfo = useUserInfo();
@@ -43,7 +43,7 @@ export const UploadPortfolio = () => {
                 const formDt = new FormData();
                 formDt.append(slide.fileType, slide.file!);
 
-                await formClient.post(
+                await formNoTokenClient.post(
                     `/upload/${slide.fileType}`,
                     formDt
                 ).then(res => {

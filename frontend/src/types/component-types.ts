@@ -59,6 +59,11 @@ export interface FormSubmitButton1Props {
     children?: UIType;
 }
 
+export interface FormCancelButton1Props {
+    children?: UIType;
+    onCancel?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
 export interface FormLinkButton1Props {
     url: string;
     icon?: UIType;

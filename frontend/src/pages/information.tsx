@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { InformationCard } from "@app/controls";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
+import { useFormNoTokenCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { genderTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
@@ -10,7 +10,7 @@ import { UserInfoData } from "@app/types";
 
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { formClient } = useFormCryptionMiddleware();
+    const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideLoading, initLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
@@ -30,7 +30,7 @@ export const Information = () => {
         {
             const formDt = new FormData();
             formDt.append('image', formData.avatar);
-            formClient.post(
+            formNoTokenClient.post(
                 '/upload/image',
                 formDt
             ).then(res => {

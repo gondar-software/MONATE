@@ -3,7 +3,7 @@ import { Accordion, ComfyUINavbarCard, ComfyUIWorkCard } from "@app/controls";
 import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
+import { useFormNoTokenCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { ComfyUIInputData, ComfyUIWorkData, GenAIModelType } from "@app/types";
 import { Bars3Icon, TrashIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 export const ComfyUI = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { formClient } = useFormCryptionMiddleware();
+    const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
@@ -61,7 +61,7 @@ export const ComfyUI = () => {
                 if ((value as ComfyUIInputData).type === 'image' || (value as ComfyUIInputData).type === 'video') {
                     const formData = new FormData();
                     formData.append((value as ComfyUIInputData).type, (value as ComfyUIInputData).value);
-                    const response = await formClient.post(`/upload/${(value as ComfyUIInputData).type}`, formData);
+                    const response = await formNoTokenClient.post(`/upload/${(value as ComfyUIInputData).type}`, formData);
                     return {
                         name: (value as ComfyUIInputData).name,
                         type: comfyuiDataTypes[(value as ComfyUIInputData).type as keyof typeof comfyuiDataTypes],

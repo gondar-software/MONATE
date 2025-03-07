@@ -1,10 +1,10 @@
 import { useSaveVideoBackgroundMode } from "@app/global";
-import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
+import { useFormNoTokenCryptionMiddleware, useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
 import { useHeader, useLoading } from "@app/providers";
 import { useEffect, useState } from "react";
 import { useAlert } from "../providers/alert-provider";
 import { handleNetworkError } from "../handlers/error-handler";
-import { Accordion, BookCard, FollowCard } from "@app/controls";
+import { Accordion, BookCard, FollowCard, FollowerCard } from "@app/controls";
 import { StarRating } from "@app/components";
 import { BookerData, FollowerData, FollowingData, FollowingMode } from "@app/types";
 
@@ -13,6 +13,7 @@ export const BookMe = () => {
     const { hideAuthInfo } = useHeader();
     const { hideLoading } = useLoading();
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
+    const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
 
     const [followingData, setFollowingData] = useState<FollowingData | undefined>();
@@ -21,7 +22,8 @@ export const BookMe = () => {
     const [following, setFollowing] = useState<boolean>(false);
 
     const fetchFollower = async() => {
-        jsonNoTokenClient.get('/following')
+        setFollowingData(undefined);
+        await jsonNoTokenClient.get('/following')
             .then((res) => {
                 setFollowingData(res.data);
             }).catch((err) => {
@@ -34,13 +36,42 @@ export const BookMe = () => {
     };
 
     const handleBook = async(bookData: BookerData) => {
-        if (bookData)
-            setBooking(true);
+        setBooking(true);
+        
+        await jsonNoTokenClient.post('/following/book', bookData)
+            .then(() => setFollowingMode(undefined))
+            .catch(err => handleNetworkError(err, addAlert))
+            .finally(() => setBooking(false));
     };
 
     const handleFollow = async(followData: FollowerData) => {
-        if (followData)
-            setFollowing(true);
+        setFollowing(true);
+
+        let avatarPath = '';
+        if (followData.avatar)
+        {
+            const request = new FormData();
+            request.append('image', followData.avatar);
+            await formNoTokenClient.post('/upload/image', request)
+                .then(res => {
+                    avatarPath = res.data.filePath;
+                }).catch(err => handleNetworkError(err, addAlert))
+                .finally();
+        }
+
+        const follower = {
+            rate: followData.rate,
+            email: followData.email,
+            name: followData.name,
+            feedback: followData.feedback,
+            avatarPath: avatarPath,
+        }
+        await jsonNoTokenClient.post('/following/follow', follower)
+            .then(() => setFollowingMode(undefined))
+            .catch(err => handleNetworkError(err, addAlert))
+            .finally(() => setFollowing(false));
+
+        await fetchFollower();
     };
 
     useEffect(() => {
@@ -62,7 +93,14 @@ export const BookMe = () => {
                                     items={followingData?.followers?.map((follower: FollowerData) => {
                                         return {
                                             header: follower.name,
-                                            body: follower.feedback,
+                                            body: <FollowerCard
+                                                    email={follower.email}
+                                                    id={follower.id}
+                                                    avatarPath={follower.avatarPath}
+                                                    name={follower.name}
+                                                    rate={follower.rate}
+                                                    feedback={follower.feedback}
+                                                />
                                         }
                                     }) ?? []}
                                 />,
@@ -159,9 +197,10 @@ export const BookMe = () => {
             </div>
             {followingMode === 'follow' && <div className="fixed w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
                 <div className="relative w-full h-full">
-                    <div className="absolute w-full h-full bg-gray-900 opacity-30" />
-                    <div className="absolute w-full h-full flex justify-center items-center overflow-auto">
+                    <div className="absolute w-full h-full bg-gray-900 opacity-30" onClick={() => setFollowingMode(undefined)} />
+                    <div className="absolute w-full h-full flex justify-center items-start overflow-auto">
                         <FollowCard
+                            onCancel={() => setFollowingMode(undefined)}
                             following={following}
                             onSubmit={handleFollow}
                         />
@@ -170,9 +209,10 @@ export const BookMe = () => {
             </div>}
             {followingMode === 'book' && <div className="fixed w-full py-14 bg-clip-padding h-full backdrop-blur-xl">
                 <div className="relative w-full h-full">
-                    <div className="absolute w-full h-full bg-gray-900 opacity-30" />
+                    <div className="absolute w-full h-full bg-gray-900 opacity-30" onClick={() => setFollowingMode(undefined)} />
                     <div className="absolute w-full h-full flex justify-center items-center overflow-auto">
                         <BookCard
+                            onCancel={() => setFollowingMode(undefined)}
                             booking={booking}
                             onSubmit={handleBook}
                         />

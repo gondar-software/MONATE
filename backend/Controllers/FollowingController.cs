@@ -77,7 +77,7 @@ namespace Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("bookers")]
-        public async Task<IActionResult> GetBookers([FromQuery] bool all = true)
+        public async Task<IActionResult> GetBookers([FromQuery] bool all = false)
         {
             try
             {
@@ -185,6 +185,7 @@ namespace Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("del-booker")]
         public async Task<IActionResult> DeleteBooker([FromBody] int id)
         {
@@ -207,6 +208,7 @@ namespace Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("del-follower")]
         public async Task<IActionResult> DeleteFollower([FromBody] int id)
         {

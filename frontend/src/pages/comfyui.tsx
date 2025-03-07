@@ -24,7 +24,7 @@ export const ComfyUI = () => {
     const [showNavBar, setShowNavBar] = useState<boolean>(() => window.innerWidth >= 1120);
     
     const fetchWorks = async () => {
-        showLoading();
+        showLoading?.();
         setWorks([]);
         await jsonClient.get(`/comfyui?type=${comfyuiModelTypes[model as keyof typeof comfyuiModelTypes]}`)
             .then(res => {
@@ -38,8 +38,8 @@ export const ComfyUI = () => {
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
-                showAuthInfo();
-                hideLoading();
+                showAuthInfo?.();
+                hideLoading?.();
             });
     };
 

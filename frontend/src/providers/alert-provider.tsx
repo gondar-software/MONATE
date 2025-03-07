@@ -1,8 +1,10 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState } from "react";
 import { Alert } from "@app/components";
 import { AlertData, AlertProviderProps } from "@app/types";
 
-const AlertContext = createContext<any | undefined>(undefined);
+const AlertContext = createContext<{
+  addAlert?: (alert: AlertData) => void
+}>({});
 
 export const useAlert = () => {
   return useContext(AlertContext);
@@ -11,7 +13,7 @@ export const useAlert = () => {
 export const AlertProvider = (props: AlertProviderProps) => {
   const [alerts, setAlerts] = useState<AlertData[]>([]);
 
-  const addAlert = useCallback((alert: AlertData) => {
+  const addAlert = (alert: AlertData) => {
     const id = Date.now();
     setAlerts((prev) => [...prev, { ...alert, id, fadeOut: false }]);
 
@@ -24,7 +26,7 @@ export const AlertProvider = (props: AlertProviderProps) => {
         setAlerts((prev) => prev.filter((a) => a.id !== id));
       }, 300);
     }, 3000);
-  }, []);
+  };
 
   return (
     <AlertContext.Provider value={{ addAlert }}>

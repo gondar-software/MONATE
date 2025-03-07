@@ -31,7 +31,7 @@ export const BookMe = () => {
                 handleNetworkError(err, addAlert);
             }).finally(() => {
                 saveVideoBackgroundMode(1);
-                hideAuthInfo();
+                hideAuthInfo?.();
                 hideLoading();
             });
     };

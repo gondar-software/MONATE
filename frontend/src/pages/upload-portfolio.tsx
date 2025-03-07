@@ -25,8 +25,8 @@ export const UploadPortfolio = () => {
         if (userInfo && (userInfo.type === 'admin' || userInfo.type === 'team'))
         {
             saveVideoBackgroundMode(1);
-            showAuthInfo();
-            hideLoading();
+            showAuthInfo?.();
+            hideLoading?.();
         }
         else
         {

@@ -10,7 +10,7 @@ import {
 import { LoadingMonate } from '@app/components';
 import { UnityBackgroundProviderProps } from '@app/types';
 
-const UnityBackgroundContext = createContext<any | undefined>(undefined);
+const UnityBackgroundContext = createContext<undefined>(undefined);
 
 export const UnityBackgroundProvider = (props: UnityBackgroundProviderProps) => {
     const unityBackgroundMode = useUnityBackgroundMode();
@@ -28,7 +28,7 @@ export const UnityBackgroundProvider = (props: UnityBackgroundProviderProps) => 
     };
 
     return(
-        <UnityBackgroundContext.Provider value={{}}>
+        <UnityBackgroundContext.Provider value={ undefined }>
             <div className='fixed w-full h-full left-0 top-0'>
                 <UnityGardenControl className={`w-full h-full absolute ${unityBackgroundMode === 'garden' ? 'visible' : 'hidden'}`} />
                 <UnityOasisControl className={`w-full h-full absolute ${unityBackgroundMode === 'oasis' ? 'visible' : 'hidden'}`} />

@@ -25,7 +25,7 @@ export const Followers = () => {
     const fetchFollowers = async() => {
         if (userInfo && (userInfo.type === 'admin'))
         {
-            showLoading();
+            showLoading?.();
             setFollowingData(undefined);
             await jsonNoTokenClient.get(`/following?all=${fetchAll}`)
                 .then((res) => {
@@ -34,8 +34,8 @@ export const Followers = () => {
                     handleNetworkError(err, addAlert);
                 }).finally(() => {
                     saveVideoBackgroundMode(1);
-                    showAuthInfo();
-                    hideLoading();
+                    showAuthInfo?.();
+                    hideLoading?.();
                 });
         }
         else

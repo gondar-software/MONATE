@@ -1,20 +1,21 @@
 import { errorTypes } from "@app/constants";
+import { AlertData } from "@app/types";
 
-export const handleNetworkError = (err: any, addAlert: any) => {
+export const handleNetworkError = (err: any, addAlert: ((alert: AlertData) => void) | undefined) => {
     if (err.response.status >= 500)
-        addAlert({
+        addAlert?.({
             type: "danger",
             title: "Error",
             message: errorTypes[err.response.status as keyof typeof errorTypes],
         });
     else if (err.response.status >= 401)
-        addAlert({
+        addAlert?.({
             type: "danger",
             title: "Error",
             message: "Your token is expired, please login again",
         });
     else
-        addAlert({
+        addAlert?.({
             type: 'danger',
             title: 'Error',
             message: 'Unkown error occurred',

@@ -6,7 +6,11 @@ import { userTypes } from '@app/constants';
 import { useNavigate } from 'react-router-dom';
 import { LoadingProviderProps } from '@app/types';
 
-const LoadingContext = createContext<any | undefined>(undefined);
+const LoadingContext = createContext<{
+    showLoading?: () => void;
+    hideLoading?: () => void;
+    initLoading?: () => void;
+}>({});
 
 export const LoadingProvider = (props: LoadingProviderProps) => {
     const saveUserInfo = useSaveUserInfo();

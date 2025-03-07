@@ -23,7 +23,7 @@ export const Bookers = () => {
     const fetchFollowers = async() => {
         if (userInfo && (userInfo.type === 'admin'))
         {
-            showLoading();
+            showLoading?.();
             setBookerData([]);
             await jsonClient.get(`/following/bookers?all=${fetchAll}`)
                 .then((res) => {
@@ -32,8 +32,8 @@ export const Bookers = () => {
                     handleNetworkError(err, addAlert);
                 }).finally(() => {
                     saveVideoBackgroundMode(1);
-                    showAuthInfo();
-                    hideLoading();
+                    showAuthInfo?.();
+                    hideLoading?.();
                 });
         }
         else

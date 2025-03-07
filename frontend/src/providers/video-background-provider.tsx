@@ -9,7 +9,7 @@ import {
 import { BackgroundVideo, LoadingMonate } from '@app/components';
 import { VideoBackgroundProviderProps } from '@app/types';
 
-const UnityBackgroundContext = createContext<any | undefined>(undefined);
+const UnityBackgroundContext = createContext<undefined>(undefined);
 
 export const VideoBackgroundProvider = (props: VideoBackgroundProviderProps) => {
     const saveVideo1Loaded = useSaveVideo1Loaded();
@@ -27,7 +27,7 @@ export const VideoBackgroundProvider = (props: VideoBackgroundProviderProps) => 
     };
 
     return(
-        <UnityBackgroundContext.Provider value={{}}>
+        <UnityBackgroundContext.Provider value={ undefined }>
             <div className='fixed w-full h-full left-0 top-0'>
                 <BackgroundVideo src='/1.mp4' onVideoLoaded={() => saveVideo1Loaded(true)} className={`w-full h-full absolute ${videoBackgroundMode === 0 ? 'visible' : 'hidden'}`} />
                 <BackgroundVideo src='/2.mp4' onVideoLoaded={() => saveVideo2Loaded(true)} className={`w-full h-full absolute ${videoBackgroundMode === 1 ? 'visible' : 'hidden'}`} />

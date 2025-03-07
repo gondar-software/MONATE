@@ -28,7 +28,7 @@ export const Chatbot = () => {
     const [showNavBar, setShowNavBar] = useState<boolean>(() => window.innerWidth >= 1120);
     
     const fetchHistories = async () => {
-        showLoading();
+        showLoading?.();
         await jsonClient.get(`/chatbot?type=${chatbotTypes[model as keyof typeof chatbotTypes]}`)
             .then(res => {
                 setChatHistories(res.data);
@@ -42,8 +42,8 @@ export const Chatbot = () => {
             ).finally(() => {
                 saveVideoBackgroundMode(1);
                 setCurrentHistory([])
-                showAuthInfo();
-                hideLoading();
+                showAuthInfo?.();
+                hideLoading?.();
             });
     };
 
@@ -79,7 +79,11 @@ export const Chatbot = () => {
                     disconnect();
                 }
                 else if (m.Type === 1) {
-                    addAlert('danger', m.Message);
+                    addAlert?.({
+                        type: 'danger', 
+                        title: 'Error',
+                        message: m.Message
+                    });
                     setProcessing(false);
                     disconnect();
                 }

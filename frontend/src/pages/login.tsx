@@ -34,6 +34,11 @@ export const Login = () => {
         ).then(async(res) => {
             saveToken(res.data.token);
             await initLoading?.(res.data.token);
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'You have successfully logged in.',
+            });
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert);

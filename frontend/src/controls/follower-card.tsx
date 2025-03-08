@@ -50,6 +50,11 @@ export const FollowerCard = (props: FollowerCardProps) => {
             rankData
         ).then(() => {
             setTopRanked(!topRanked);
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Follower updated successfully.'
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)

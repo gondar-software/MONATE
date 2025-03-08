@@ -70,15 +70,20 @@ export const UploadPortfolio = () => {
             items: items,
         }
 
-        jsonClient.post('/portfolio/create', packet).then()
-            .catch(err => {
+        jsonClient.post('/portfolio/create', packet)
+            .then(() => {
+                addAlert?.({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'Portfolio uploaded successfully.',
+                });
+            }).catch(err => {
                 handleNetworkError(err, addAlert)
                 if (err.response.status === 401)
                     redirect('/auth/login');
                 else if (err.response.status === 504 || err.response.status === 505)
                     redirect('/');
-            })
-            .finally(() => {
+            }).finally(() => {
                 setUploading(false);
             });
     }

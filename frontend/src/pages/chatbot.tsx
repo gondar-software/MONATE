@@ -180,6 +180,11 @@ export const Chatbot = () => {
                 prev.filter((_, i) => i !== idx)
             ));
             handleNewChat();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Successfully deleted.',
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)

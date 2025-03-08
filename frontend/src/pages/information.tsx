@@ -72,6 +72,11 @@ export const Information = () => {
         ).then(async(_) => {
             setSaving(false);
             await initLoading?.();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'User info has been saved successfully.',
+            });
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert)

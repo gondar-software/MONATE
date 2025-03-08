@@ -72,6 +72,11 @@ export const UserCard = (props: UserCardProps) => {
         ).then(() => {
             setUserType(userType);
             setPermition(permition);
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'User info updated successfully.'
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)

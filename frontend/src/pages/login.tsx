@@ -5,6 +5,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useJsonNoTokenCryptionMiddleware } from "@app/middlewares";
+import { AuthCardData } from "@app/types";
 
 export const Login = () => {
     const saveToken = useSaveToken();
@@ -14,15 +15,15 @@ export const Login = () => {
     const { addAlert } = useAlert();
     const { hideAuthInfo } = useHeader();
     const { hideLoading, initLoading } = useLoading();
-    const [submitting, setSubmitting] = useState(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
-    const handleSubmit = (formData: any) => {
+    const handleSubmit = (formData: AuthCardData) => {
         setSubmitting(true);
         jsonNoTokenClient.post(
             '/user/login',
@@ -32,7 +33,7 @@ export const Login = () => {
             }
         ).then(async(res) => {
             saveToken(res.data.token);
-            await initLoading(res.data.token);
+            await initLoading?.(res.data.token);
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert);
@@ -42,8 +43,10 @@ export const Login = () => {
     };
 
     return (
-        <div className='flex w-full min-h-screen justify-center items-center'>
-            <AuthCard submitting={submitting} mode='login' onSubmit={handleSubmit} />
+        <div className='fixed py-14 flex w-full h-full'>
+            <div className="w-full h-full flex justify-center items-center">
+                <AuthCard submitting={submitting} mode='login' onSubmit={handleSubmit} />
+            </div>
         </div>
     );
 };

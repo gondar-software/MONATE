@@ -1,8 +1,9 @@
 import { useAlert } from "@app/providers";
+import { ImageUploaderProps } from "@app/types";
 import { useEffect, useState } from "react";
 
-export const ImageUploader = (props: any) => {
-    const [selectedImage, setSelectedImage] = useState(props.initUrl);
+export const ImageUploader = (props: ImageUploaderProps) => {
+    const [selectedImage, setSelectedImage] = useState<string | undefined>(props.initUrl);
     const { addAlert } = useAlert();
 
     useEffect(() => {
@@ -18,8 +19,8 @@ export const ImageUploader = (props: any) => {
         const img = new Image();
         img.onload = () => {
             if (img.width > maxWidth || img.height > maxHeight) {
-                addAlert({
-                    mode: "warning",
+                addAlert?.({
+                    type: "warning",
                     title: "Image too large",
                     message: `Please upload an image smaller than ${maxWidth}x${maxHeight} pixels.`,
                 });
@@ -79,7 +80,7 @@ export const ImageUploader = (props: any) => {
                                 <span className="font-semibold">Click to upload</span> or drag and drop
                             </p>
                             <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-                                PNG, JPG (MAX. {maxWidth}x{maxHeight}px)
+                                PNG, JPG <br/>(MAX: {maxWidth}x{maxHeight}px)
                             </p>
                         </div>
                     )}

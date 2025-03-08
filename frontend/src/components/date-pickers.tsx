@@ -1,4 +1,6 @@
-export const FormDatePicker1 = (props: any) => {
+import { FormDatePicker1Props } from "@app/types"
+
+export const FormDatePicker1 = (props: FormDatePicker1Props) => {
     return (
         <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

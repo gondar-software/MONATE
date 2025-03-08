@@ -1,6 +1,8 @@
 export const portfolioTypes = {
-    "web": 0,
-    "mobile": 1,
-    "workflow": 2,
-    "other": 3,
+    "Web": 0,
+    "Mobile": 1,
+    "Chatbot": 2,
+    "Generative AI": 3,
+    "Workflow": 4,
+    "Other": 5,
 }

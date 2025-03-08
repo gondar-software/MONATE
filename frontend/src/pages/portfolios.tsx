@@ -9,15 +9,15 @@ import { useEffect, useState } from "react";
 export const Portfolios = () => {
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
-    const { showAuthInfo } = useHeader();
+    const { hideAuthInfo } = useHeader();
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
-    const [portfolioIds, setPortfolioIds] = useState<any[]>([]);
-    const [maxPage, setMaxPage] = useState(1);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [portfolioIds, setPortfolioIds] = useState<number[]>([]);
+    const [maxPage, setMaxPage] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
     const fetchPortfolios = async (page = 1) => {
-        showLoading();
+        showLoading?.();
         await jsonNoTokenClient.get(`/portfolio?page=${page}`)
             .then(res => {
                 setPortfolioIds(res.data.portfolioIds);
@@ -27,8 +27,8 @@ export const Portfolios = () => {
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
-                showAuthInfo();
-                hideLoading();
+                hideAuthInfo?.();
+                hideLoading?.();
             });
     };
 

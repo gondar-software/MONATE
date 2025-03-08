@@ -1,10 +1,5 @@
-import {
-    HomeIcon,
-} from '@heroicons/react/24/solid';
-
 import { MonateIcon } from '@app/components';
-import { Preface, Home, Portfolios, Login, SignUp, RePassword, Information, UploadPortfolio, Chatbot } from '@app/pages';
-import ComfyUI from './pages/comfyui';
+import { Home, Portfolios, Login, ComfyUI, SignUp, RePassword, Information, UploadPortfolio, Chatbot, BookMe, Bookers, Followers, Settings, Users } from '@app/pages';
 
 const icon = {
     className: 'w-5 h-5 text-inherit',
@@ -16,16 +11,9 @@ export const routes = [
         pages: [
             {
                 icon: <MonateIcon {...icon} />,
-                name: 'preface',
-                label: 'Preface',
-                path: '',
-                element: <Preface />,
-            },
-            {
-                icon: <HomeIcon {...icon} />,
                 name: 'home',
                 label: 'Home',
-                path: 'home',
+                path: '',
                 element: <Home />,
             },
         ],
@@ -71,6 +59,34 @@ export const routes = [
     {
         layout: '/admin',
         pages: [
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'bookers',
+                label: 'Bookers',
+                path: '/bookers',
+                element: <Bookers />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'followers',
+                label: 'Followers',
+                path: '/followers',
+                element: <Followers />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'settings',
+                label: 'Settings',
+                path: '/settings',
+                element: <Settings />,
+            },
+            {
+                icon: <MonateIcon {...icon} />,
+                name: 'manage-users',
+                label: 'Manage Users',
+                path: '/users',
+                element: <Users />,
+            },
         ],
     },
     {
@@ -119,7 +135,7 @@ export const routes = [
                 name: 'book-me',
                 label: 'Book me',
                 path: '/book-me',
-                element: <div />,
+                element: <BookMe />,
             },
         ]
     },

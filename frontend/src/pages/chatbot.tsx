@@ -6,6 +6,7 @@ import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
 import { useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
+import { ChatbotHistoryData, ChatbotMessages, ChatbotModelType } from "@app/types";
 import { ArrowUpCircleIcon, Bars3Icon, GlobeAltIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
@@ -16,18 +17,18 @@ export const Chatbot = () => {
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
-    const [model, setModel] = useState('open-ai');
-    const [chatHistories, setChatHistories] = useState<any[]>([]);
-    const [prompt, setPrompt] = useState('');
-    const [processing, setProcessing] = useState(false);
-    const [loadingHistory, setLoadingHistory] = useState(false);
-    const [currentHistory, setCurrentHistory] = useState<any[]>([]);
-    const [rag, setRag] = useState(false);
-    const [chatId, setChatId] = useState('');
-    const [showNavBar, setShowNavBar] = useState(() => window.innerWidth >= 1120);
+    const [model, setModel] = useState<ChatbotModelType>('open-ai');
+    const [chatHistories, setChatHistories] = useState<ChatbotHistoryData[]>([]);
+    const [prompt, setPrompt] = useState<string>('');
+    const [processing, setProcessing] = useState<boolean>(false);
+    const [loadingHistory, setLoadingHistory] = useState<boolean>(false);
+    const [currentHistory, setCurrentHistory] = useState<ChatbotMessages>([]);
+    const [rag, setRag] = useState<boolean>(false);
+    const [chatId, setChatId] = useState<string>('');
+    const [showNavBar, setShowNavBar] = useState<boolean>(() => window.innerWidth >= 1120);
     
     const fetchHistories = async () => {
-        showLoading();
+        showLoading?.();
         await jsonClient.get(`/chatbot?type=${chatbotTypes[model as keyof typeof chatbotTypes]}`)
             .then(res => {
                 setChatHistories(res.data);
@@ -41,8 +42,8 @@ export const Chatbot = () => {
             ).finally(() => {
                 saveVideoBackgroundMode(1);
                 setCurrentHistory([])
-                showAuthInfo();
-                hideLoading();
+                showAuthInfo?.();
+                hideLoading?.();
             });
     };
 
@@ -78,7 +79,11 @@ export const Chatbot = () => {
                     disconnect();
                 }
                 else if (m.Type === 1) {
-                    addAlert('danger', m.Message);
+                    addAlert?.({
+                        type: 'danger', 
+                        title: 'Error',
+                        message: m.Message
+                    });
                     setProcessing(false);
                     disconnect();
                 }
@@ -186,7 +191,7 @@ export const Chatbot = () => {
         });
     }
 
-    const handlePromptChange = (e: any) => {
+    const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const textarea = e.target;
         setPrompt(textarea.value);
 
@@ -240,7 +245,7 @@ export const Chatbot = () => {
         });
     }
     
-    const handlePromptKeyDown = (e: any) => {
+    const handlePromptKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             handlePrompt();
@@ -284,7 +289,7 @@ export const Chatbot = () => {
                             onChange={handlePromptChange}
                             onKeyDown={handlePromptKeyDown}
                             placeholder="Type your prompt here..."
-                            className="w-full p-2 text-sm h-auto overflow-y-hidden bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                            className="w-full p-2 text-sm h-auto bg-gray-50 border border-gray-300 rounded-lg resize-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                             rows={2}
                         />
                         <div className="w-full flex justify-between">

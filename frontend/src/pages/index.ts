@@ -1,5 +1,4 @@
 export * from '@app/pages/home';
-export * from '@app/pages/preface';
 export * from '@app/pages/portfolios';
 export * from '@app/pages/login';
 export * from '@app/pages/signup';
@@ -8,3 +7,8 @@ export * from '@app/pages/information';
 export * from '@app/pages/upload-portfolio';
 export * from '@app/pages/chatbot';
 export * from '@app/pages/comfyui';
+export * from '@app/pages/book-me';
+export * from '@app/pages/bookers';
+export * from '@app/pages/followers';
+export * from '@app/pages/settings';
+export * from '@app/pages/users';

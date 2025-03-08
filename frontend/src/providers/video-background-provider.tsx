@@ -7,26 +7,27 @@ import {
     useVideoBackgroundMode,
 } from '@app/global';
 import { BackgroundVideo, LoadingMonate } from '@app/components';
+import { VideoBackgroundProviderProps } from '@app/types';
 
-const UnityBackgroundContext = createContext<any | undefined>(undefined);
+const UnityBackgroundContext = createContext<undefined>(undefined);
 
-export const VideoBackgroundProvider = (props: any) => {
+export const VideoBackgroundProvider = (props: VideoBackgroundProviderProps) => {
     const saveVideo1Loaded = useSaveVideo1Loaded();
     const saveVideo2Loaded = useSaveVideo2Loaded();
     const video1Loaded = useVideo1Loaded();
     const video2Loaded = useVideo2Loaded();
     const videoBackgroundMode = useVideoBackgroundMode();
 
-    const [hasInteracted, setHasInteracted] = useState(false);
+    const [hasInteracted, setHasInteracted] = useState<boolean>(false);
 
-    const handleMouseMove = (_: any) => {
+    const handleMouseMove = (_: React.MouseEvent<HTMLDivElement>) => {
         if (!hasInteracted) {
             setHasInteracted(true);
         }
     };
 
     return(
-        <UnityBackgroundContext.Provider value={{}}>
+        <UnityBackgroundContext.Provider value={ undefined }>
             <div className='fixed w-full h-full left-0 top-0'>
                 <BackgroundVideo src='/1.mp4' onVideoLoaded={() => saveVideo1Loaded(true)} className={`w-full h-full absolute ${videoBackgroundMode === 0 ? 'visible' : 'hidden'}`} />
                 <BackgroundVideo src='/2.mp4' onVideoLoaded={() => saveVideo2Loaded(true)} className={`w-full h-full absolute ${videoBackgroundMode === 1 ? 'visible' : 'hidden'}`} />

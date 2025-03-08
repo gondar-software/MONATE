@@ -2,13 +2,14 @@ import { useUserInfo } from '@app/global';
 import { useRedirectionHelper } from '@app/helpers';
 import { Avatar, TransparentButton2 } from '@app/components';
 import { dropDownMenus } from '@app/constants';
+import { AuthInfoProps } from '@app/types';
 
-export const AuthInfo = (props: any) => {
+export const AuthInfo = (props: AuthInfoProps) => {
     const redirect = useRedirectionHelper();
     const userInfo = useUserInfo();
 
     return (
-        <div {...props}>
+        <div className={props.className}>
             {!userInfo ? <div className='flex gap-4'>
                     <TransparentButton2 onClick={() => redirect('auth/login')}>Login</TransparentButton2>
                     <TransparentButton2 onClick={() => redirect('auth/signup')}>Sign up</TransparentButton2>

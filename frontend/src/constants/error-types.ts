@@ -21,6 +21,11 @@ export const errorTypes = {
     519: "Can not find RAG doc",
     520: "Chatbot server is not working now",
     521: "Chatbot type is not supported",
+    522: "Can not find ComfyUI work",
+    523: "Booker already exists",
+    524: "Follower already exists",
+    525: "Booker not found",
+    526: "Follower not found",
 }
 
 export default errorTypes;

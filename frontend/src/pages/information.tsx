@@ -1,35 +1,36 @@
 import { useEffect, useState } from "react";
 import { InformationCard } from "@app/controls";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
+import { useFormNoTokenCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { genderTypes } from "@app/constants";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useSaveVideoBackgroundMode } from "@app/global";
 import { useRedirectionHelper } from "@app/helpers";
+import { UserInfoData } from "@app/types";
 
 export const Information = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { formClient } = useFormCryptionMiddleware();
+    const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { addAlert } = useAlert();
     const { hideLoading, initLoading } = useLoading();
     const { hideAuthInfo } = useHeader();
-    const [saving, setSaving] = useState(false);
+    const [saving, setSaving] = useState<boolean>(false);
     const redirect = useRedirectionHelper();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
-    const handleSubmit = (formData: any) => {
+    const handleSubmit = (formData: UserInfoData) => {
         setSaving(true);
         if (formData.avatar && formData.avatar !== 'original')
         {
             const formDt = new FormData();
             formDt.append('image', formData.avatar);
-            formClient.post(
+            formNoTokenClient.post(
                 '/upload/image',
                 formDt
             ).then(res => {
@@ -38,6 +39,8 @@ export const Information = () => {
                 handleNetworkError(err, addAlert)
                 if (err.response.status === 401)
                     redirect('/auth/login');
+                else if (err.response.status === 504 || err.response.status === 505)
+                    redirect('/');
             }).finally(() => {
                 setSaving(false);
             });
@@ -48,7 +51,7 @@ export const Information = () => {
         }
     }
 
-    const saveInfo = (formData: any, res: any = null) => {
+    const saveInfo = (formData: UserInfoData, res: any = null) => {
         jsonClient.post('/user/info',
             {
                 firstName: formData.firstName,
@@ -68,20 +71,24 @@ export const Information = () => {
             }
         ).then(async(_) => {
             setSaving(false);
-            await initLoading();
+            await initLoading?.();
             redirect('/');
         }).catch(err => {
             handleNetworkError(err, addAlert)
             if (err.response.status === 401)
                 redirect('/auth/login');
+            else if (err.response.status === 504 || err.response.status === 505)
+                redirect('/');
         }).finally(() => {
             setSaving(false);
         });
     }
 
     return (
-        <div className='flex w-full min-h-screen justify-center items-center'>
-            <InformationCard onSubmit={handleSubmit} saving={saving} />
+        <div className='fixed py-14 flex w-full h-full'>
+            <div className="w-full h-full flex justify-center items-start overflow-auto">
+                <InformationCard onSubmit={handleSubmit} saving={saving} />
+            </div>
         </div>
     );
 };

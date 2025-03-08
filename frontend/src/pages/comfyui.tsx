@@ -3,27 +3,28 @@ import { Accordion, ComfyUINavbarCard, ComfyUIWorkCard } from "@app/controls";
 import { useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useRedirectionHelper } from "@app/helpers";
-import { useFormCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
+import { useFormNoTokenCryptionMiddleware, useJsonCryptionMiddleware } from "@app/middlewares";
 import { useAlert, useHeader, useLoading } from "@app/providers";
+import { ComfyUIInputData, ComfyUIWorkData, GenAIModelType } from "@app/types";
 import { Bars3Icon, TrashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 export const ComfyUI = () => {
     const { jsonClient } = useJsonCryptionMiddleware();
-    const { formClient } = useFormCryptionMiddleware();
+    const { formNoTokenClient } = useFormNoTokenCryptionMiddleware();
     const { showLoading, hideLoading } = useLoading();
     const { showAuthInfo } = useHeader();
     const { addAlert } = useAlert();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
     const redirect = useRedirectionHelper();
-    const [model, setModel] = useState('mimicmotion');
-    const [works, setWorks] = useState<any[]>([]);
-    const [processing, setProcessing] = useState(false);
-    const [progress, setProgress] = useState('');
-    const [showNavBar, setShowNavBar] = useState(() => window.innerWidth >= 1120);
+    const [model, setModel] = useState<GenAIModelType>('mimicmotion');
+    const [works, setWorks] = useState<ComfyUIWorkData[]>([]);
+    const [processing, setProcessing] = useState<boolean>(false);
+    const [progress, setProgress] = useState<string>('');
+    const [showNavBar, setShowNavBar] = useState<boolean>(() => window.innerWidth >= 1120);
     
     const fetchWorks = async () => {
-        showLoading();
+        showLoading?.();
         setWorks([]);
         await jsonClient.get(`/comfyui?type=${comfyuiModelTypes[model as keyof typeof comfyuiModelTypes]}`)
             .then(res => {
@@ -37,8 +38,8 @@ export const ComfyUI = () => {
             }
             ).finally(() => {
                 saveVideoBackgroundMode(1);
-                showAuthInfo();
-                hideLoading();
+                showAuthInfo?.();
+                hideLoading?.();
             });
     };
 
@@ -57,20 +58,20 @@ export const ComfyUI = () => {
             }]);
             
             const uploadPromises = Object.entries(inputData).map(async ([_, value]) => {
-                if ((value as any).type === 'image' || (value as any).type === 'video') {
+                if ((value as ComfyUIInputData).type === 'image' || (value as ComfyUIInputData).type === 'video') {
                     const formData = new FormData();
-                    formData.append((value as any).type, (value as any).value);
-                    const response = await formClient.post(`/upload/${(value as any).type}`, formData);
+                    formData.append((value as ComfyUIInputData).type, (value as ComfyUIInputData).value);
+                    const response = await formNoTokenClient.post(`/upload/${(value as ComfyUIInputData).type}`, formData);
                     return {
-                        name: (value as any).name,
-                        type: comfyuiDataTypes[(value as any).type as keyof typeof comfyuiDataTypes],
+                        name: (value as ComfyUIInputData).name,
+                        type: comfyuiDataTypes[(value as ComfyUIInputData).type as keyof typeof comfyuiDataTypes],
                         value: response.data.filePath
                     }
                 }
                 else return {
-                    name: (value as any).name,
-                    type: comfyuiDataTypes[(value as any).type as keyof typeof comfyuiDataTypes],
-                    value: (value as any).value
+                    name: (value as ComfyUIInputData).name,
+                    type: comfyuiDataTypes[(value as ComfyUIInputData).type as keyof typeof comfyuiDataTypes],
+                    value: (value as ComfyUIInputData).value
                 }
             });
             const updatedData = await Promise.all(uploadPromises);
@@ -88,7 +89,7 @@ export const ComfyUI = () => {
         }
         catch (error) {
             setProcessing(false);
-            setWorks(works.filter((work: any) => work.progress !== true));
+            setWorks(works.filter((work: ComfyUIWorkData) => work.progress !== true));
         }
     };
 

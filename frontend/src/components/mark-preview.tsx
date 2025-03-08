@@ -6,9 +6,10 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useLightMode } from "@app/global";
+import { MarkdownPreviewerProps } from "@app/types";
 
-export const MarkdownPreviewer = (props: any) => {
-    const [text, setText] = useState("");
+export const MarkdownPreviewer = (props: MarkdownPreviewerProps) => {
+    const [text, setText] = useState<string>("");
     const lightMode = useLightMode();
 
     const replaceHolder = (text: string) => {

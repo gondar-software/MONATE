@@ -2,22 +2,23 @@ import { useEffect, useState } from 'react';
 import { FormDatePicker1, FormHeader1, FormSelect1, FormSubmitButton1, FormTextField1, ImageUploader } from '@app/components';
 import { genderTypes } from '@app/constants';
 import { useUserInfo } from '@app/global';
+import { GenderType, InformationCardProps } from '@app/types';
 
-export const InformationCard = (props: any) => {
+export const InformationCard = (props: InformationCardProps) => {
     const userInfo = useUserInfo();
 
-    const [firstName, setFirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [gender, setGender] = useState('');
-    const [dob, setDob] = useState('');
-    const [address1, setAddress1] = useState('');
-    const [address2, setAddress2] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [zipCode, setZipCode] = useState('');
-    const [country, setCountry] = useState('');
-    const [avatar, setAvatar] = useState<any>(userInfo?.avatar ? 'original' : null);
+    const [firstName, setFirstName] = useState<string>('');
+    const [middleName, setMiddleName] = useState<string | undefined>();
+    const [lastName, setLastName] = useState<string>('');
+    const [gender, setGender] = useState<GenderType>('male');
+    const [dob, setDob] = useState<string>('');
+    const [address1, setAddress1] = useState<string>('');
+    const [address2, setAddress2] = useState<string | undefined>();
+    const [city, setCity] = useState<string>('');
+    const [state, setState] = useState<string>('');
+    const [zipCode, setZipCode] = useState<string>('');
+    const [country, setCountry] = useState<string>('');
+    const [avatar, setAvatar] = useState<File | string | undefined>(userInfo?.avatar ? 'original' : undefined);
     const [githubUrl, setGithubUrl] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     
@@ -42,7 +43,7 @@ export const InformationCard = (props: any) => {
         setState(userInfo.state);
         setZipCode(userInfo.zipCode);
         setCountry(userInfo.country);
-        setAvatar(userInfo.avatar ? 'original' : null);
+        setAvatar(userInfo.avatar ? 'original' : undefined);
         setGithubUrl(userInfo.githubUrl);
         setPhoneNumber(userInfo.phoneNumber);
     }, [userInfo]);
@@ -51,7 +52,7 @@ export const InformationCard = (props: any) => {
         setAvatar(file);
     };
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.onSubmit({
             firstName,
@@ -72,7 +73,7 @@ export const InformationCard = (props: any) => {
     };
 
     return (
-        <div className="w-full max-w-sm p-4 mt-32 mb-32 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-sm p-4 my-12 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <FormHeader1>
                     Your information
@@ -89,7 +90,7 @@ export const InformationCard = (props: any) => {
                     name="firstName"
                     id="firstName"
                     value={firstName}
-                    onChange={(e: any) => setFirstName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
                     placeholder="John"
                     required
                 />
@@ -99,7 +100,7 @@ export const InformationCard = (props: any) => {
                     name="middleName"
                     id="middleName"
                     value={middleName}
-                    onChange={(e: any) => setMiddleName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMiddleName(e.target.value)}
                     placeholder=""
                 />
                 <FormTextField1
@@ -108,7 +109,7 @@ export const InformationCard = (props: any) => {
                     name="lastName"
                     id="lastName"
                     value={lastName}
-                    onChange={(e: any) => setLastName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
                     placeholder="Doe"
                     required
                 />
@@ -117,7 +118,7 @@ export const InformationCard = (props: any) => {
                     name="gender"
                     id="gender"
                     value={gender}
-                    onChange={(e: any) => setGender(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setGender(e.target.value as GenderType)}
                     placeholder="Select your gender"
                     options={
                         [
@@ -134,7 +135,7 @@ export const InformationCard = (props: any) => {
                     name="dob"
                     placeholder="2002-06-15"
                     value={dob}
-                    onChange={(e: any) => setDob(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDob(e.target.value)}
                 />
                 <FormTextField1
                     label="Address1"
@@ -142,7 +143,7 @@ export const InformationCard = (props: any) => {
                     name="address1"
                     id="address1"
                     value={address1}
-                    onChange={(e: any) => setAddress1(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress1(e.target.value)}
                     placeholder=""
                     required
                 />
@@ -152,7 +153,7 @@ export const InformationCard = (props: any) => {
                     name="address2"
                     id="address2"
                     value={address2}
-                    onChange={(e: any) => setAddress2(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress2(e.target.value)}
                     placeholder=""
                 />
                 <FormTextField1
@@ -161,7 +162,7 @@ export const InformationCard = (props: any) => {
                     name="city"
                     id="city"
                     value={city}
-                    onChange={(e: any) => setCity(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCity(e.target.value)}
                     placeholder=""
                     required
                 />
@@ -171,7 +172,7 @@ export const InformationCard = (props: any) => {
                     name="state"
                     id="state"
                     value={state}
-                    onChange={(e: any) => setState(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setState(e.target.value)}
                     placeholder=""
                     required
                 />
@@ -181,7 +182,7 @@ export const InformationCard = (props: any) => {
                     name="zipCode"
                     id="zipCode"
                     value={zipCode}
-                    onChange={(e: any) => setZipCode(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setZipCode(e.target.value)}
                     aria-describedby="helper-text-explanation" 
                     placeholder="90012" 
                     required
@@ -192,7 +193,7 @@ export const InformationCard = (props: any) => {
                     name="country"
                     id="country"
                     value={country}
-                    onChange={(e: any) => setCountry(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)}
                     placeholder=""
                     required
                 />
@@ -202,7 +203,7 @@ export const InformationCard = (props: any) => {
                     name="githubUrl"
                     id="githubUrl"
                     value={githubUrl}
-                    onChange={(e: any) => setGithubUrl(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGithubUrl(e.target.value)}
                     placeholder="https://github.com/..."
                     required
                 />
@@ -212,7 +213,7 @@ export const InformationCard = (props: any) => {
                     name="phoneNumber"
                     id="phoneNumber"
                     value={phoneNumber}
-                    onChange={(e: any) => setPhoneNumber(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
                     placeholder="+12016203178" 
                     required
                 />

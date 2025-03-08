@@ -1,12 +1,14 @@
 import { FormSelect1 } from "@app/components";
+import { ChatbotHistoryData, ChatbotModelType, ChatbotNavbarCardProps } from "@app/types";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
-export const ChatbotNavbarCard = (props: any) => {
+export const ChatbotNavbarCard = (props: ChatbotNavbarCardProps) => {
     return (
         <div className="flex flex-col w-80 h-full bg-white border border-gray-200 rounded-lg shadow p-8 dark:bg-gray-800 dark:border-gray-700">
             <FormSelect1
                 value={props.model}
-                onChange={(e: any) => props.setModel(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                    props.setModel(e.target.value as ChatbotModelType)}
                 options={
                     [
                         { value: 'open-ai', label: 'OpenAI' }, 
@@ -27,7 +29,7 @@ export const ChatbotNavbarCard = (props: any) => {
                     props.chatbotHistories
                         .slice()
                         .reverse()
-                        .map((chatbotHistory: any, index: number) => (
+                        .map((chatbotHistory: ChatbotHistoryData, index: number) => (
                             <div key={index} className="relative">
                                 <div
                                     className={`flex flex-row items-center w-full pr-2 pl-5 py-1 mb-2 text-gray-900 dark:text-white rounded-lg cursor-pointer 

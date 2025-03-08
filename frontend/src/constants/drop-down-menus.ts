@@ -2,39 +2,43 @@ export const dropDownMenus = {
     "client": [ 
         {
             label: 'Information',
-            path: '/user/info'
-        },
-        {
-            label: 'Profile',
-            path: '/user/profile'
+            url: '/user/info'
         },
     ],
     "team": [
         {
             label: 'Information',
-            path: '/user/info'
-        },
-        {
-            label: 'Profile',
-            path: '/user/profile'
+            url: '/user/info'
         },
         {
             label: 'Upload Portfolio',
-            path: '/team/upload-portfolio'
+            url: '/team/upload-portfolio'
         },
     ],
     "admin": [
         {
             label: 'Information',
-            path: '/user/info'
-        },
-        {
-            label: 'Profile',
-            path: '/user/profile'
+            url: '/user/info'
         },
         {
             label: 'Upload Portfolio',
-            path: '/team/upload-portfolio'
+            url: '/team/upload-portfolio'
+        },
+        {
+            label: 'Bookers',
+            url: '/admin/bookers'
+        },
+        {
+            label: 'Followers',
+            url: '/admin/followers'
+        },
+        {
+            label: 'Settings',
+            url: '/admin/settings'
+        },
+        {
+            label: 'Manage Users',
+            url: '/admin/users'
         },
     ],
 };

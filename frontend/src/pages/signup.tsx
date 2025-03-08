@@ -5,6 +5,7 @@ import { useSaveToken, useSaveVideoBackgroundMode } from "@app/global";
 import { handleNetworkError } from "@app/handlers";
 import { useAlert, useHeader, useLoading } from "@app/providers";
 import { useRedirectionHelper } from "@app/helpers";
+import { AuthCardData } from "@app/types";
 
 export const SignUp = () => {
     const { jsonNoTokenClient } = useJsonNoTokenCryptionMiddleware();
@@ -15,17 +16,17 @@ export const SignUp = () => {
     const redirect = useRedirectionHelper();
     const saveVideoBackgroundMode = useSaveVideoBackgroundMode();
 
-    const [formData, setFormData] = useState<any>();
-    const [isOpen, setIsOpen] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
+    const [formData, setFormData] = useState<AuthCardData>();
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     useEffect(() => {
         saveVideoBackgroundMode(1);
-        hideAuthInfo();
-        hideLoading();
+        hideAuthInfo?.();
+        hideLoading?.();
     }, []);
 
-    const handleSubmit = (data: any) => {
+    const handleSubmit = (data: AuthCardData) => {
         setSubmitting(true);
         jsonNoTokenClient.post(
             '/user/register',
@@ -47,8 +48,8 @@ export const SignUp = () => {
         jsonNoTokenClient.post(
             '/user/register',
             {
-                emailAddr: formData.email,
-                password: formData.password,
+                emailAddr: formData!.email,
+                password: formData!.password,
             }
         ).then(_ => {
             showVerifyCode();
@@ -61,13 +62,13 @@ export const SignUp = () => {
         jsonNoTokenClient.post(
             '/user/verify',
             {
-                emailAddr: formData.email,
-                password: formData.password,
+                emailAddr: formData!.email,
+                password: formData!.password,
                 code: code,
             }
         ).then(async(res) => {
             saveToken(res.data.token);
-            await initLoading(res.data.token);
+            await initLoading?.(res.data.token);
             hideVerifyCode();
             redirect('/user/info');
         }).catch(err => {

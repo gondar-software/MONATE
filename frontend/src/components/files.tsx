@@ -1,9 +1,12 @@
-export const FormFileUploader1 = (props: any) => {
-    const handleFileChange = (event: any) => {
-        const uploadedFile = event.target.files[0];
+import { FileType, FormFileItem1Props, FormFileUploader1Props } from "@app/types";
+import React from "react";
+
+export const FormFileUploader1 = (props: FormFileUploader1Props) => {
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const uploadedFile = event.target.files![0];
         if (uploadedFile) {
             const type = uploadedFile.type;
-            let fileType = '';
+            let fileType: FileType = 'image';
             if (type.startsWith("image/")) {
                 fileType = "image";
             } else if (type.startsWith("video/")) {
@@ -12,7 +15,7 @@ export const FormFileUploader1 = (props: any) => {
                 fileType = "unknown";
             }
 
-            props.setFileData(uploadedFile, fileType);
+            props.setFileData(fileType, uploadedFile);
         }
     };
     return (
@@ -34,7 +37,7 @@ export const FormFileUploader1 = (props: any) => {
     );
 }
 
-export const FormFileItem1 = (props: any) => {
+export const FormFileItem1 = (props: FormFileItem1Props) => {
     return (
         <div className="flex">
             <div className="relative w-full">

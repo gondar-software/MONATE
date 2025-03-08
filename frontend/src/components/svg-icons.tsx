@@ -1,4 +1,6 @@
-export const MonateIcon = (props: any) => {
+import { CopyrightIconProps, LoadingSpinProps, MonateIconProps } from "@app/types";
+
+export const MonateIcon = (props: MonateIconProps) => {
     return (
         <svg
             viewBox="0 0 36 36"
@@ -13,7 +15,7 @@ export const MonateIcon = (props: any) => {
     );
 };
 
-export const CopyrightIcon = (props: any) => {
+export const CopyrightIcon = (props: CopyrightIconProps) => {
     return (
         <svg
             viewBox="0 0 36 36"
@@ -26,7 +28,7 @@ export const CopyrightIcon = (props: any) => {
     );
 };
 
-export const LoadingSpin = (props: any) => {
+export const LoadingSpin = (props: LoadingSpinProps) => {
     return (
         <svg
             viewBox="0 0 860.1 876.5"

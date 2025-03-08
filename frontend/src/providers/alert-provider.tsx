@@ -1,16 +1,19 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState } from "react";
 import { Alert } from "@app/components";
+import { AlertData, AlertProviderProps } from "@app/types";
 
-const AlertContext = createContext<any | undefined>(undefined);
+const AlertContext = createContext<{
+  addAlert?: (alert: AlertData) => void
+}>({});
 
 export const useAlert = () => {
   return useContext(AlertContext);
 };
 
-export const AlertProvider = (props: any) => {
-  const [alerts, setAlerts] = useState<any[]>([]);
+export const AlertProvider = (props: AlertProviderProps) => {
+  const [alerts, setAlerts] = useState<AlertData[]>([]);
 
-  const addAlert = useCallback((alert: any) => {
+  const addAlert = (alert: AlertData) => {
     const id = Date.now();
     setAlerts((prev) => [...prev, { ...alert, id, fadeOut: false }]);
 
@@ -23,12 +26,12 @@ export const AlertProvider = (props: any) => {
         setAlerts((prev) => prev.filter((a) => a.id !== id));
       }, 300);
     }, 3000);
-  }, []);
+  };
 
   return (
     <AlertContext.Provider value={{ addAlert }}>
       {props.children}
-      <div className="fixed top-20 w-screen flex flex-col items-center">
+      <div className="fixed top-20 right-8 w-screen flex flex-col items-end">
         {alerts.map((alert) => (
           <div
             key={alert.id}
@@ -36,7 +39,7 @@ export const AlertProvider = (props: any) => {
               alert.fadeOut ? "animate-fade-out" : "animate-fade-in"
             }`}
           >
-            <Alert mode={alert.mode} title={alert.title} message={alert.message} />
+            <Alert type={alert.type} title={alert.title} message={alert.message} />
           </div>
         ))}
       </div>

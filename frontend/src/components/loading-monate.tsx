@@ -1,8 +1,9 @@
 import { LoadingSpin } from "@app/components";
+import { LoadingMonateProps } from "@app/types";
 
-export const LoadingMonate = (props: any) => {
+export const LoadingMonate = (props: LoadingMonateProps) => {
     return (
-        <div {...props}>
+        <div className={props.className}>
             <div className='h-full w-full items-center justify-center flex bg-gray-100 dark:bg-gray-900'>
                 <div className='hidden md:flex'>
                     <div className='h-32 w-32 items-center'><LoadingSpin /></div>

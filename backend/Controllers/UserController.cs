@@ -272,6 +272,7 @@ namespace Controllers
                         Id = user.Id,
                         EmailAddr = user.EmailAddr,
                         Permition = user.Permition,
+                        Type = user.Type,
                         Information = new
                         {
                             FirstName = user.Information?.FirstName,
@@ -291,17 +292,18 @@ namespace Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("permit")]
-        public async Task<IActionResult> Permit([FromBody] UserPermitionData data)
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateData data)
         {
             try
             {
                 var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Id != data.Id);
+                    .FirstOrDefaultAsync(u => u.Id == data.Id);
 
                 if (user == null)
                     return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
 
+                user.Type = data.Type;
                 user.Permition = data.Permition;
                 await _context.SaveChangesAsync();
 
@@ -310,6 +312,30 @@ namespace Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error setting permition");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteUser([FromBody] int id)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Id == id);
+
+                if (user == null)
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting user");
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }

@@ -33,14 +33,14 @@ namespace Controllers
                 if (all)
                     return Ok(new
                     {
-                        Rate = followers.Count == 0 ? 0 : Math.Round((followers.Sum(f => f.Rate) + 4.8 * 2572) / (followers.Count + 2572.), 2),
+                        Rate = followers.Count == 0 ? 0 : Math.Round((followers.Sum(f => f.Rate) + 4.8 * 2572) / (followers.Count + 2572f), 2),
                         Count = followers.Count + 2572,
                         Followers = followers,
                     });
                 else
                     return Ok(new
                     {
-                        Rate = followers.Count == 0 ? 0 : Math.Round((followers.Sum(f => f.Rate) + 4.8 * 2572) / (followers.Count + 2572.), 2),
+                        Rate = followers.Count == 0 ? 0 : Math.Round((followers.Sum(f => f.Rate) + 4.8 * 2572) / (followers.Count + 2572f), 2),
                         Count = followers.Count + 2572,
                         Followers = followers.Where(f => f.TopRanked),
                     });

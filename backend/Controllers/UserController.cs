@@ -254,5 +254,90 @@ namespace Controllers
                 return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                var users = await _context.Users
+                    .AsNoTracking()
+                    .Include(u => u.Information)
+                    .Where(u => u.Information != null)
+                    .ToListAsync();
+
+                return Ok(users.Select((user) =>
+                    new {
+                        Id = user.Id,
+                        EmailAddr = user.EmailAddr,
+                        Permition = user.Permition,
+                        Type = user.Type,
+                        Information = new
+                        {
+                            FirstName = user.Information?.FirstName,
+                            LastName = user.Information?.LastName,
+                            AvatarPath = user.Information?.AvatarPath,
+                            State = user.Information?.State,
+                            Country = user.Information?.Country,
+                            PhoneNumber = user.Information?.PhoneNumber
+                        }
+                    }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting users");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateData data)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Id == data.Id);
+
+                if (user == null)
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+
+                user.Type = data.Type;
+                user.Permition = data.Permition;
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error setting permition");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteUser([FromBody] int id)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Id == id);
+
+                if (user == null)
+                    return StatusCode((int)ErrorType.UserNotFound, ErrorType.UserNotFound.ToString());
+
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting user");
+                return StatusCode((int)ErrorType.Unknown, ErrorType.Unknown.ToString());
+            }
+        }
     }
 }

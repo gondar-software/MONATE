@@ -1,7 +1,6 @@
 using Databases;
 using Enums;
 using Helpers.Utils;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Packets.File;
 
@@ -20,7 +19,6 @@ namespace Controllers
             _logger = logger;
         }
 
-        [Authorize]
         [HttpPost("image")]
         public async Task<IActionResult> UploadImage([FromForm] ImageData file)
         {
@@ -35,7 +33,6 @@ namespace Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("video")]
         public async Task<IActionResult> UploadVideo([FromForm] VideoData file)
         {

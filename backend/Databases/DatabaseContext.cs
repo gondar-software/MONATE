@@ -3,6 +3,7 @@ using Databases.ComfyUIData;
 using Databases.UserData;
 using Databases.ChatbotData;
 using Microsoft.EntityFrameworkCore;
+using Databases.FollowerData;
 
 namespace Databases
 {
@@ -32,6 +33,11 @@ namespace Databases
         public DbSet<ComfyUIInputData> ComfyUIInputDatas { get; set; } = null!;
         public DbSet<ComfyUIOutputData> ComfyUIOutputDatas { get; set; } = null!;
         public DbSet<ComfyUIWork> ComfyUIWorks { get; set; } = null!;
+        #endregion
+
+        #region FollowerTables
+        public DbSet<Follower> Followers { get; set; } = null!;
+        public DbSet<Booker> Bookers { get; set; } = null!;
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

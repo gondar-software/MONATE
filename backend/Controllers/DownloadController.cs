@@ -1,7 +1,6 @@
 using Databases;
 using Enums;
 using Helpers.Utils;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controllers

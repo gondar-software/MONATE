@@ -38,6 +38,11 @@ export const SignUp = () => {
             setFormData(data);
             setSubmitting(false);
             showVerifyCode();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Verify code has been sent.',
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
             setSubmitting(false);
@@ -53,6 +58,11 @@ export const SignUp = () => {
             }
         ).then(_ => {
             showVerifyCode();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Verify code has been sent again.',
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
         });
@@ -70,6 +80,11 @@ export const SignUp = () => {
             saveToken(res.data.token);
             await initLoading?.(res.data.token);
             hideVerifyCode();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'You are registered successfully.',
+            });
             redirect('/user/info');
         }).catch(err => {
             handleNetworkError(err, addAlert);

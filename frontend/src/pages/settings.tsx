@@ -53,8 +53,13 @@ export const Settings = () => {
         jsonClient.post(
             '/system',
             settingsData
-        ).then(
-        ).catch(err => {
+        ).then(() => {
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Saved successfully.',
+            });
+        }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)
                 redirect('/auth/login');

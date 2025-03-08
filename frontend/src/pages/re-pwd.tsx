@@ -35,6 +35,11 @@ export const RePassword = () => {
         ).then(_ => {
             setFormData(formData);
             showVerifyCode();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Verify code has been sent.',
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
         }).finally(() => {
@@ -51,6 +56,11 @@ export const RePassword = () => {
             }
         ).then(_ => {
             showVerifyCode();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Verify code has been sent again.',
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
         });
@@ -66,6 +76,11 @@ export const RePassword = () => {
             }
         ).then(_ => {
             hideVerifyCode();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Password has been reset successfully. Please login.',
+            });
             redirect('/auth/login');
         }).catch(err => {
             handleNetworkError(err, addAlert);

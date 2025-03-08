@@ -46,6 +46,11 @@ export const Users = () => {
             id
         ).then(async() => {
             await fetchUsers();
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Successfully deleted user.',
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)

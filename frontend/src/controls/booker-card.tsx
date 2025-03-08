@@ -14,7 +14,7 @@ export const BookerCard = (props: BookerCardProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [checked, setChecked] = useState<boolean>(props.checked);
 
-    const handleRank = async () => {
+    const handleCheck = async () => {
         setLoading(true);
         const checkData = {
             id: props.id,
@@ -24,6 +24,11 @@ export const BookerCard = (props: BookerCardProps) => {
             checkData
         ).then(() => {
             setChecked(!checked);
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Booker updated successfully.'
+            });
         }).catch(err => {
             handleNetworkError(err, addAlert);
             if (err.response.status === 401)
@@ -47,7 +52,7 @@ export const BookerCard = (props: BookerCardProps) => {
                             <div className="text-gray-900 dark:text-white font-semibold">{props.email}</div>
                             <div className="flex w-full flex-row gap-3 justify-end">
                                 <CheckIcon
-                                    onClick={handleRank}
+                                    onClick={handleCheck}
                                     className={`w-5 h-5 hover:text-green-600 ${checked ? 'text-green-600' : 'text-gray-500'} transition-colors duration-200`}
                                 />
                                 <TrashIcon
@@ -73,7 +78,7 @@ export const BookerCard = (props: BookerCardProps) => {
                         <div className="flex flex-col items-start justify-start gap-2">
                             <div className="flex w-full flex-row gap-3 justify-start">
                                 <CheckIcon
-                                    onClick={handleRank}
+                                    onClick={handleCheck}
                                     className={`w-5 h-5 hover:text-green-600 ${checked ? 'text-green-600' : 'text-gray-500'} transition-colors duration-200`}
                                 />
                                 <TrashIcon

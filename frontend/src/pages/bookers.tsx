@@ -50,6 +50,11 @@ export const Bookers = () => {
         await jsonClient.post(`/following/del-booker`,
             id
         ).then(async() => {
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Successfully deleted booker.',
+            });
             await fetchFollowers();
         }).catch(err => {
             handleNetworkError(err, addAlert);

@@ -173,6 +173,11 @@ export const ComfyUI = () => {
             id
         ).then((_) => {
             setWorks(works.filter((work, _) => work.id !== id));
+            addAlert?.({
+                type: 'success',
+                title: 'Success',
+                message: 'Successfully deleted.',
+            });
         }).catch((err) => {
             handleNetworkError(err, addAlert)
             if (err.response.status === 401)

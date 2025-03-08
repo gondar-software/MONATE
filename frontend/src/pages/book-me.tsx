@@ -40,7 +40,14 @@ export const BookMe = () => {
         setBooking(true);
         
         await jsonNoTokenClient.post('/following/book', bookData)
-            .then(() => setFollowingMode(undefined))
+            .then(() => {
+                setFollowingMode(undefined);
+                addAlert?.({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'You have been successfully booked.',
+                });
+            })
             .catch(err => handleNetworkError(err, addAlert))
             .finally(() => setBooking(false));
     };
@@ -68,7 +75,14 @@ export const BookMe = () => {
             avatarPath: avatarPath,
         }
         await jsonNoTokenClient.post('/following/follow', follower)
-            .then(() => setFollowingMode(undefined))
+            .then(() => {
+                setFollowingMode(undefined);
+                addAlert?.({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'Thank you! You have successfully followed.',
+                });
+            })
             .catch(err => handleNetworkError(err, addAlert))
             .finally(() => setFollowing(false));
 

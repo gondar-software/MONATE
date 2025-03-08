@@ -51,6 +51,11 @@ export const Followers = () => {
                 id
             ).then(async() => {
                 await fetchFollowers();
+                addAlert?.({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'Successfully deleted follower.',
+                });
             }).catch(err => {
                 handleNetworkError(err, addAlert);
                 if (err.response.status === 401)

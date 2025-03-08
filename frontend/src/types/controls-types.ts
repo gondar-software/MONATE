@@ -217,3 +217,23 @@ export interface SettingsCardProps {
     onUpdate?: (data: SettingsData) => Promise<void>;
     onCancel?: () => void;
 }
+
+export interface UserCardProps {
+    data: UserManagingData;
+    onDelete?: (id: number) => Promise<void>;
+}
+
+export interface UserManagingData {
+    id: number;
+    emailAddr: string;
+    permition: number;
+    type: number;
+    information: {
+        firstName: string;
+        lastName: string;
+        avatarPath: string;
+        state: string;
+        country: string;
+        phoneNumber: string;
+    }
+}

@@ -10,3 +10,4 @@ export * from '@app/constants/chatbot-types';
 export * from '@app/constants/comfyui-models';
 export * from '@app/constants/comfyui-model-types';
 export * from '@app/constants/comfyui-data-types';
+export * from '@app/constants/permition-types';

@@ -89,8 +89,10 @@ export const UploadPortfolio = () => {
     }
 
     return (
-        <div className='flex w-full min-h-screen justify-center items-center'>
-            <UploadPortfolioCard onSubmit={handleSubmit} uploading={uploading} />
+        <div className='fixed py-14 flex w-full h-full'>
+            <div className="w-full h-full flex justify-center items-start overflow-auto">
+                <UploadPortfolioCard onSubmit={handleSubmit} uploading={uploading} />
+            </div>
         </div>
     );
 };

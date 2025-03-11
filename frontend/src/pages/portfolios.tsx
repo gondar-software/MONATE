@@ -41,20 +41,22 @@ export const Portfolios = () => {
     }
 
     return (
-        <div className="min-h-screen w-full">
-            <div className="mt-32 mb-32 pl-8 pr-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                <div className="col-span-full flex justify-center items-center pb-12">
-                    <FormHeader2>
-                        Portfolios
-                    </FormHeader2>
+        <div className='fixed py-14 flex w-full h-full'>
+            <div className="w-full h-full flex justify-center items-start overflow-auto">
+                <div className="my-12 px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="col-span-full flex justify-center items-center pb-12">
+                        <FormHeader2>
+                            Portfolios
+                        </FormHeader2>
+                    </div>
+                    {portfolioIds.map((id: number, index: number) => (
+                        <PortfolioCard id={id} key={index} />
+                    ))}
                 </div>
-                {portfolioIds.map((id: number, index: number) => (
-                    <PortfolioCard id={id} key={index} />
-                ))}
-            </div>
-            <div className="fixed bottom-24 w-full flex items-center justify-center">
-                <div className="backdrop-blur-xl min-w-[400px] rounded-lg p-2 flex items-center justify-center gap-2">
-                    <Pagenation maxPage={maxPage} onChangePage={handleChangePage} />
+                <div className="fixed bottom-24 w-full flex items-center justify-center">
+                    <div className="backdrop-blur-xl min-w-[400px] rounded-lg p-2 flex items-center justify-center gap-2">
+                        <Pagenation maxPage={maxPage} onChangePage={handleChangePage} />
+                    </div>
                 </div>
             </div>
         </div>

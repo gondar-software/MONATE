@@ -43,7 +43,7 @@ export const Portfolios = () => {
     return (
         <div className='fixed py-14 flex w-full h-full'>
             <div className="w-full h-full flex justify-center items-start overflow-auto">
-                <div className="my-12 px-8 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="mt-12 mb-28 px-8 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     <div className="col-span-full flex justify-center items-center pb-12">
                         <FormHeader2>
                             Portfolios

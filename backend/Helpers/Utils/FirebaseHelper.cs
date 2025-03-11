@@ -6,8 +6,14 @@ namespace Helpers.Utils
 {
     public static class FirebaseHelper
     {
-        private readonly static StorageClient _client = StorageClient.Create(
+        private static StorageClient _client = StorageClient.Create(
             GoogleCredential.FromFile("firebase.json"));
+
+        public static void Refresh()
+        {
+            _client = StorageClient.Create(
+                GoogleCredential.FromFile("firebase.json"));
+        }
 
         public static async Task<string?> SaveFileAndGetPath(IFormFile? file, FileType type)
         {

@@ -17,10 +17,19 @@ namespace Helpers.Chatbot
             public float? Similarity { get; set; }
         }
 
-        private static readonly CustomSearchAPIService _customSearchAPIService;
-        private static readonly HttpClient _httpClient;
+        private static CustomSearchAPIService _customSearchAPIService;
+        private static HttpClient _httpClient;
 
         static RAGHelper()
+        {
+            _customSearchAPIService = new CustomSearchAPIService(new BaseClientService.Initializer
+            {
+                ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY")
+            });
+            _httpClient = new HttpClient();
+        }
+
+        public static void Refresh()
         {
             _customSearchAPIService = new CustomSearchAPIService(new BaseClientService.Initializer
             {

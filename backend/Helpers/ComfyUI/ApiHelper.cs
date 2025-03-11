@@ -13,8 +13,14 @@
     public static class ApiHelper
     {
         private static readonly HttpClient client = new HttpClient();
-        private static readonly string serverUrl = Environment.GetEnvironmentVariable("COMFYUI_SERVER_URL") ?? "";
-        private static readonly string wsUrl = Environment.GetEnvironmentVariable("COMFYUI_WS_URL") ?? "";
+        private static string serverUrl = Environment.GetEnvironmentVariable("COMFYUI_SERVER_URL") ?? "";
+        private static string wsUrl = Environment.GetEnvironmentVariable("COMFYUI_WS_URL") ?? "";
+
+        public static void Refresh()
+        {
+            serverUrl = Environment.GetEnvironmentVariable("COMFYUI_SERVER_URL") ?? "";
+            wsUrl = Environment.GetEnvironmentVariable("COMFYUI_WS_URL") ?? "";
+        }
 
         public static async Task<JObject?> QueuePrompt(JObject prompt, string clientId)
         {

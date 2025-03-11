@@ -61,7 +61,7 @@ export const UploadPortfolioCard = (props: UploadPortfolioCardProps) => {
     }
 
     return (
-        <div className="w-full max-w-6xl p-4 mt-32 mb-32 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-6xl p-4 my-12 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <FormHeader2>
                     Upload Portfolio
@@ -85,19 +85,27 @@ export const UploadPortfolioCard = (props: UploadPortfolioCardProps) => {
                     onChange={(e: any) => setPortfolioType(e.target.value)}
                     options={[
                         {
-                            value: 'web',
+                            value: 'Web',
                             label: 'Web',
                         },
                         {
-                            value: 'mobile',
+                            value: 'Mobile',
                             label: 'Mobile',
                         },
                         {
-                            value: 'workflow',
+                            value: 'Chatbot',
+                            label: 'Chatbot',
+                        },
+                        {
+                            value: 'Generative AI',
+                            label: 'Generative AI',
+                        },
+                        {
+                            value: 'Workflow',
                             label: 'Workflow',
                         },
                         {
-                            value: 'other',
+                            value: 'Other',
                             label: 'Other',
                         },
                     ]}

@@ -9,13 +9,20 @@ namespace Helpers.Chatbot
 {
     public static class OpenAIHelper
     {
-        private static readonly ConcurrentDictionary<string, List<List<string>>> _histories = new();
-        private static readonly ConcurrentDictionary<string, Document[]> _documents = new();
-        private static readonly OpenAIClient _client;
-        private static readonly EmbeddingClient _embeddingClient;
-        private static readonly ChatClient _chatClient;
+        private static ConcurrentDictionary<string, List<List<string>>> _histories = new();
+        private static ConcurrentDictionary<string, Document[]> _documents = new();
+        private static OpenAIClient _client;
+        private static EmbeddingClient _embeddingClient;
+        private static ChatClient _chatClient;
 
         static OpenAIHelper()
+        {
+            _client = new OpenAIClient(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
+            _embeddingClient = _client.GetEmbeddingClient("text-embedding-ada-002");
+            _chatClient = _client.GetChatClient("gpt-4o");
+        }
+
+        public static void Refresh()
         {
             _client = new OpenAIClient(Environment.GetEnvironmentVariable("OPENAI_API_KEY"));
             _embeddingClient = _client.GetEmbeddingClient("text-embedding-ada-002");

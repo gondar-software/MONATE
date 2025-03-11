@@ -2,6 +2,9 @@
 using Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Helpers.Chatbot;
+using Helpers.ComfyUI;
+using Helpers.Utils;
 
 namespace Controllers
 {
@@ -63,6 +66,11 @@ namespace Controllers
                 Environment.SetEnvironmentVariable("QWEN_URL", settings.QwenUrl);
                 Environment.SetEnvironmentVariable("COMFYUI_SERVER_URL", settings.ComfyUIServerUrl);
                 Environment.SetEnvironmentVariable("COMFYUI_WS_URL", settings.ComfyUIWSUrl);
+
+                OpenAIHelper.Refresh();
+                RAGHelper.Refresh();
+                ApiHelper.Refresh();
+                FirebaseHelper.Refresh();
 
                 return Ok();
             }

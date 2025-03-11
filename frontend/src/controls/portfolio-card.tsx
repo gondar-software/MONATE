@@ -88,7 +88,7 @@ export const PortfolioCard = (props: PortfolioCardProps) => {
     }
 
     return (
-        <div className="w-full max-w-sm p-4 h-90 flex-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full p-4 h-90 flex-1 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <form className="w-full h-full">
                 {loading ? 
                     <div className="w-full h-full flex justify-center items-center">

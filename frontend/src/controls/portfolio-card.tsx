@@ -14,6 +14,9 @@ const portfolioBadgeModes = {
     1: 'red',
     2: 'green',
     3: 'yellow',
+    4: 'indigo',
+    5: 'purple',
+    6: 'pink',
 };
 
 export const PortfolioCard = (props: PortfolioCardProps) => {
